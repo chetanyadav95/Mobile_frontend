@@ -1,0 +1,24 @@
+<ion-header class="ion-no-border">
+	<ion-toolbar>
+		<ion-title>Create watchlist</ion-title>
+		<ion-buttons slot="end">
+			<ion-button (click)="dismissModal()">Close</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="!isEdit">
+    <ion-item class="ion-margin-horizontal">
+      <ion-label position="floating">Name of watchlist</ion-label>
+      <ion-input [(ngModel)]="watchlistName"></ion-input>
+    </ion-item>
+    <ion-button class="ion-margin" expand="block" (click)="createWatchlist()">Create watchlist</ion-button>
+  </div>
+  <div *ngIf="isEdit">
+    <ion-item class="ion-margin-horizontal">
+      <ion-label position="floating">Name of watchlist</ion-label>
+      <ion-input [value]="watchlistName" [(ngModel)]="watchlistName"></ion-input>
+    </ion-item>
+    <ion-button class="ion-margin" expand="block" (click)="editWatchlist()">Save watchlist</ion-button>
+  </div>
+</ion-content>

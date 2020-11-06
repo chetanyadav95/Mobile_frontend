@@ -1,0 +1,40 @@
+<ion-header #header class="ion-no-border">
+	<ion-toolbar>
+		<ion-title (click)="onTitleClick()">Watchlists</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" appHideHeader [header]="header">
+	<super-tabs #superTabs [(activeTabIndex)]="selectedTab">
+		<super-tabs-toolbar slot="top" color="translucent" scrollable scrollable-padding="false">
+			<super-tab-button *ngFor="let w of watchlists">
+				<ion-label>{{w.name}}</ion-label>
+			</super-tab-button>
+		</super-tabs-toolbar>
+		<super-tabs-container>
+			<super-tab *ngFor="let w of watchlists">
+				<ion-list>
+					<ion-item *ngFor="let company of w.companies">
+						<ion-label>
+							<h3>{{company.code | uppercase}}</h3>
+							<p>{{company.name}}</p>
+						</ion-label>
+						<ion-label class="ion-margin-start ion-text-right" *ngIf="company.isRising">
+							<ion-text color="success"><h3>{{company.greenNum}}</h3></ion-text>
+							<p>+{{company.rateRaw}} (+{{company.ratePercentage}}%)</p>
+						</ion-label>
+						<ion-label class="ion-margin-start ion-text-right" *ngIf="!company.isRising">
+							<ion-text color="danger"><h3>{{company.greenNum}}</h3></ion-text>
+							<p>-{{company.rateRaw}} (-{{company.ratePercentage}}%)</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+				<ion-fab horizontal="end" vertical="bottom">
+					<ion-fab-button (click)="openCompaniesModal()">
+						<ion-icon name="add"></ion-icon>
+					</ion-fab-button>
+				</ion-fab>
+			</super-tab>
+		</super-tabs-container>
+	</super-tabs>
+</ion-content>

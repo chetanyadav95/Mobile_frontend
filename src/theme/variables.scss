@@ -3,7 +3,12 @@
 
 /** Ionic CSS Variables **/
 :root {
-  /** primary **/
+    --st-label-text-transform: capitalize;
+   --st-indicator-color: #000000;
+   .buttons-container{
+    padding-left: 0 !important;
+}
+   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -82,7 +87,8 @@
    * -------------------------------------------
    */
 
-  body {
+   body {
+    --st-indicator-color: #ffffff;
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66,140,255;
     --ion-color-primary-contrast: #ffffff;
