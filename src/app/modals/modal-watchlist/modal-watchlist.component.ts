@@ -10,16 +10,16 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
   styleUrls: ['./modal-watchlist.component.scss'],
 })
 export class ModalWatchlistComponent implements OnInit{
-  jsonData: Company[]
+  companies: Company[]
   filteredData: Company[]
-  selectedWatchlist: Watchlist
-  @Input() tabIndex: number
+  sWatchlist: Watchlist
+  @Input() selectedWatchlist: number
 
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService) { }
   
   ngOnInit(){
-    this.jsonData = this.watchlistService.jsonData
-    this.selectedWatchlist = this.watchlistService.watchlists[this.tabIndex]
+    this.companies = this.watchlistService.companies
+    this.sWatchlist = this.watchlistService.getWatchlist(this.selectedWatchlist)
   }
 
   dismissModal(){
@@ -27,18 +27,19 @@ export class ModalWatchlistComponent implements OnInit{
   }
 
   onSelect(event: boolean, company: Company){
-    event 
-      ? this.watchlistService.addToWatchlist(this.tabIndex, company)
-      : this.watchlistService.removeFromWatchlist(this.tabIndex, company)
+    if(event == true)
+      this.watchlistService.addToWatchlist(this.selectedWatchlist, company)
+    else if(event == false) 
+      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, company)
   }
 
   filter(filterValue: any){
-    this.filteredData = this.jsonData.filter(company => company.name.toLowerCase().includes(filterValue.toLowerCase()))
+    this.filteredData = this.companies.filter(company => company.name.toLowerCase().includes(filterValue.toLowerCase()))
   }
 
   seeIfChecked(company: Company){
-    if(this.selectedWatchlist.companies != undefined || this.selectedWatchlist.companies != null)
-      return this.selectedWatchlist.companies.find(c => c.name == company.name)
+    if(this.sWatchlist.companies != undefined || this.sWatchlist.companies != null)
+      return this.sWatchlist.companies.find(c => c.name == company.name)
     else false
   }
 }

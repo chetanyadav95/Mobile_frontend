@@ -5,9 +5,9 @@
 </ion-header>
 
 <ion-content scrollEvents="true" appHideHeader [header]="header">
-	<super-tabs #superTabs [(activeTabIndex)]="selectedTab">
+	<super-tabs #superTabs *ngIf="watchlists.length > 0">
 		<super-tabs-toolbar slot="top" color="translucent" scrollable scrollable-padding="false">
-			<super-tab-button *ngFor="let w of watchlists">
+			<super-tab-button *ngFor="let w of watchlists" (click)="tabIndex(w.id)">
 				<ion-label>{{w.name}}</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
@@ -37,4 +37,10 @@
 			</super-tab>
 		</super-tabs-container>
 	</super-tabs>
+	<ion-content padding *ngIf="watchlists.length == 0">
+		<div>
+			<h6 class="gray">Go on and create your personal watchlist <br>
+			by pressing 'Watchlists' in the toolbar</h6>
+		</div>
+	</ion-content>
 </ion-content>

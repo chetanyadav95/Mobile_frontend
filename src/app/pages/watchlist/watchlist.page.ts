@@ -12,24 +12,24 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
   styleUrls: ['./watchlist.page.scss'],
 })
 export class WatchlistPage implements OnInit {
-  jsonData: Company[] = []
+  companies: Company[] = []
   watchlists: Watchlist[] = []
-  selectedTab: number = 0
+  selectedWatchlist: number = 1
   constructor(private modalController: ModalController, 
     private watchlistService: WatchlistService, 
     public actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
     // this.watchlistService.watchlistsSubject.subscribe(w => this.watchlists = w)
-    // this.watchlistService.jsonDataSubject.subscribe(j => this.jsonData = j)
-    this.jsonData = this.watchlistService.jsonData
+    // this.watchlistService.companiesSubject.subscribe(j => this.companies = j)
+    this.companies = this.watchlistService.companies
     this.watchlists = this.watchlistService.watchlists
   }
 
   async openCompaniesModal() {
     const modal = await this.modalController.create({
       component: ModalWatchlistComponent,
-      componentProps: {tabIndex: this.selectedTab}
+      componentProps: {selectedWatchlist: this.selectedWatchlist}
     });
     return await modal.present();
   }
@@ -37,7 +37,7 @@ export class WatchlistPage implements OnInit {
   async openWatchlistModal(isEdit: boolean) {
     const modal = await this.modalController.create({
       component: ModalWatchlistCeComponent,
-      componentProps: {isEdit, tabIndex: this.selectedTab}
+      componentProps: {isEdit, selectedWatchlist: this.selectedWatchlist}
     });
     return await modal.present();
   }
@@ -78,6 +78,11 @@ export class WatchlistPage implements OnInit {
   }
 
   deleteWatchlist(){
-    this.watchlistService.deleteWatchlist(this.selectedTab)
+    this.watchlistService.deleteWatchlist(this.selectedWatchlist)
+  }
+
+  tabIndex(event: any){
+    console.log(event)
+    this.selectedWatchlist = event
   }
 }

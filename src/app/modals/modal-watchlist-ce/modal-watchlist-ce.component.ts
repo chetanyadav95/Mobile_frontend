@@ -9,14 +9,14 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
 })
 export class ModalWatchlistCeComponent implements OnInit {
   @Input() isEdit: boolean
-  @Input() tabIndex: number
+  @Input() selectedWatchlist: number
   watchlistName: string
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService) { }
 
   ngOnInit() {
     this.isEdit == false 
       ? this.watchlistName = '' 
-      : this.watchlistName = this.watchlistService.watchlists[this.tabIndex].name
+      : this.watchlistName = this.watchlistService.getWatchlist(this.selectedWatchlist).name
   }
 
   dismissModal(){
@@ -29,7 +29,7 @@ export class ModalWatchlistCeComponent implements OnInit {
   }
   
   editWatchlist(){    
-    this.watchlistService.editWatchlist(this.tabIndex, this.watchlistName)
+    this.watchlistService.editWatchlist(this.selectedWatchlist, this.watchlistName)
     this.dismissModal()
   }
 }
