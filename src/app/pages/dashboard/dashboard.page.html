@@ -1,7 +1,62 @@
-<ion-header class="ion-no-border">
+<ion-header>
 	<ion-toolbar>
-		<ion-title class="ion-text-left ion-padding ion-margin-bottom">
-			<h1>Dashboard</h1>
-		</ion-title>
+		<ion-title>Dashboard</ion-title>
 	</ion-toolbar>
 </ion-header>
+<ion-content class="ion-padding">
+	<ion-grid>
+		<ion-row>
+			<ion-col size="12">
+				<ion-text> <h5>Hi Ibrahim</h5> </ion-text>
+			</ion-col>
+		</ion-row>
+		<hr />
+		<ion-row>
+			<ion-col size="12">
+				<h5 class="equity-title">
+					<ion-icon name="pie-chart-outline" style="margin-right: 10px"></ion-icon>Equity
+					<ion-icon name="warning-outline" color="danger" style="margin-left: 10px"></ion-icon>
+				</h5>
+			</ion-col>
+		</ion-row>
+		<ion-row class="ion-align-items-center">
+			<ion-col size="6">
+				<ion-text>
+					<h4>6.22k</h4>
+				</ion-text>
+				<ion-text>
+					<span>Margin-available</span>
+				</ion-text>
+			</ion-col>
+		</ion-row>
+		<hr />
+		<ion-row>
+			<ion-col size="12">
+				<h5 class="holdings-title">
+					<ion-icon name="briefcase-outline" style="margin-right: 10px"></ion-icon> Holdings (3)
+				</h5>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col size="6">
+				<ion-text color="danger" style="display: flex; flex-direction: row; align-items:baseline">
+					<h4 class="ion-margin-end">-15.44k</h4>
+					<span class="holdings-percentage">-55.85%</span>
+				</ion-text>
+			</ion-col>
+			<ion-col size="6">
+				<table class="holdings-table">
+					<tr>
+						<td><h6 class="holdings-text">Current value</h6></td>
+						<td><h5 class="holdings-values ion-padding-start">12.4k</h5></td>
+					</tr>
+					<tr>
+						<td><h6 class="holdings-text">Investments</h6></td>
+						<td><h5 class="holdings-values ion-padding-start">28.09k</h5></td>
+					</tr>
+				</table>
+			</ion-col>
+		</ion-row>
+		<hr />
+	</ion-grid>
+</ion-content>

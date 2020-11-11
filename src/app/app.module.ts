@@ -13,12 +13,14 @@ import { CommonModule } from '@angular/common';
 import { ModalWatchlistComponent } from './modals/modal-watchlist/modal-watchlist.component';
 import { ModalWatchlistCeComponent } from './modals/modal-watchlist-ce/modal-watchlist-ce.component';
 import { FormsModule } from '@angular/forms';
+import { BuySellModalPopupComponent } from './buy-sell-modal-popup/buy-sell-modal-popup.component';
 
 @NgModule({
   declarations: [
     AppComponent, 
     ModalWatchlistComponent,
-    ModalWatchlistCeComponent
+    ModalWatchlistCeComponent,
+    BuySellModalPopupComponent
   ],
   entryComponents: [],
   imports: [

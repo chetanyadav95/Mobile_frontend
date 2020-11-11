@@ -1,7 +1,31 @@
-<ion-header class="ion-no-border">
+<ion-header #header class="ion-no-border">
 	<ion-toolbar>
-		<ion-title class="ion-text-left ion-padding ion-margin-bottom">
-			<h1>Orders</h1>
-		</ion-title>
+		<ion-title>Orders</ion-title>
 	</ion-toolbar>
 </ion-header>
+<ion-content>
+	<super-tabs>
+		<super-tabs-toolbar slot="top" color="translucent">
+			<super-tab-button>
+				<ion-label>Pending</ion-label>
+			</super-tab-button>
+			<super-tab-button>
+				<ion-label>Executed</ion-label>
+			</super-tab-button>
+			<super-tab-button>
+				<ion-label>GTT</ion-label>
+			</super-tab-button>
+		</super-tabs-toolbar>
+		<super-tabs-container>
+			<super-tab>
+				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+			</super-tab>
+			<super-tab>
+				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+			</super-tab>
+			<super-tab>
+				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+			</super-tab>
+		</super-tabs-container>
+	</super-tabs>
+</ion-content>

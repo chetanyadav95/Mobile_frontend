@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
+import { BuySellModalPopupComponent } from 'src/app/buy-sell-modal-popup/buy-sell-modal-popup.component';
 import { ModalWatchlistCeComponent } from 'src/app/modals/modal-watchlist-ce/modal-watchlist-ce.component';
 import { ModalWatchlistComponent } from 'src/app/modals/modal-watchlist/modal-watchlist.component';
 import { Company } from 'src/app/models/company.model';
@@ -20,8 +21,6 @@ export class WatchlistPage implements OnInit {
     public actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
-    // this.watchlistService.watchlistsSubject.subscribe(w => this.watchlists = w)
-    // this.watchlistService.companiesSubject.subscribe(j => this.companies = j)
     this.companies = this.watchlistService.companies
     this.watchlists = this.watchlistService.watchlists
   }
@@ -38,6 +37,14 @@ export class WatchlistPage implements OnInit {
     const modal = await this.modalController.create({
       component: ModalWatchlistCeComponent,
       componentProps: {isEdit, selectedWatchlist: this.selectedWatchlist}
+    });
+    return await modal.present();
+  }
+
+  async openBuySellModal(id: number) {
+    const modal = await this.modalController.create({
+      component: BuySellModalPopupComponent,
+      componentProps: {selectedCompany: id}
     });
     return await modal.present();
   }
