@@ -1,0 +1,38 @@
+ion-toolbar{
+    background-color: #e3e3e3;
+}
+.subtitle, .subtitle ion-label{
+    padding-left:20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+.subtitle h5{
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 15px;
+}
+hr {
+    border-top: 1px solid rgba(167, 167, 167, 0.5) !important;
+    height: 1px !important;
+    width: 100% !important;
+    display: block !important;
+    font-size: 2em !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+.table-title{
+    font-size: 17px;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+th{
+    font-size: 16px;
+    color: #a2a2a2;
+    font-weight: 400;
+}
+td{
+    font-size: 15px;
+}

@@ -1,0 +1,127 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title slot="start"> {{ company.name }} </ion-title>
+		<ion-buttons slot="end">
+			<ion-button (click)="dismissModal()">Close</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+	<ion-toolbar>
+		<ion-text slot="start" class="subtitle" *ngIf="company.isRising">
+			<h5 class="ion-margin-end">{{ company.code }}</h5>
+			<ion-text class="ion-margin-end" color="success">
+				<h5>{{ company.greenNum }}</h5>
+			</ion-text>
+			<h5 class="ion-margin-end">+{{ company.rateRaw }} (+{{ company.ratePercentage }}%)</h5>
+		</ion-text>
+		<ion-text slot="start" class="subtitle" *ngIf="!company.isRising">
+			<h5 class="ion-margin-end">{{ company.code }}</h5>
+			<ion-text class="ion-margin-end" color="danger">
+				<h5>{{ company.greenNum }}</h5>
+			</ion-text>
+			<h5 class="ion-margin-end">-{{ company.rateRaw }} (-{{ company.ratePercentage }}%)</h5>
+		</ion-text>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+	<ion-grid>
+		<ion-row class="ion-margin-vertical">
+			<ion-col size="6">
+				<ion-button color="tertiary" size="large" expand="full" class="ion-margin-start"
+				(click)="onClick(true)">Buy</ion-button>
+			</ion-col>
+			<ion-col size="6">
+				<ion-button color="danger" size="large" expand="full" class="ion-margin-end"
+				(click)="onClick(false)">Sell</ion-button>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col size="6">
+				<ion-button color="tertiary" size="small" expand="block" fill="clear" class="ion-margin-end ion-float-left">
+					View chart
+				</ion-button>
+			</ion-col>
+			<ion-col size="6">
+				<ion-button color="tertiary" size="small" expand="block" fill="clear" class="ion-margin-start ion-float-right">
+					Create GTT
+				</ion-button>
+			</ion-col>
+		</ion-row>
+		<!-- <ion-row>
+			<ion-col size="12">
+				<ion-text>
+					<h4 class="table-title ion-text-left">Market depth</h4>
+				</ion-text>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col size="6">
+				<table>
+					<thead>
+						<tr>
+							<th class="ion-text-left">Bid</th>
+							<th class="ion-text-center ion-margin-horizontal">Orders</th>
+							<th class="ion-text-end">Qty</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="ion-text-left">
+								<ion-text color="secondary"> 771.20 </ion-text>
+							</td>
+							<td class="ion-text-center">
+								<ion-text color="secondary"> 1 </ion-text>
+							</td>
+							<td class="ion-text-end">
+								<ion-text color="secondary"> 33 </ion-text>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2">
+								<ion-text color="secondary"> Total </ion-text>
+							</td>
+							<td colspan="1">
+								<ion-text color="secondary"> 9,03,720 </ion-text>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</ion-col>
+			<ion-col size="6">
+				<table>
+					<thead>
+						<tr>
+							<th class="ion-text-left">Offer</th>
+							<th class="ion-text-center ion-margin-horizontal">Orders</th>
+							<th class="ion-text-end">Qty</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="ion-text-left">
+								<ion-text color="danger"> 773.05 </ion-text>
+							</td>
+							<td class="ion-text-center">
+								<ion-text color="danger"> 1 </ion-text>
+							</td>
+							<td class="ion-text-end">
+								<ion-text color="danger"> 29 </ion-text>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2">
+								<ion-text color="danger"> Total </ion-text>
+							</td>
+							<td colspan="1">
+								<ion-text color="danger"> 11,84,482 </ion-text>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</ion-col>
+		</ion-row> -->
+	</ion-grid>
+</ion-content>

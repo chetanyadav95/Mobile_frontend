@@ -9,6 +9,7 @@ import { WatchlistPageRoutingModule } from './watchlist-routing.module';
 import { WatchlistPage } from './watchlist.page';
 import { SuperTabsModule } from '@ionic-super-tabs/angular';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { BuySellPage } from './buy-sell/buy-sell.page';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     SuperTabsModule,
     SharedModule
   ],
-  declarations: [WatchlistPage]
+  declarations: [WatchlistPage, BuySellPage]
 })
 export class WatchlistPageModule {}

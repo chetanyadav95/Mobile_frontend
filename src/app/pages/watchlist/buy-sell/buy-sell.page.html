@@ -1,0 +1,107 @@
+<ion-header translucent>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-back-button [defaultHref]="['home','watchlist']" (click)="navigateToWatchlist()"></ion-back-button>
+		</ion-buttons>
+		<ion-title>{{company.name}}</ion-title>
+
+		<ion-buttons slot="end">
+			<ion-button>
+				<ion-select ok-text="Okay" cancel-text="Cancel" selectedText="Type" (ionChange)="changeType($event)">
+					<ion-select-option value="true">Buy</ion-select-option>
+					<ion-select-option value="false">Sale</ion-select-option>
+				</ion-select>
+			</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+<ion-content>
+	<form #buySellForm="ngForm" id="buySellForm">
+		<ion-card>
+			<ion-grid>
+				<ion-row>
+					<ion-col size="6">
+						<ion-card-header>
+							<ion-card-title>Quantity</ion-card-title>
+							<ion-card-subtitle>Lot: 1</ion-card-subtitle>
+						</ion-card-header>
+						<ion-card-content>
+							<ion-input type="number" class="card-input" name="quantity" ngModel required></ion-input>
+						</ion-card-content>
+					</ion-col>
+					<ion-col size="6">
+						<ion-card-header>
+							<ion-card-title>Price</ion-card-title>
+							<ion-card-subtitle>Tick: 0.05</ion-card-subtitle>
+						</ion-card-header>
+						<ion-card-content>
+							<ion-input
+								type="number"
+								class="card-input"
+								name="price"
+								ngModel
+								[ngClass]="{'disabled-input':marketRadio.checked}"
+								[required]="!marketRadio.checked"
+								[disabled]="marketRadio.checked"
+							>
+							</ion-input>
+						</ion-card-content>
+					</ion-col>
+				</ion-row>
+			</ion-grid>
+		</ion-card>
+		<ion-grid>
+			<ion-row>
+				<ion-col class="bs-radio-group">
+					<ion-text><h5>Order</h5></ion-text>
+					<ul class="radios">
+						<li>
+							<input
+								#marketRadio
+								type="radio"
+								slot="start"
+								value="market"
+								id="radio-market"
+								name="order"
+								ngModel
+								[ngClass]="{'red':!isBuy,'blue':isBuy}"
+							/>
+							<label for="radio-market">MARKET</label>
+						</li>
+						<li>
+							<input
+								type="radio"
+								slot="start"
+								value="limit"
+								id="radio-limit"
+								name="order"
+								ngModel
+								[ngClass]="{'red':!isBuy,'blue':isBuy}"
+							/>
+							<label for="radio-limit">LIMIT</label>
+						</li>
+					</ul>
+				</ion-col>
+				<hr />
+			</ion-row>
+		</ion-grid>
+	</form>
+</ion-content>
+<ion-footer>
+	<ion-toolbar>
+		<ion-grid>
+			<ion-row>
+				<ion-col class="footer" *ngIf="isBuy">
+					<ion-button class="footer-button" color="tertiary" form="buySellForm" (click)="onSubmit()">
+						Confirm buy
+					</ion-button>
+				</ion-col>
+				<ion-col class="footer" *ngIf="!isBuy">
+					<ion-button class="footer-button" color="danger" form="buySellForm" (click)="onSubmit()">
+						Confirm sale
+					</ion-button>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
+	</ion-toolbar>
+</ion-footer>

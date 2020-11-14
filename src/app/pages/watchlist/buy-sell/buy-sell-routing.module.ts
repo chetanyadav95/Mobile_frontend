@@ -1,16 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BuySellPage } from './buy-sell/buy-sell.page';
 
-import { WatchlistPage } from './watchlist.page';
+import { BuySellPage } from './buy-sell.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: WatchlistPage,
-  },
-  {
-    path:'buy-sell/:id', 
     component: BuySellPage
   }
 ];
@@ -19,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WatchlistPageRoutingModule {}
+export class BuySellPageRoutingModule {}

@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+body{
+    font-family: Roboto;
+}
+ion-card-header{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+ion-card-title{
+    font-size: 15px;
+}
+ion-card-subtitle{
+    margin-top: 0;
+    font-size:14px;
+    color:#ababab;
+}
+ion-input{
+    border: 1px solid rgb(184, 184, 184, 0.69);
+    color: black;
+    padding: 10px 0;
+    font-size:18px;
+}
+.bs-radio-group{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.radios{
+    list-style-type:none;
+    margin:25px 0 0 0;
+    padding:0;
+}
+.bs-radio-group h5{
+    margin: 0 5px;
+}
+ul{
+    margin: 0 !important;
+}
+.radios li {
+    float:right;
+    text-align: center;
+    width:90px;
+    height:30px;
+    position:relative;
+}
+.radios label, .radios input[type="radio"] {
+    display:block;
+    position:absolute;
+    margin-left: 10px;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+.radios input[type="radio"]{
+    opacity:0.011;
+    z-index:100;
+    margin-left: 10px;
+}
+.radios input[type="radio"]:checked + label {
+    border: 1px solid rgb(255, 255, 255, 0); 
+    border-radius: 5px;
+    margin-left: 10px;
+    color:white;
+}
+.radios input[type="radio"].red:checked + label {
+    background-color: #EB455A;
+}
+.radios input[type="radio"].blue:checked + label {
+    background-color:#5360fc;
+}
+.radios label {    
+    padding:4px !important;
+    border-radius: 5px;
+    border:1px solid #CCC; 
+    font-size:14px;
+    z-index:90;
+}
+.radios label:hover {
+    background:#DDD;
+}
+hr {
+    border-top: 1px solid rgba(167, 167, 167, 0.5) !important;
+    height: 1px !important;
+    width: 100% !important;
+    display: block !important;
+    font-size: 2em !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin-bottom:0;
+}
+.footer-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+ion-button.footer-button{
+    width: 100%;
+}
+.disabled-input{
+    background-color:#dedede;
+    color: #353535;
+}
+@media (prefers-color-scheme: dark) {
+    ion-input{
+        color: white;
+    }
+}

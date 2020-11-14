@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
-import { BuySellModalPopupComponent } from 'src/app/buy-sell-modal-popup/buy-sell-modal-popup.component';
+import { BuySellModalPopupComponent } from 'src/app/modals/buy-sell-modal-popup/buy-sell-modal-popup.component';
 import { ModalWatchlistCeComponent } from 'src/app/modals/modal-watchlist-ce/modal-watchlist-ce.component';
 import { ModalWatchlistComponent } from 'src/app/modals/modal-watchlist/modal-watchlist.component';
 import { Company } from 'src/app/models/company.model';

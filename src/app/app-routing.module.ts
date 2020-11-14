@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'buy-sell',
+    loadChildren: () => import('./pages/watchlist/buy-sell/buy-sell.module').then( m => m.BuySellPageModule)
   }
 ];
 
