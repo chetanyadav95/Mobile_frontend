@@ -1,0 +1,38 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-back-button [defaultHref]="['home','watchlist']" (click)="navigateToAccount()"></ion-back-button>
+		</ion-buttons>
+		<ion-title>Funds</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-card>
+		<ion-card-header class="ion-text-center ion-padding-bottom">
+			<ion-card-subtitle>Available margin (Cash + Collateral)</ion-card-subtitle>
+			<ion-card-title color="tertiary"><h2 class="ion-no-margin">$6,203.21</h2></ion-card-title>
+		</ion-card-header>
+	</ion-card>
+	<ion-grid>
+		<ion-row>
+			<ion-col size="6" class="ion-text-center">
+				<ion-button color="success">
+					<ion-icon name="add-outline"></ion-icon>
+					Add funds
+				</ion-button>
+				<ion-text><p class="subtitle-text">Available cash</p></ion-text>
+				<ion-text><p class="cash-text">6,203.21</p> </ion-text>
+			</ion-col>
+			<ion-col size="6" class="ion-text-center">
+				<ion-button>
+					<ion-icon name="refresh-outline"></ion-icon>
+					Withdraw
+				</ion-button>
+				<ion-text><p class="subtitle-text">Used margin</p></ion-text>
+				<ion-text><p class="cash-text">0</p> </ion-text>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+	<hr>
+</ion-content>

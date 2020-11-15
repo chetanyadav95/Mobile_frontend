@@ -1,7 +1,51 @@
-<ion-header class="ion-no-border">
+<ion-header #header class="ion-no-border">
 	<ion-toolbar>
-		<ion-title class="ion-text-left ion-padding ion-margin-bottom">
-			<h1>Account</h1>
-		</ion-title>
+		<ion-title><h3>Account</h3></ion-title>
+		<ion-title><h5>Ibrahim Sefer</h5></ion-title>
 	</ion-toolbar>
 </ion-header>
+<ion-content>
+	<ion-card class="ion-padding-horizontal">
+		<ion-grid>
+			<ion-row class="ion-align-items-center">
+				<ion-col size="8">
+					<ion-card-title>TE8123</ion-card-title>
+					<ion-card-subtitle>seferibrahim2@gmail.com</ion-card-subtitle>
+				</ion-col>
+				<ion-col size="4">
+					<img
+						src="https://images8.alphacoders.com/679/thumb-1920-679478.jpg"
+						class="ion-float-right"
+						style="height: 100px; width: 100px; border-radius: 50%"
+					/>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
+	</ion-card>
+	<hr />
+	<div class="ion-no-border ion-padding account-card-link" [routerLink]="['funds']">
+		<ion-text>Funds</ion-text>
+		<ion-icon name="cash-outline" class="ion-margin-end icon"></ion-icon>
+	</div>
+	<hr />
+	<div class="ion-no-border ion-padding account-card-link" [routerLink]="['profile']">
+		<ion-text>Profile</ion-text>
+		<ion-icon name="person-outline" class="ion-margin-end icon"></ion-icon>
+	</div>
+	<hr />
+	<div class="ion-no-border ion-padding account-card-link" [routerLink]="['settings']">
+		<ion-text>Settings</ion-text>
+		<ion-icon name="settings-outline" class="ion-margin-end icon"></ion-icon>
+	</div>
+	<hr />
+	<div class="ion-no-border ion-padding account-card-link" [routerLink]="['invite-friends']">
+		<ion-text>Invite friends</ion-text>
+		<ion-icon name="person-add-outline" class="ion-margin-end icon"></ion-icon>
+	</div>
+	<hr />
+	<div class="ion-no-border ion-padding account-card-link">
+		<ion-text>Logout</ion-text>
+		<ion-icon name="log-out-outline" class="ion-margin-end icon"></ion-icon>
+	</div>
+	<hr />
+</ion-content>

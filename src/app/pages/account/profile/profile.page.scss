@@ -1,0 +1,41 @@
+.profile-header{
+    flex-direction: row; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+
+    div{
+        display: flex; 
+        flex-direction: column; 
+        justify-content: start;
+    }
+    h5{
+        margin-bottom:0px;
+    }
+    p{
+        margin-top:5px;
+    }
+    img{
+        height: 100px; 
+        width: 100px; 
+        border-radius: 50%;
+    }
+}
+hr {
+    border-top: 1px solid rgba(167, 167, 167, 0.5) !important;
+    height: 1px !important;
+    width: 100% !important;
+    display: block !important;
+    font-size: 2em !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    margin-top:0;
+}
+.subtitle{
+    color:#737373;
+}
+@media(prefers-color-scheme: dark) {
+    .subtitle{
+        color:#949494;
+    }
+}

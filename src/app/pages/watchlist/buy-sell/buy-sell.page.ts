@@ -36,9 +36,14 @@ export class BuySellPage implements OnInit {
     const quantity = this.buySellForm.value.quantity
     const price = this.buySellForm.value.price
     const order = this.buySellForm.value.order
-    if(quantity != '' && order != '' && price != '' && quantity > 0 && price > 0){
-      console.log({formVal: this.buySellForm.value})
-      alert('check console log for values.')
+    if(quantity != '' && order != '' && price != '' && quantity > 0 ){
+      if(order != 'market' && price > 0){
+        console.log({formVal: this.buySellForm.value})
+        alert('check console log for values.')
+      } else {
+        console.log({formVal: this.buySellForm.value})
+        alert('check console log for values.')
+      }
     } else alert('err')
   }
 }
