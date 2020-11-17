@@ -10,7 +10,7 @@
 				<ion-label>Pending</ion-label>
 			</super-tab-button>
 			<super-tab-button>
-				<ion-label>Executed</ion-label>
+				<ion-label class="executed">Executed</ion-label><ion-badge color="primary">3</ion-badge>
 			</super-tab-button>
 			<super-tab-button>
 				<ion-label>GTT</ion-label>
@@ -22,6 +22,77 @@
 			</super-tab>
 			<super-tab>
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-list>
+					<ion-item class="ion-no-padding">
+						<ion-grid>
+							<ion-row>
+								<ion-col col=6>
+									<p>
+										<span class="buy">BUY</span> 
+										<span class="padding-strt">0/100</span>
+									</p>
+									<p>IOC</p>
+									<p><span>NSE</span></p>
+								</ion-col>
+								<ion-col col=6 class="ion-text-right">
+									<p>
+										<ion-icon name="time-outline"></ion-icon> 
+										<span class="padding-hor">11:02:34</span> 
+										<span class="cancelled">CANCELLED</span> 
+									</p>
+									<p>0.00</p>
+									<p><span>MIS SL-M</span></p>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
+					</ion-item>
+					<ion-item class="ion-no-padding">
+						<ion-grid>
+							<ion-row>
+								<ion-col col=6>
+									<p>
+										<span class="buy">BUY</span> 
+										<span class="padding-strt">100/100</span>
+									</p>
+									<p>IOC</p>
+									<p><span>NSE</span></p>
+								</ion-col>
+								<ion-col col=6 class="ion-text-right">
+									<p>
+										<ion-icon name="time-outline"></ion-icon> 
+										<span class="padding-hor">11:02:34</span> 
+										<span class="complete">COMPLETE</span> 
+									</p>
+									<p><span>Avg.</span> 78.60</p>
+									<p><span>MIS MARKET</span></p>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
+					</ion-item>
+					<ion-item class="ion-no-padding">
+						<ion-grid>
+							<ion-row>
+								<ion-col col=6>
+									<p>
+										<span class="sell">SELL</span> 
+										<span class="padding-strt">100/100</span>
+									</p>
+									<p>IOC</p>
+									<p><span>NSE</span></p>
+								</ion-col>
+								<ion-col col=6 class="ion-text-right">
+									<p>
+										<ion-icon name="time-outline"></ion-icon> 
+										<span class="padding-hor">11:02:34</span> 
+										<span class="complete">COMPLETE</span> 
+									</p>
+									<p><span>Avg.</span> 78.60</p>
+									<p><span>MIS MARKET</span></p>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
+					</ion-item>
+				</ion-list>
 			</super-tab>
 			<super-tab>
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
