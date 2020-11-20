@@ -27,6 +27,22 @@ const routes: Routes = [
         path: 'orders',
         loadChildren: () => import('../pages/orders/orders.module').then( m => m.OrdersPageModule)
       },
+      {
+        path: 'login',
+        loadChildren: () => import('../pages/login/login.module').then( m => m.LoginPageModule)
+      },
+      {
+        path: 'chart',
+        loadChildren: () => import('../pages/chart/chart.module').then( m => m.ChartPageModule)
+      },
+      {
+        path: 'leaderboard',
+        loadChildren: () => import('../pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
+      },
+      {
+        path: 'learning',
+        loadChildren: () => import('../pages/learning/learning.module').then( m => m.LearningPageModule)
+      },
     ],
   },
   {

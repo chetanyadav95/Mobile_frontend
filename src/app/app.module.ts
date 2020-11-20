@@ -20,7 +20,8 @@ import { BuySellModalPopupComponent } from './modals/buy-sell-modal-popup/buy-se
     AppComponent, 
     ModalWatchlistComponent,
     ModalWatchlistCeComponent,
-    BuySellModalPopupComponent
+    BuySellModalPopupComponent,
+    
   ],
   entryComponents: [],
   imports: [
@@ -30,6 +31,8 @@ import { BuySellModalPopupComponent } from './modals/buy-sell-modal-popup/buy-se
     SuperTabsModule.forRoot(),
     CommonModule,
     FormsModule,
+  ],
+  exports:[
   ],
   providers: [
     StatusBar,

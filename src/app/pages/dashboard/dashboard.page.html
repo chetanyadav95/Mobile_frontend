@@ -39,7 +39,7 @@
 		</ion-row>
 		<ion-row>
 			<ion-col size="6">
-				<ion-text color="danger" style="display: flex; flex-direction: row; align-items:baseline">
+				<ion-text color="danger" style="display: flex; flex-direction: row; align-items: baseline">
 					<h4 class="ion-margin-end">-15.44k</h4>
 					<span class="holdings-percentage">-55.85%</span>
 				</ion-text>
@@ -58,5 +58,48 @@
 			</ion-col>
 		</ion-row>
 		<hr />
+		<ion-row>
+			<ion-col>
+				<ion-title class="ion-no-padding">Leaderboard</ion-title>
+				<ion-list>
+					<ion-item class="ion-no-padding header-labels">
+						<ion-label class="ion-padding-start">Name</ion-label>
+						<ion-label slot="end" class="ion-text-right">Score</ion-label>
+					</ion-item>
+					<ion-item class="ion-no-padding" *ngFor="let user of leaderboard | slice:0:3">
+						<ion-label class="ion-padding-start">{{user.name}}</ion-label>
+						<ion-label slot="end" class="ion-text-right">{{user.score}}</ion-label>
+					</ion-item>
+					<ion-item class="ion-no-padding">
+						<ion-button (click)="navigateToLeaderboard()" color="tertiary" size="small" expand="block" fill="clear" class="see-more-button"
+							>See more</ion-button
+						>
+					</ion-item>
+				</ion-list>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col>
+				<ion-title class="ion-no-padding">Videos for learning</ion-title>
+				<ion-list>
+					<div *ngFor="let video of videos | slice:0:3" class="video-card">
+						<ion-label class="ion-padding-start"><h4 class="video-title">{{video.name}}</h4></ion-label>
+						<iframe
+							class="ion-padding"
+							width="fit-content"
+							height="fit-content"
+							[src]="sanitizeUrl(video.url)"
+							frameborder="0"
+							fullscreen="true"
+						></iframe>
+					</div>
+					<ion-item class="ion-no-padding">
+						<ion-button (click)="navigateToLearning()" color="tertiary" size="small" expand="block" fill="clear" class="see-more-button"
+							>See more</ion-button
+						>
+					</ion-item>
+				</ion-list>
+			</ion-col>
+		</ion-row>
 	</ion-grid>
 </ion-content>

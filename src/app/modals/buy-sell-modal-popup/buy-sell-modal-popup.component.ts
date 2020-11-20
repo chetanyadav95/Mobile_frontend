@@ -28,4 +28,8 @@ export class BuySellModalPopupComponent implements OnInit {
     this.modalCtrl.dismiss()
     this.router.navigate(['home','watchlist','buy-sell',this.company.id],{queryParams: {isBuy}})
   }
+  navigateToChart(){
+    this.modalCtrl.dismiss()
+    this.router.navigate(['home','chart'])
+  }
 }

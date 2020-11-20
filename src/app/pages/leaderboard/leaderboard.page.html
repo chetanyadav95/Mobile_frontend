@@ -1,0 +1,21 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-back-button defaultHref="home/dashboard"></ion-back-button>
+		</ion-buttons>
+		<ion-title>Leaderboard</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list>
+		<ion-item class="ion-no-padding header-labels">
+			<ion-label class="ion-padding-start">Name</ion-label>
+			<ion-label slot="end" class="ion-text-right">Score</ion-label>
+		</ion-item>
+		<ion-item class="ion-no-padding" *ngFor="let user of leaderboard">
+			<ion-label class="ion-padding-start">{{user.name}}</ion-label>
+			<ion-label slot="end" class="ion-text-right">{{user.score}}</ion-label>
+		</ion-item>
+	</ion-list>
+</ion-content>

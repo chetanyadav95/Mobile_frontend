@@ -9,6 +9,22 @@ const routes: Routes = [
   {
     path: 'buy-sell',
     loadChildren: () => import('./pages/watchlist/buy-sell/buy-sell.module').then( m => m.BuySellPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'chart',
+    loadChildren: () => import('./pages/chart/chart.module').then( m => m.ChartPageModule)
+  },
+  {
+    path: 'leaderboard',
+    loadChildren: () => import('./pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
+  },
+  {
+    path: 'learning',
+    loadChildren: () => import('./pages/learning/learning.module').then( m => m.LearningPageModule)
   }
 ];
 
