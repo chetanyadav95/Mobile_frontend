@@ -7,16 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
 
 import { DashboardPage } from './dashboard.page';
-import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { BrowserModule } from '@angular/platform-browser';
+import { LeaderboardPage } from './leaderboard/leaderboard.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    // BrowserModule,
     DashboardPageRoutingModule,
-    // SuperTabsModule
   ],
-  declarations: [DashboardPage]
+  declarations: [DashboardPage, LeaderboardPage]
 })
 export class DashboardPageModule {}

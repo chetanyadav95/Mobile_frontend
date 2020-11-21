@@ -20,8 +20,7 @@ import { BuySellModalPopupComponent } from './modals/buy-sell-modal-popup/buy-se
     AppComponent, 
     ModalWatchlistComponent,
     ModalWatchlistCeComponent,
-    BuySellModalPopupComponent,
-    
+    BuySellModalPopupComponent
   ],
   entryComponents: [],
   imports: [

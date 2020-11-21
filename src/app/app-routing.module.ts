@@ -19,17 +19,13 @@ const routes: Routes = [
     loadChildren: () => import('./pages/chart/chart.module').then( m => m.ChartPageModule)
   },
   {
-    path: 'leaderboard',
-    loadChildren: () => import('./pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
-  },
-  {
     path: 'learning',
     loadChildren: () => import('./pages/learning/learning.module').then( m => m.LearningPageModule)
   },
   {
     path: 'sign-up',
     loadChildren: () => import('./pages/sign-up/sign-up.module').then( m => m.SignUpPageModule)
-  }
+  },
 ];
 
 @NgModule({

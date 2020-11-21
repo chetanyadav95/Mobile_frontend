@@ -2,38 +2,81 @@ super-tab-button{
     display: flex;
     flex-direction: row; 
     align-items: center;
-    ion-label.executed{
-        padding-right: 7px;
+}
+.success{
+    color:#7fd300;
+    font-weight: 500;
+}
+.failure{
+    color:#d20000;
+    font-weight: 500;
+}
+table p{
+    padding-bottom: 0;
+    margin-bottom: 0%;
+    padding-left: 10px;
+}
+.column-centralise-text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+ion-card{
+    ion-card-content{
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center;
+    }
+}
+ion-list{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    ion-grid{
+        padding-right: 0;
+        ion-col{
+            padding-right: 0;
+        }
     }
 }
 ion-item{
+    .success{
+        color:#7fd300;
+        font-weight: 500;
+    }
+    .failure{
+        color:#d20000;
+        font-weight: 500;
+    }
     p{
         font-size: 13px;
     }
     span{
         color:#747474;
     }
-    span.sell{
-        background-color: rgba(255, 168, 168, 0.5);
-        color:rgb(255, 0, 0);
+    .sell{
+        background-color: #ffa8a880;
+        color:#ff0000;
         padding:3px 12px;
         border-radius: 5px;
     }
-    span.buy{
-        background-color: rgba(116, 116, 255, 0.5);
-        color:rgb(0, 8, 255);
+    .buy{
+        background-color: #7474ff80;
+        color:#0008ff;
         padding:3px 12px;
         border-radius: 5px;
     }
-    span.cancelled{
-        background-color: rgba(227, 227, 227, 0.5);
-        color:rgb(75, 75, 75);
+    .cancelled{
+        background-color: #e3e3e380;
+        color:#4b4b4b;
         padding:3px 12px;
         border-radius: 5px;
     }
-    span.complete{
-        background-color: rgba(77, 255, 77, 0.5);
-        color:rgb(7, 143, 0);
+    .complete{
+        background-color: #4dff4d80;
+        color:#078f00;
         padding:3px 12px;
         border-radius: 5px;
     }
@@ -49,21 +92,21 @@ ion-item{
         span{
             color:#949494;
         }
-        span.sell{
-            background-color: rgba(255, 116, 116, 0.35);
-            color:rgb(255, 170, 170);
+        .sell{
+            background-color: #ff747459;
+            color:#ffaaaa;
         }
-        span.buy{
-            background-color: rgba(116, 116, 255, 0.35);
-            color:rgb(170, 173, 255);
+        .buy{
+            background-color: #7474ff59;
+            color:#aaadff;
         }
-        span.cancelled{
-            background-color: rgba(106, 106, 106, 0.5);
-            color:rgb(255, 255, 255);
+        .cancelled{
+            background-color: #6a6a6a80;
+            color:#ffffff;
         }
-        span.complete{
-            background-color: rgba(31, 228, 31, 0.5);
-            color:rgb(77, 255, 67);
+        .complete{
+            background-color: #1fe41f80;
+            color:#4dff43;
         }
     }
 }

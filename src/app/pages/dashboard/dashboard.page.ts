@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { LeaderboardService } from 'src/app/services/leaderboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,39 +9,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-  videos = [
-    {
-      name: 'Video 1',
-      url: 'https://www.youtube.com/embed/1ozGKlOzEVc',
-    },
-    {
-      name: 'Video 2',
-      url: 'https://www.youtube.com/embed/vZv9-TWdBJM',
-    },
-  ]
-  leaderboard = [
-    {
-      name: 'Chetan',
-      score: '100'
-    },
-    {
-      name: 'Ibrahim',
-      score: '90'
-    },
-    {
-      name: 'Muatesim',
-      score: '80'
-    },
-    {
-      name: 'John',
-      score: '70'
-    },
-  ]
+  leaderboard
 
-  constructor(private sanitizer: DomSanitizer, private router: Router){
+  constructor(private sanitizer: DomSanitizer, private router: Router, private leaderboardService: LeaderboardService){
   }
 
   ngOnInit() {
+    this.leaderboard = this.leaderboardService.leaderboard
   }
   
   sanitizeUrl(url:string){
@@ -48,7 +23,7 @@ export class DashboardPage implements OnInit {
   }
 
   navigateToLeaderboard(){
-    this.router.navigate(['home','leaderboard'])
+    this.router.navigate(['home','dashboard','leaderboard'])
   }
 
   navigateToLearning(){

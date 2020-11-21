@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { LeaderboardService } from 'src/app/services/leaderboard.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -7,27 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LeaderboardPage implements OnInit {
 
-  leaderboard = [
-    {
-      name: 'Chetan',
-      score: '100'
-    },
-    {
-      name: 'Ibrahim',
-      score: '90'
-    },
-    {
-      name: 'Muatesim',
-      score: '80'
-    },
-    {
-      name: 'John',
-      score: '70'
-    },
-  ]
-  constructor() { }
+  leaderboard
+  constructor(private leaderboardService: LeaderboardService) { }
 
   ngOnInit() {
+    this.leaderboard = this.leaderboardService.leaderboard
   }
 
 }

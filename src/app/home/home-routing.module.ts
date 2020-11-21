@@ -20,10 +20,6 @@ const routes: Routes = [
         loadChildren: () => import('../pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
       },
       {
-        path: 'position',
-        loadChildren: () => import('../pages/position/position.module').then( m => m.PositionPageModule)
-      },
-      {
         path: 'orders',
         loadChildren: () => import('../pages/orders/orders.module').then( m => m.OrdersPageModule)
       },
@@ -38,10 +34,6 @@ const routes: Routes = [
       {
         path: 'chart',
         loadChildren: () => import('../pages/chart/chart.module').then( m => m.ChartPageModule)
-      },
-      {
-        path: 'leaderboard',
-        loadChildren: () => import('../pages/leaderboard/leaderboard.module').then( m => m.LeaderboardPageModule)
       },
       {
         path: 'learning',

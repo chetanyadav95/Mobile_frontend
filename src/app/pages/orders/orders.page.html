@@ -7,87 +7,72 @@
 	<super-tabs>
 		<super-tabs-toolbar slot="top" color="translucent">
 			<super-tab-button>
+				<ion-label>Position</ion-label>
+			</super-tab-button>
+			<super-tab-button>
+				<ion-label>Completed</ion-label>
+			</super-tab-button>
+			<super-tab-button>
 				<ion-label>Pending</ion-label>
-			</super-tab-button>
-			<super-tab-button>
-				<ion-label class="executed">Executed</ion-label><ion-badge color="primary">3</ion-badge>
-			</super-tab-button>
-			<super-tab-button>
-				<ion-label>GTT</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
 		<super-tabs-container>
 			<super-tab>
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
-			</super-tab>
-			<super-tab>
-				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-card>
+					<ion-card-content>
+						<ion-card-subtitle>Total P&L</ion-card-subtitle>
+						<ion-card-title [ngClass]="{'success': totalPandL > 0, 'failure': totalPandL < 0}">
+							{{totalPandL > 0 ? '+' : ''}}{{totalPandL}}
+						</ion-card-title>
+					</ion-card-content>
+				</ion-card>
 				<ion-list>
-					<ion-item class="ion-no-padding">
+					<ion-item class="ion-no-padding" *ngFor="let p of position">
 						<ion-grid>
 							<ion-row>
-								<ion-col col=6>
+								<ion-col col="6">
 									<p>
-										<span class="buy">BUY</span> 
-										<span class="padding-strt">0/100</span>
+										<span [ngClass]="{'buy': p.quantity > 0, 'sell': p.quantity < 0}">
+											{{p.code}}
+										</span>
 									</p>
-									<p>IOC</p>
-									<p><span>NSE</span></p>
+									<p>Price: {{p.price}}</p>
+									<p>Quantity: {{p.quantity}}</p>
 								</ion-col>
-								<ion-col col=6 class="ion-text-right">
-									<p>
-										<ion-icon name="time-outline"></ion-icon> 
-										<span class="padding-hor">11:02:34</span> 
-										<span class="cancelled">CANCELLED</span> 
-									</p>
-									<p>0.00</p>
-									<p><span>MIS SL-M</span></p>
-								</ion-col>
-							</ion-row>
-						</ion-grid>
-					</ion-item>
-					<ion-item class="ion-no-padding">
-						<ion-grid>
-							<ion-row>
-								<ion-col col=6>
-									<p>
-										<span class="buy">BUY</span> 
-										<span class="padding-strt">100/100</span>
-									</p>
-									<p>IOC</p>
-									<p><span>NSE</span></p>
-								</ion-col>
-								<ion-col col=6 class="ion-text-right">
-									<p>
-										<ion-icon name="time-outline"></ion-icon> 
-										<span class="padding-hor">11:02:34</span> 
-										<span class="complete">COMPLETE</span> 
-									</p>
-									<p><span>Avg.</span> 78.60</p>
-									<p><span>MIS MARKET</span></p>
-								</ion-col>
-							</ion-row>
-						</ion-grid>
-					</ion-item>
-					<ion-item class="ion-no-padding">
-						<ion-grid>
-							<ion-row>
-								<ion-col col=6>
-									<p>
-										<span class="sell">SELL</span> 
-										<span class="padding-strt">100/100</span>
-									</p>
-									<p>IOC</p>
-									<p><span>NSE</span></p>
-								</ion-col>
-								<ion-col col=6 class="ion-text-right">
-									<p>
-										<ion-icon name="time-outline"></ion-icon> 
-										<span class="padding-hor">11:02:34</span> 
-										<span class="complete">COMPLETE</span> 
-									</p>
-									<p><span>Avg.</span> 78.60</p>
-									<p><span>MIS MARKET</span></p>
+								<ion-col col="6" class="ion-text-right ion-no-padding">
+									<table class="ion-float-right">
+										<tbody>
+											<tr>
+												<td>
+													<p><strong>P&L</strong></p>
+												</td>
+												<td>
+													<p>
+														<span [ngClass]="{'success': p.pAndL > 0, 'failure':p.pAndL < 0}">
+															{{p.pAndL > 0 ? ' +' : ' '}}{{p.pAndL}}
+														</span>
+													</p>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<p><strong>LTP</strong></p>
+												</td>
+												<td>
+													<p>{{p.LTP}}</p>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<p><strong>SL</strong></p>
+												</td>
+												<td>
+													<p>{{p.SL}}</p>
+												</td>
+											</tr>
+										</tbody>
+									</table>
 								</ion-col>
 							</ion-row>
 						</ion-grid>
@@ -96,6 +81,60 @@
 			</super-tab>
 			<super-tab>
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-list>
+					<ion-item class="ion-no-padding" *ngFor="let c of completed">
+						<ion-grid>
+							<ion-row>
+								<ion-col col="6">
+									<p>
+										<span [ngClass]="{'buy': c.quantity > 0, 'sell': c.quantity < 0}">
+											{{c.code}}
+										</span>
+									</p>
+									<p>Price: {{c.price}}</p>
+									<p>Quantity: {{c.quantity}}</p>
+								</ion-col>
+								<ion-col col="6" class="ion-text-right">
+									<p>
+										<span [ngClass]="{'cancelled': c.status == 'CANCELLED', 'complete': c.status == 'COMPLETE'}">
+											{{c.status}}
+										</span>
+									</p>
+									<p>
+										<strong>P&L</strong>
+										<span [ngClass]="{'success': c.pAndL > 0, 'failure':c.pAndL < 0}">
+											{{c.pAndL > 0 ? ' +' : ' '}}{{c.pAndL}}
+										</span>
+									</p>
+									<p><strong>Exit Price</strong> {{c.exitPrice}}</p>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
+					</ion-item>
+				</ion-list>
+			</super-tab>
+			<super-tab>
+				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-list>
+					<ion-item class="ion-no-padding" *ngFor="let p of pending">
+						<ion-grid>
+							<ion-row>
+								<ion-col col="6">
+									<p>
+										<span [ngClass]="{'buy': p.quantity > 0, 'sell': p.quantity < 0}">
+											{{p.code}}
+										</span>
+									</p>
+									<p>Price: {{p.price}}</p>
+									<p>Quantity: {{p.quantity}}</p>
+								</ion-col>
+								<ion-col col="6" class="ion-text-right column-centralise-text">
+									<p><strong>LTP</strong> {{p.LTP}}</p>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
+					</ion-item>
+				</ion-list>
 			</super-tab>
 		</super-tabs-container>
 	</super-tabs>

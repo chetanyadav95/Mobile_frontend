@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
+    // BrowserModule,
     HomePageRoutingModule,
   ],
   declarations: [HomePage, ]
