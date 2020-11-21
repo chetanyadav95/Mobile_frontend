@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-icon name="logo-angular" slot="end" class="ion-padding-end"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form>
+    <ion-title class="ion-text-center ion-margin-vertical" color="warning"><h3>Welcome to Empuraan</h3></ion-title>
+    <ion-title class="ion-text-center ion-margin-vertical">Sign Up</ion-title>
+    <ion-grid>
+      <ion-row>
+        <ion-col col=6>
+          <ion-item class="ion-no-padding">
+            <ion-label position="floating">Name</ion-label>
+            <ion-input></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col=6>
+          <ion-item class="ion-no-padding">
+            <ion-label position="floating">Surname</ion-label>
+            <ion-input></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-no-padding">
+            <ion-label position="floating">Email or Phone Number</ion-label>
+            <ion-input></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-no-padding">
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-no-padding">
+            <ion-label position="floating">Confirm Password</ion-label>
+            <ion-input type="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button class="sign-up-button">Sign Up</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button color="tertiary" size="small" expand="block" fill="clear" class="ion-float-left" (click)="navigateToLogin()">
+            Already have an account?
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

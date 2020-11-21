@@ -12,12 +12,18 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
 export class BuySellPage implements OnInit {
   isBuy: boolean
   company: Company
+  availableBalance: number
+  approxMargin: number
+  capitalAtRisk: number
   @ViewChild('buySellForm') buySellForm: NgForm
   constructor(private route: ActivatedRoute, 
     private watchlistService: WatchlistService,
     private router: Router) { }
 
   ngOnInit() {
+    this.availableBalance = 100000
+    this.approxMargin = 2167
+    this.capitalAtRisk = this.approxMargin / this.availableBalance
     this.route.queryParams.subscribe(data => {
       data.isBuy == 'true' ? this.isBuy = true : this.isBuy = false
     })

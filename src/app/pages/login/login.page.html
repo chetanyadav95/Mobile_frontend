@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="home/watchlist"></ion-back-button>
+      <ion-back-button defaultHref="home/dashboard"></ion-back-button>
     </ion-buttons>
     <ion-icon name="logo-angular" slot="end" class="ion-padding-end"></ion-icon>
   </ion-toolbar>
@@ -12,18 +12,56 @@
     <ion-title class="ion-text-center ion-margin-vertical" color="warning"><h3>Welcome to Empuraan</h3></ion-title>
     <ion-title class="ion-text-center ion-margin-vertical">Login</ion-title>
 
-    <ion-item class="ion-margin">
-      <ion-label position="floating">E-mail</ion-label>
-      <ion-input type="email"></ion-input>
-    </ion-item>
-
-    <ion-item class="ion-margin">
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="password"></ion-input>
-    </ion-item>
-    <ion-button style="width: 100%; height: 80px;" class="ion-padding">Login</ion-button>
-    <ion-button color="tertiary" size="small" expand="block" fill="clear" class="ion-float-right">
-      Forgot password?
-    </ion-button>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">E-mail</ion-label>
+            <ion-input type="email"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button class="login-button">Login</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size=6>
+          <ion-button color="tertiary" size="small" fill="clear" (click)="navigateToSignup()">
+            New user?
+          </ion-button>
+        </ion-col>
+        <ion-col size=6>
+          <ion-button color="tertiary" size="small" fill="clear" class="ion-float-right">
+            Forgot password?
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <div class="or-line">
+            <hr>
+            <span>OR</span>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button class="login-button" color="danger">
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            Login with Google
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </form>
 </ion-content>

@@ -16,7 +16,7 @@ ion-card-subtitle{
     font-size:14px;
     color:#ababab;
 }
-ion-input{
+.card-input{
     border: 1px solid rgb(184, 184, 184, 0.69);
     color: black;
     padding: 11px 0;
@@ -79,9 +79,9 @@ ul{
     font-size:14px;
     z-index:90;
 }
-.radios label:hover {
-    background:#DDD;
-}
+// .radios label:hover {
+//     background:#DDD;
+// }
 hr {
     border-top: 1px solid rgba(167, 167, 167, 0.5) !important;
     height: 1px !important;
@@ -90,7 +90,6 @@ hr {
     font-size: 2em !important;
     opacity: 1 !important;
     visibility: visible !important;
-    margin-bottom:0;
 }
 .footer-button{
     display: flex;
@@ -107,5 +106,10 @@ ion-button.footer-button{
 @media (prefers-color-scheme: dark) {
     ion-input{
         color: white;
+    }
+
+    .disabled-input{
+        background-color:#484848;
+        color: #bdbdbd;
     }
 }
