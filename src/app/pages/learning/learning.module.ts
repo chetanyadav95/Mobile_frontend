@@ -6,6 +6,12 @@ import { IonicModule } from '@ionic/angular';
 
 import { LearningPageRoutingModule } from './learning-routing.module';
 
+import { SuperTabsModule } from '@ionic-super-tabs/angular';
+import { BlogsPage } from './blogs/blogs.page';
+import { DemoTradingPage } from './demo-trading/demo-trading.page';
+import { IntraDayPage } from './intra-day/intra-day.page';
+import { PositionalPage } from './positional/positional.page';
+import { TutorialsPage } from './tutorials/tutorials.page';
 import { LearningPage } from './learning.page';
 
 @NgModule({
@@ -13,8 +19,9 @@ import { LearningPage } from './learning.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    LearningPageRoutingModule
+    LearningPageRoutingModule,
+    SuperTabsModule
   ],
-  declarations: [LearningPage]
+  declarations: [LearningPage, BlogsPage,DemoTradingPage,IntraDayPage,PositionalPage,TutorialsPage]
 })
 export class LearningPageModule {}

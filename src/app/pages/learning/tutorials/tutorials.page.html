@@ -1,0 +1,15 @@
+<ion-content>
+  <ion-list>
+    <div *ngFor="let video of videos" class="video-card">
+      <ion-label class="ion-padding-start"><h4 class="video-title">{{video.name}}</h4></ion-label>
+      <iframe
+        class="ion-padding"
+        width="fit-content"
+        height="fit-content"
+        [src]="sanitizeUrl(video.url)"
+        frameborder="0"
+        fullscreen="false"
+      ></iframe>
+    </div>
+  </ion-list>
+</ion-content>

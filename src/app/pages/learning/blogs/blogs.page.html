@@ -1,0 +1,7 @@
+<ion-content>
+  <ion-list>
+    <ion-item class="ion-no-padding" *ngFor="let blog of blogs">
+      <a [href]="blog.url" class="blog-link">- {{blog.name}}</a>
+    </ion-item>
+  </ion-list>
+</ion-content>

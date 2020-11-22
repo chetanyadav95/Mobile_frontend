@@ -1,24 +1,34 @@
-<ion-header>
+<ion-header class="ion-no-border">
 	<ion-toolbar>
-		<ion-buttons slot="start">
-			<ion-back-button defaultHref="home/dashboard"></ion-back-button>
-		</ion-buttons>
 		<ion-title>Learning</ion-title>
 	</ion-toolbar>
 </ion-header>
 
 <ion-content>
-	<ion-list>
-		<div *ngFor="let video of videos" class="video-card">
-			<ion-label class="ion-padding-start"><h4 class="video-title">{{video.name}}</h4></ion-label>
-			<iframe
-				class="ion-padding"
-				width="fit-content"
-				height="fit-content"
-				[src]="sanitizeUrl(video.url)"
-				frameborder="0"
-				fullscreen="false"
-			></iframe>
-		</div>
-	</ion-list>
+	<super-tabs>
+		<super-tabs-toolbar slot="top" color="translucent" scrollable="true" scrollable-padding="false">
+			<super-tab-button><ion-label>Tutorials</ion-label></super-tab-button>
+			<super-tab-button><ion-label>Blogs</ion-label></super-tab-button>
+			<super-tab-button><ion-label>Intra-day</ion-label></super-tab-button>
+			<super-tab-button><ion-label>Positional</ion-label></super-tab-button>
+			<super-tab-button><ion-label>Demo-trading</ion-label></super-tab-button>
+		</super-tabs-toolbar>
+		<super-tabs-container>
+			<super-tab>
+				<app-tutorials></app-tutorials>
+			</super-tab>
+			<super-tab>
+				<app-blogs></app-blogs>
+			</super-tab>
+			<super-tab>
+				<app-intra-day></app-intra-day>
+			</super-tab>
+			<super-tab>
+				<app-positional></app-positional>
+			</super-tab>
+			<super-tab>
+				<app-demo-trading></app-demo-trading>
+			</super-tab>
+		</super-tabs-container>
+	</super-tabs>
 </ion-content>

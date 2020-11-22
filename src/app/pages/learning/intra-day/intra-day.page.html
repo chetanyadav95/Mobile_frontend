@@ -1,0 +1,38 @@
+<ion-content>
+	<ion-grid>
+		<ion-row>
+			<ion-col>
+				<ion-searchbar class="ion-no-padding" showCancelButton="focus"></ion-searchbar>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col>
+				<ion-item class="ion-no-padding">
+					<ion-label position="floating">Post</ion-label>
+					<ion-input></ion-input>
+				</ion-item>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col>
+				<ion-item class="ion-no-padding">
+					<ion-label position="floating">Share Name</ion-label>
+					<ion-input></ion-input>
+				</ion-item>
+			</ion-col>
+		</ion-row>
+		<ion-row>
+			<ion-col size="6"> </ion-col>
+			<ion-col size="6">
+				<ion-button class="post-button">Post</ion-button>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+	<ion-card *ngFor="let intraDay of intraDayPosts">
+		<ion-card-header><h5>{{intraDay.name}}</h5></ion-card-header>
+		<ion-card-content>
+			<ion-img [src]="intraDay.imgURL" class="ion-margin-bottom"></ion-img>
+			<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>
+		</ion-card-content>
+	</ion-card>
+</ion-content>
