@@ -58,7 +58,7 @@ and here you will select the _APK_ option. <br>
 
 Then you will see a bunch of form inputs, so you need to go ahead and fill them all out.<br>
 
-After filling the up, click on Next.
+After filling them up, click on Next.
 
 Now you have two more options before finishing it all up and that is to choose between <br>
 _release_ or _debug_.
