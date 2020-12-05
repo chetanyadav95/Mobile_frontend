@@ -51,4 +51,24 @@ BECAUSE IT IS REFERRING TO THE ALREADY PERFECTLY WORKING GRADLE SCRIPTS GENERATE
 
 ### Second step - Generating an APK in Android Studio for Android devices
 
+In Android Studio, in the _Build_ tab, click on _Generate Signed Bundle / APK..._
+
+It will open up a window making you choose between two radio points, <br>
+and here you will select the _APK_ option. <br>
+
+Then you will see a bunch of form inputs, so you need to go ahead and fill them all out.<br>
+
+After filling the up, click on Next.
+
+Now you have two more options before finishing it all up and that is to choose between <br>
+_release_ or _debug_.
+
+Select release, then tick both of the checkboxes before clicking on Finish.
+
+It will then proceed to build the APK file for you.
+
+The APK file should be generated in the same file the Android Studio is reading the scripts from.
+To be more specific, the filepath should look something like this:
+
+android -> app -> build -> release -> APP.apk
 
