@@ -46,9 +46,6 @@ And last but not least, we run ```npx cap open android```. <br>
 Now if you have Android Studio installed on your computer, it will open it up for you. <br>
 If not, go and install Android studio and try this line again.
 
-> **IF ANDROID STUDIO TELLS YOU TO UPDATE SOME GRADLE SCRIPTS, DO NOT UPDATE THEM, <br>
-BECAUSE IT IS REFERRING TO THE ALREADY PERFECTLY WORKING GRADLE SCRIPTS GENERATED IN VSCODE!!!**
-
 ### Second step - Generating an APK in Android Studio for Android devices
 
 In Android Studio, in the _Build_ tab, click on _Generate Signed Bundle / APK..._
