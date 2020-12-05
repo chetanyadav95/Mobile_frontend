@@ -21,8 +21,11 @@ The app should be running on the browser at [localhost:8100](http://localhost:81
 > **BEWARE!** If for some reason it none of these work, and you're a macOS user, 
 > try putting _sudo_ in front of them.
 
-* Moving on, the next step is to run this ```sudo ionic build cordova android``` in the terminal. <br>
+* Moving on, the next step is to run this ```ionic build cordova android``` in the terminal. <br>
 Notice ```android``` in the line. We are putting it there because we want android. Makes sense.
+
+* Now the next thing is to run this line in the terminal: <br>
+```ionic cordova platform add android```
 
 * The next step is to initialize our app by the following line in terminal: <br>
 
@@ -45,3 +48,7 @@ If not, go and install Android studio and try this line again.
 
 > **IF ANDROID STUDIO TELLS YOU TO UPDATE SOME GRADLE SCRIPTS, DO NOT UPDATE THEM, <br>
 BECAUSE IT IS REFERRING TO THE ALREADY PERFECTLY WORKING GRADLE SCRIPTS GENERATED IN VSCODE!!!**
+
+### Second step - Generating an APK in Android Studio for Android devices
+
+
