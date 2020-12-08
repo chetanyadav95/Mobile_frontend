@@ -69,3 +69,26 @@ To be more specific, the filepath should look something like this:
 
 android -> app -> build -> release -> APP.apk
 
+## How to generate the IOS IPK
+
+In VSCode, in Terminal, type: <br>
+```npx cap init [appName] [appId]```
+
+where the `[appName]` should be the actual name of the app, for eg. "tradingApp", <br>
+and the `[appId]` is the domain identifier of your app `(ex: com.tradingApp.app)`.
+
+The next thing to do is to run ```ionic build``` in the terminal. This generates <br>
+a ```www``` file, so don't touch it.
+
+The next thing is to type, in the terminal: <br>
+```npx cap add ios```.
+
+After that, we type in: <br>
+```npx cap open ios```.
+
+Now this line will work only if you have XCode installed, meaning that if you don't
+have XCode installed (which is only available on macOS devices), this line is pretty
+much useless.
+
+But you have the _ios_ file which you can open in other IOS code editors, such as
+_Xamarin_.
