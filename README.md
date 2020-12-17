@@ -10,6 +10,8 @@ The app should be running on the browser at [localhost:8100](http://localhost:81
 
 ### First step - generate an Android file
 
+#### If this is your first time do these first steps, if not, skip:
+
 Run this before doing anything:
 
 ```npm install @capacitor/core @capacitor/cli```
