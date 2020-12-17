@@ -21,12 +21,6 @@ Then we need to enable the capacitor by running this in the terminal:
 > **BEWARE!** If for some reason it none of these work, and you're a macOS user, 
 > try putting _sudo_ in front of them.
 
-Moving on, the next step is to run this ```ionic build cordova android``` in the terminal. <br>
-Notice ```android``` in the line. We are putting it there because we want android. Makes sense.
-
-Now the next thing is to run this line in the terminal: <br>
-```ionic cordova platform add android```
-
 The next step is to initialize our app by the following line in terminal: <br>
 
 ```npx cap init [appName] [appId]```
@@ -41,6 +35,9 @@ a ```www``` file, so don't touch it.
 
 Going forward, the next thing to do is to write ```npx cap add android``` <br>
 and this will generate the native android file ready to be used in Android Studio for eg.
+
+> If you made some changes, and you don't want to entirely rebuild the android file <br>
+> just type in ```npx cap sync android```.
 
 And last but not least, we run ```npx cap open android```. <br>
 Now if you have Android Studio installed on your computer, it will open it up for you. <br>
