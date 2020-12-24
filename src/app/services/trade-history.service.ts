@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { BaseService } from './base.service';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TradeHistoryService {
 
-  constructor(private http: Http, private baseService: BaseService) { }
-  // baseUrl = 'https://min-api.cryptocompare.com';
-  baseUrl = 'https://empuraan.com/';
+  constructor(private baseService: BaseService, private http: HttpClient) { }
+
+  apiUrl = environment.apiUrl + 'stocks/history/'
   handleError(error : Response) {
       console.error(error);
       return throwError(error);
@@ -27,10 +28,10 @@ export class TradeHistoryService {
 					toTs:  to ? to : '',
 					limit: limit ? limit : 2000
         }
-const mockUrl = 'api/v1/stocks/history/5fe2f69dc47d3374729430fe';
+const stockId = '5fe2f69dc47d3374729430fe';
     // return this.baseService.getLocalMockData(mockUrl).pipe(
         // return  this.http.get(`${this.baseUrl}${url}`,{params:qs}).pipe(
-        return this.baseService.getData(`${this.baseUrl}${mockUrl}`, {}).pipe(
+        return this.http.get(`${this.apiUrl}${stockId}`).pipe(
           map(res => {
             // return res.json();
             return res;

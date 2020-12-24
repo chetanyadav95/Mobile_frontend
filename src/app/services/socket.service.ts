@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { io } from 'socket.io-client';
+import * as io from 'socket.io-client'
+import { environment } from 'src/environments/environment';
 
 const SERVER_URL = 'wss://streamer.cryptocompare.com';
 
@@ -10,7 +11,7 @@ export class SocketService {
   private socket;
   private _subscriptions=[];
   constructor() { 
-    this.socket = io(SERVER_URL);
+    this.socket = io(environment.socketUrl);
     this.socket.on('connect', () => {
       console.log('=====Socket connected=======')
     })

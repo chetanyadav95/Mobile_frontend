@@ -1,7 +1,7 @@
-import { Order } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/charting_library/charting_library';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Completed } from 'src/app/models/completed.model';
+import { Order } from 'src/app/models/order.model';
 import { Pending } from 'src/app/models/pending.model';
 import { Position } from 'src/app/models/position.model';
 import { OrderService } from 'src/app/services/order.service';
