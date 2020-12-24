@@ -164,21 +164,18 @@ updateStoredImages(name) {
         icon: 'camera',
         handler: () => {
           // this.accessCamera()
-          console.log('Camera clicked');
         }
       }, {
         text: 'Gallery',
         icon: 'image',
         handler: () => {
           // this.accessGallery()
-          console.log('Gallery clicked');
         }
       }, {
         text: 'Cancel',
         icon: 'close',
         role: 'cancel',
         handler: () => {
-          console.log('Cancel clicked');
         }
       }]
     });

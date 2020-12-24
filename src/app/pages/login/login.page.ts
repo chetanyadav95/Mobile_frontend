@@ -19,7 +19,6 @@ export class LoginPage implements OnInit {
 
   login(form: NgForm){
     this.userService.logIn(form.value).subscribe((res:any) => {
-      console.log(res)
       localStorage.setItem('token', res.jwt)
       this.userService.decodedToken = res.jwt
       let user: User = {
@@ -36,7 +35,7 @@ export class LoginPage implements OnInit {
         user.balance.openBal = parseFloat(res.account.currentBalance)
         user.balance.currency = res.account.currency
       })
-      this.userService.user = user
+      this.userService.user.next(user)
       form.resetForm()
       this.router.navigate(['home','dashboard'])
       this.userService.checkIfIsOnLoginOrSignUpPage('/home/dashboard')

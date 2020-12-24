@@ -35,6 +35,21 @@
     },
 
     /***/
+    1:
+    /*!********************!*\
+      !*** ws (ignored) ***!
+      \********************/
+
+    /*! no static exports found */
+
+    /***/
+    function _(module, exports) {
+      /* (ignored) */
+
+      /***/
+    },
+
+    /***/
     "1eeg":
     /*!********************************************!*\
       !*** ./src/app/guards/auth-guard.guard.ts ***!
@@ -89,10 +104,20 @@
         _createClass(AuthGuard, [{
           key: "canActivate",
           value: function canActivate(next, state) {
-            if (!this.userService.isLoggedIn) {
-              this.router.navigate(['home', 'login']);
-              return false;
-            } else return true;
+            var _this = this;
+
+            var user;
+            var b;
+            this.userService.user.subscribe(function (u) {
+              user = u;
+
+              if (user == null || user == undefined) {
+                _this.router.navigate(['home', 'login']);
+
+                b = false;
+              } else b = true;
+            });
+            return b;
           }
         }]);
 
@@ -187,8 +212,14 @@
         _createClass(ModalWatchlistCeComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.watchlistName = this.watchlistService.getWatchlist(this.selectedWatchlist).name;
-            this.companies = this.watchlistService.getWatchlist(this.selectedWatchlist).companies;
+            var _this2 = this;
+
+            this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
+              _this2.watchlistName = w.name;
+            });
+            this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
+              _this2.companies = w.stockIds;
+            });
           }
         }, {
           key: "dismissModal",
@@ -200,13 +231,13 @@
           value: function onEditWatchlist() {
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
-              console.log(this.watchlistName);
               this.watchlistService.editWatchlist(this.selectedWatchlist, this.watchlistName);
             }
           }
         }, {
           key: "drop",
           value: function drop(event) {
+            //needs to happen in backend
             Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_6__["moveItemInArray"])(this.companies, event.previousIndex, event.currentIndex);
           }
         }]);
@@ -297,6 +328,150 @@
     },
 
     /***/
+    "8hSh":
+    /*!*******************************************!*\
+      !*** ./src/app/services/stock.service.ts ***!
+      \*******************************************/
+
+    /*! exports provided: StockService */
+
+    /***/
+    function hSh(module, __webpack_exports__, __webpack_require__) {
+      "use strict";
+
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "StockService", function () {
+        return StockService;
+      });
+      /* harmony import */
+
+
+      var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! tslib */
+      "mrSG");
+      /* harmony import */
+
+
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! @angular/common/http */
+      "tk/3");
+      /* harmony import */
+
+
+      var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! @angular/core */
+      "fXoL");
+      /* harmony import */
+
+
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! src/environments/environment */
+      "AytR");
+      /* harmony import */
+
+
+      var socket_io_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      /*! socket.io-client */
+      "gFX4");
+      /* harmony import */
+
+
+      var socket_io_client__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_4__);
+      /* harmony import */
+
+
+      var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      /*! rxjs */
+      "qCKp");
+
+      var StockService = /*#__PURE__*/function () {
+        function StockService(http) {
+          _classCallCheck(this, StockService);
+
+          this.http = http;
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "stocks/order/";
+          this.apiGetStock = src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "stocks/";
+          this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4__(src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].socketUrl);
+          console.log('socket', this.socket);
+        }
+
+        _createClass(StockService, [{
+          key: "listen",
+          value: function listen(eventName) {
+            var _this3 = this;
+
+            return new rxjs__WEBPACK_IMPORTED_MODULE_5__["Observable"](function (subscriber) {
+              _this3.socket.on(eventName, function (data) {
+                subscriber.next(data);
+              });
+            });
+          }
+        }, {
+          key: "emit",
+          value: function emit(eventName, data) {
+            this.socket.emit(eventName, data);
+          }
+        }, {
+          key: "getStock",
+          value: function getStock(id) {
+            return this.http.get(this.apiGetStock + id);
+          }
+        }, {
+          key: "getStocks",
+          value: function getStocks() {
+            return this.http.get(this.apiGetStock);
+          }
+        }, {
+          key: "initStocks",
+          value: function initStocks() {
+            return this.http.post(this.apiUrl + 'init', {});
+          }
+        }, {
+          key: "orderStockLimitBuy",
+          value: function orderStockLimitBuy(input) {
+            return this.http.post(this.apiUrl + 'limit/buy', input);
+          }
+        }, {
+          key: "orderStockLimitSell",
+          value: function orderStockLimitSell(input) {
+            return this.http.post(this.apiUrl + 'limit/sell', input);
+          }
+        }, {
+          key: "orderStockMarketBuy",
+          value: function orderStockMarketBuy(input) {
+            return this.http.post(this.apiUrl + 'market/buy', input);
+          }
+        }, {
+          key: "orderStockMarketSell",
+          value: function orderStockMarketSell(input) {
+            return this.http.post(this.apiUrl + 'market/sell', input);
+          }
+        }, {
+          key: "createNewStocks",
+          value: function createNewStocks(input) {
+            return this.http.post(this.apiUrl + 'new', input);
+          }
+        }]);
+
+        return StockService;
+      }();
+
+      StockService.ctorParameters = function () {
+        return [{
+          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]
+        }];
+      };
+
+      StockService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
+        providedIn: 'root'
+      })], StockService);
+      /***/
+    },
+
+    /***/
     "8jmp":
     /*!*************************************************************************!*\
       !*** ./src/app/modals/modal-edit-order/modal-edit-order.component.scss ***!
@@ -312,7 +487,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL21vZGFscy9tb2RhbC1lZGl0LW9yZGVyL21vZGFsLWVkaXQtb3JkZXIuY29tcG9uZW50LnNjc3MifQ== */";
+      __webpack_exports__["default"] = "ion-card-header {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between;\n  align-items: center;\n}\n\nion-card-title {\n  font-size: 15px;\n}\n\nion-card-subtitle {\n  margin-top: 0;\n  font-size: 14px;\n  color: #ababab;\n}\n\n.card-input {\n  border: 1px solid rgba(184, 184, 184, 0.69);\n  color: black;\n  padding: 11px 0;\n  font-size: 18px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kYWxzL21vZGFsLWVkaXQtb3JkZXIvbW9kYWwtZWRpdC1vcmRlci5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGFBQUE7RUFDQSxtQkFBQTtFQUNBLDhCQUFBO0VBQ0EsbUJBQUE7QUFDSjs7QUFDQTtFQUNJLGVBQUE7QUFFSjs7QUFBQTtFQUNJLGFBQUE7RUFDQSxlQUFBO0VBQ0EsY0FBQTtBQUdKOztBQURBO0VBQ0ksMkNBQUE7RUFDQSxZQUFBO0VBQ0EsZUFBQTtFQUNBLGVBQUE7QUFJSiIsImZpbGUiOiJzcmMvYXBwL21vZGFscy9tb2RhbC1lZGl0LW9yZGVyL21vZGFsLWVkaXQtb3JkZXIuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJpb24tY2FyZC1oZWFkZXJ7XG4gICAgZGlzcGxheTpmbGV4O1xuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xuICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5pb24tY2FyZC10aXRsZXtcbiAgICBmb250LXNpemU6IDE1cHg7XG59XG5pb24tY2FyZC1zdWJ0aXRsZXtcbiAgICBtYXJnaW4tdG9wOiAwO1xuICAgIGZvbnQtc2l6ZToxNHB4O1xuICAgIGNvbG9yOiNhYmFiYWI7XG59XG4uY2FyZC1pbnB1dHtcbiAgICBib3JkZXI6IDFweCBzb2xpZCByZ2IoMTg0LCAxODQsIDE4NCwgMC42OSk7XG4gICAgY29sb3I6IGJsYWNrO1xuICAgIHBhZGRpbmc6IDExcHggMDtcbiAgICBmb250LXNpemU6MThweDtcbn0iXX0= */";
       /***/
     },
 
@@ -332,7 +507,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Create watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t\t<ion-item class=\"ion-margin-horizontal\">\n\t\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t\t</ion-item>\n\t\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"createWatchlistForm.invalid && createWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t\t<ion-button class=\"ion-margin\" expand=\"block\" (click)=\"onCreateWatchlist()\">Create watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\">\n\t\t<div class=\"drag-box\" *ngFor=\"let watchlist of watchlists\" cdkDrag>\n\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t<span>{{ watchlist.name }}</span>\n\t\t</div>\n\t</div>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Create watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-item class=\"ion-margin-horizontal\">\n\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t</ion-item>\n\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"createWatchlistForm.invalid && createWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t<ion-button class=\"ion-margin\" expand=\"block\" (click)=\"onCreateWatchlist()\">Create watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\" *ngIf=\"watchlists.length > 0\">\n\t\t<div class=\"drag-box\" *ngFor=\"let watchlist of watchlists\" cdkDrag>\n\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t<span>{{ watchlist.name }}</span>\n\t\t</div>\n\t</div>\n</ion-content>\n";
       /***/
     },
 
@@ -380,7 +555,9 @@
 
 
       var environment = {
-        production: false
+        production: false,
+        apiUrl: 'https://empuraan.com/api/v1/',
+        socketUrl: 'http://socket.empuraan.com'
       };
       /*
        * For easier debugging in development mode, you can import the following file
@@ -410,7 +587,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Search Companies</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content vertical=\"top\">\n\t<ion-searchbar showCancelButton=\"focus\" (ionChange)=\"filter($event.detail.value)\"></ion-searchbar>\n\t<ion-list>\n\t\t<ion-item *ngFor=\"let company of filteredData || companies\">\n\t\t\t<ion-label>{{ company.name }}</ion-label>\n\t\t\t<ion-checkbox\n\t\t\t\tslot=\"end\"\n\t\t\t\t[checked]=\"seeIfChecked(company)\"\n\t\t\t\t(ionChange)=\"onSelect($event.detail.checked, company)\"\n\t\t\t></ion-checkbox>\n\t\t</ion-item>\n\t</ion-list>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Search Companies</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content vertical=\"top\">\n\t<ion-searchbar showCancelButton=\"focus\" (ionChange)=\"filter($event.detail.value)\"></ion-searchbar>\n\t<ion-list>\n\t\t<ion-item *ngFor=\"let stock of filteredData || stocks\">\n\t\t\t<ion-label>{{ stock.companyName }}</ion-label>\n\t\t\t<ion-checkbox\n\t\t\t\tslot=\"end\"\n\t\t\t\t[checked]=\"seeIfChecked(stock)\"\n\t\t\t\t(ionChange)=\"onSelect($event.detail.checked, stock)\"\n\t\t\t></ion-checkbox>\n\t\t</ion-item>\n\t</ion-list>\n</ion-content>\n";
       /***/
     },
 
@@ -520,7 +697,13 @@
 
         _createClass(ModalChangePasswordComponent, [{
           key: "ngOnInit",
-          value: function ngOnInit() {}
+          value: function ngOnInit() {
+            var _this4 = this;
+
+            this.userService.user.subscribe(function (u) {
+              return _this4.user = u;
+            });
+          }
         }, {
           key: "dismissModal",
           value: function dismissModal() {
@@ -529,10 +712,13 @@
         }, {
           key: "changePassword",
           value: function changePassword(input) {
-            if (this.userService.changePassword(input.newPassword, input.confirmPassword) != false) {
-              this.userService.changePassword(input.newPassword, input.confirmPassword);
-              this.dismissModal();
-            } else this.passwordsDontMatch = false;
+            if (input.newPassword == input.confirmPassword) {
+              this.userService.changePassword(this.user.email, input.newPassword).subscribe(function (res) {});
+            } // if(this.userService.changePassword(input.newPassword, input.confirmPassword)) {
+            //   this.userService.changePassword(input.newPassword, input.confirmPassword)
+            //   this.dismissModal() 
+            // } else this.passwordsDontMatch = false
+
           }
         }]);
 
@@ -629,21 +815,18 @@
           }
         }, {
           key: "savePosition",
-          value: function savePosition() {
-            this.position != null && this.orderService.savePosition(this.position);
-            this.dismissModal();
+          value: function savePosition() {// (this.position != null) && this.orderService.savePosition(this.position)
+            // this.dismissModal()
           }
         }, {
           key: "sellPosition",
-          value: function sellPosition() {
-            this.position != null && this.orderService.sellPosition(this.position);
-            this.dismissModal();
+          value: function sellPosition() {// (this.position != null) && this.orderService.sellPosition(this.position)
+            // this.dismissModal()
           }
         }, {
           key: "savePending",
-          value: function savePending() {
-            this.pending != null && this.orderService.savePending(this.pending);
-            this.dismissModal();
+          value: function savePending() {// (this.pending != null) && this.orderService.savePending(this.pending)
+            // this.dismissModal()
           }
         }]);
 
@@ -726,23 +909,36 @@
       /* harmony import */
 
 
-      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      /*! src/app/services/stock.service */
+      "8hSh");
+      /* harmony import */
+
+
+      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! src/app/services/watchlist.service */
       "Tl0h");
 
       var ModalWatchlistComponent = /*#__PURE__*/function () {
-        function ModalWatchlistComponent(modalCtrl, watchlistService) {
+        function ModalWatchlistComponent(modalCtrl, watchlistService, stockService) {
           _classCallCheck(this, ModalWatchlistComponent);
 
           this.modalCtrl = modalCtrl;
           this.watchlistService = watchlistService;
+          this.stockService = stockService;
         }
 
         _createClass(ModalWatchlistComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.companies = this.watchlistService.companies;
-            this.sWatchlist = this.watchlistService.getWatchlist(this.selectedWatchlist);
+            var _this5 = this;
+
+            this.stockService.getStocks().subscribe(function (s) {
+              _this5.stocks = s.data;
+            });
+            this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
+              _this5.sWatchlist = w.data;
+            });
           }
         }, {
           key: "dismissModal",
@@ -751,21 +947,23 @@
           }
         }, {
           key: "onSelect",
-          value: function onSelect(event, company) {
-            if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, company);else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, company);
+          value: function onSelect(event, stock) {
+            if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(function (res) {
+              return console.log(res);
+            });else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock);
           }
         }, {
           key: "filter",
           value: function filter(filterValue) {
-            this.filteredData = this.companies.filter(function (company) {
-              return company.name.toLowerCase().includes(filterValue.toLowerCase());
+            this.filteredData = this.stocks.filter(function (stock) {
+              return stock.name.toLowerCase().includes(filterValue.toLowerCase());
             });
           }
         }, {
           key: "seeIfChecked",
-          value: function seeIfChecked(company) {
-            if (this.sWatchlist.companies != undefined || this.sWatchlist.companies != null) return this.sWatchlist.companies.find(function (c) {
-              return c.name == company.name;
+          value: function seeIfChecked(stock) {
+            if (this.sWatchlist.stockIds.length > 0) return this.sWatchlist.stockIds.find(function (s) {
+              return s.id == stock._id;
             });else false;
           }
         }]);
@@ -777,7 +975,9 @@
         return [{
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"]
         }, {
-          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_5__["WatchlistService"]
+          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__["WatchlistService"]
+        }, {
+          type: src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_5__["StockService"]
         }];
       };
 
@@ -934,26 +1134,25 @@
         }, {
           key: "connectionLostEvent",
           value: function connectionLostEvent() {
-            var _this = this;
+            var _this6 = this;
 
             this.networkListener = Network.addListener('networkStatusChange', function (status) {
-              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this6, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
-                        console.log('Network status changed', status);
                         this.networkStatus = status;
 
                         if (this.networkStatus.connected) {
-                          _context2.next = 5;
+                          _context2.next = 4;
                           break;
                         }
 
-                        _context2.next = 5;
+                        _context2.next = 4;
                         return this.connectionLostNotification();
 
-                      case 5:
+                      case 4:
                       case "end":
                         return _context2.stop();
                     }
@@ -965,10 +1164,10 @@
         }, {
           key: "backButtonEvent",
           value: function backButtonEvent() {
-            var _this2 = this;
+            var _this7 = this;
 
             this.platform.backButton.subscribeWithPriority(10, function () {
-              if (_this2.router.url == "/home/dashboard") _this2.backButtonAlert();else _this2.location.back();
+              if (_this7.router.url == "/home/dashboard") _this7.backButtonAlert();else _this7.location.back();
             });
           }
         }, {
@@ -1035,12 +1234,12 @@
         }, {
           key: "initializeApp",
           value: function initializeApp() {
-            var _this3 = this;
+            var _this8 = this;
 
             this.platform.ready().then(function () {
-              _this3.statusBar.styleDefault();
+              _this8.statusBar.styleDefault();
 
-              _this3.splashScreen.hide();
+              _this8.splashScreen.hide();
             });
           }
         }]);
@@ -1096,7 +1295,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>{{ position != null ? \"Edit Position\" : \"Edit Pending\" }}</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n  <ion-title class=\"ion-padding\" *ngIf=\"position != null\">{{position.name}}</ion-title>\n  <ion-title class=\"ion-padding\" *ngIf=\"pending != null\">{{pending.name}}</ion-title>\n\t<ion-grid>\n\t\t<ion-row *ngIf=\"position != null\">\n\t\t\t<ion-col>\n\t\t\t\t<ion-item>\n\t\t\t\t\t<ion-label>Stop-Loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.SL\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t\t<ion-item>\n\t\t\t\t\t<ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.LTP\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row *ngIf=\"pending != null\">\n\t\t\t<ion-col>\n\t\t\t\t<ion-item>\n\t\t\t\t\t<ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.LTP\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n<ion-footer class=\"ion-padding\">\n  <div *ngIf=\"position != null\">\n    <ion-button expand=\"block\" color=\"success\" (click)=\"savePosition()\">\n      <ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n      Save\n    </ion-button>\n    <ion-button expand=\"block\" color=\"danger\" (click)=\"sellPosition()\">\n      <ion-icon name=\"trash-outline\" style=\"padding-right: 5px\"></ion-icon>\n      Sell\n    </ion-button>\n  </div>\n  <div *ngIf=\"pending != null\">\n    <ion-button expand=\"block\" color=\"success\" (click)=\"savePending()\">\n      <ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n      Save\n    </ion-button>\n  </div>\n</ion-footer>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>{{ position != null ? \"Edit Position\" : \"Edit Pending\" }}</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-title class=\"ion-padding\" *ngIf=\"position != null\">{{ position.name }}</ion-title>\n\t<ion-title class=\"ion-padding\" *ngIf=\"pending != null\">{{ pending.name }}</ion-title>\n\t<ion-grid>\n\t\t<ion-row *ngIf=\"position != null\">\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-card-header>\n\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t</ion-card-header>\n\t\t\t\t<ion-card-content>\n\t\t\t\t\t<ion-input\n\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\tname=\"stopLoss\"\n\t\t\t\t\t\t[(ngModel)]=\"position.stoploss\"\n\t\t\t\t\t\trequired\n\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t></ion-input>\n\t\t\t\t</ion-card-content>\n\t\t\t\t<!-- <ion-label>Stop-Loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.stoploss\"></ion-input> -->\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-card-header>\n\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t</ion-card-header>\n\t\t\t\t<ion-card-content>\n\t\t\t\t\t<ion-input\n\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\tname=\"target\"\n\t\t\t\t\t\t[(ngModel)]=\"position.target\"\n\t\t\t\t\t\trequired\n\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t></ion-input>\n\t\t\t\t</ion-card-content>\n\t\t\t\t<!-- <ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.target\"></ion-input> -->\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row *ngIf=\"pending != null\">\n\t\t\t<ion-col>\n\t\t\t\t<div *ngIf=\"!pending.isStopLoss\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\tname=\"target\"\n\t\t\t\t\t\t\t[(ngModel)]=\"pending.target\"\n\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t<!-- <ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.target\"></ion-input> -->\n\t\t\t\t</div>\n\t\t\t\t<div *ngIf=\"pending.isStopLoss\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\tname=\"stopLoss\"\n\t\t\t\t\t\t\t[(ngModel)]=\"pending.stoploss\"\n\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t<!-- <ion-label>Stop-loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.stoploss\"></ion-input> -->\n\t\t\t\t</div>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n<ion-footer class=\"ion-padding\">\n\t<div *ngIf=\"position != null\">\n\t\t<ion-button expand=\"block\" color=\"success\" (click)=\"savePosition()\">\n\t\t\t<ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSave\n\t\t</ion-button>\n\t\t<ion-button expand=\"block\" color=\"danger\" (click)=\"sellPosition()\">\n\t\t\t<ion-icon name=\"trash-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSell\n\t\t</ion-button>\n\t</div>\n\t<div *ngIf=\"pending != null\">\n\t\t<ion-button expand=\"block\" color=\"success\" (click)=\"savePending()\">\n\t\t\t<ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSave\n\t\t</ion-button>\n\t</div>\n</ion-footer>\n";
       /***/
     },
 
@@ -1128,204 +1327,272 @@
       /* harmony import */
 
 
-      var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! @angular/common/http */
+      "tk/3");
+      /* harmony import */
+
+
+      var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
       /*! @angular/core */
       "fXoL");
+      /* harmony import */
+
+
+      var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! rxjs */
+      "qCKp");
+      /* harmony import */
+
+
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      /*! src/environments/environment */
+      "AytR");
 
       var WatchlistService = /*#__PURE__*/function () {
-        function WatchlistService() {
+        // companies: Stock[] = [
+        //   {
+        //     id: 1,
+        //     name: 'AAA',
+        //     code: 'AAA',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 2,
+        //     name: 'BBB',
+        //     code: 'BBB',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 3,
+        //     name: 'CCC',
+        //     code: 'CCC',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 4,
+        //     name: 'DDD',
+        //     code: 'DDD',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 5,
+        //     name: 'EEE',
+        //     code: 'EEE',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 6,
+        //     name: 'FFF',
+        //     code: 'FFF',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 7,
+        //     name: 'GGG',
+        //     code: 'GGG',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 8,
+        //     name: 'HHH',
+        //     code: 'HHH',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 9,
+        //     name: 'III',
+        //     code: 'III',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 10,
+        //     name: 'JJJ',
+        //     code: 'JJJ',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 11,
+        //     name: 'Infosys',
+        //     code: 'Infy',
+        //     greenNum: 92.90,
+        //     rateRaw: 4.00,
+        //     isRising: true,
+        //     ratePercentage: 4.50
+        //   },
+        //   {
+        //     id: 12,
+        //     name: 'Niftybees',
+        //     code: 'Nifty',
+        //     greenNum: 958.10,
+        //     isRising: true,
+        //     rateRaw: 18.25,
+        //     ratePercentage: 1.94
+        //   },
+        //   {
+        //     id: 13,
+        //     name: 'Tesla Motors',
+        //     code: 'Tsla',
+        //     greenNum: 119.85,
+        //     isRising: false,
+        //     rateRaw: 5.05,
+        //     ratePercentage: 4.40
+        //   },
+        //   {
+        //     id: 14,
+        //     name: 'Apple Inc.',
+        //     code: 'Aapl',
+        //     greenNum: 2102.35,
+        //     isRising: true,
+        //     rateRaw: 42.30,
+        //     ratePercentage: 2.05
+        //   },
+        //   {
+        //     id: 15,
+        //     name: 'McDonalds',
+        //     code: 'MCDS',
+        //     greenNum: 128.25,
+        //     isRising: false,
+        //     rateRaw: 1.55,
+        //     ratePercentage: 1.22
+        // }]
+        // watchlists: Watchlist[] = [
+        //   {
+        //     id: 1,
+        //     name: 'Trending',
+        //     companies: [
+        //       this.companies[0],
+        //       this.companies[1],
+        //       this.companies[2],
+        //       this.companies[3],
+        //       this.companies[4],
+        //       this.companies[5],
+        //       this.companies[6],
+        //       this.companies[7],
+        //       this.companies[8],
+        //       this.companies[9],
+        //     ]
+        //   },
+        //   {
+        //     id: 2,
+        //     name: 'W1',
+        //     companies: [
+        //       this.companies[10],
+        //       this.companies[11],
+        //     ]
+        //   },
+        //   {
+        //     id: 3,
+        //     name: 'W2',
+        //     companies: [
+        //       this.companies[12],
+        //       this.companies[13],
+        //     ]
+        //   },
+        //   {
+        //     id: 4,
+        //     name: 'W3',
+        //     companies: [
+        //       this.companies[14],
+        //     ]
+        //   }]
+        function WatchlistService(http) {
           _classCallCheck(this, WatchlistService);
 
-          this.companies = [{
-            id: 1,
-            name: 'AAA',
-            code: 'AAA',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 2,
-            name: 'BBB',
-            code: 'BBB',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 3,
-            name: 'CCC',
-            code: 'CCC',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 4,
-            name: 'DDD',
-            code: 'DDD',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 5,
-            name: 'EEE',
-            code: 'EEE',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 6,
-            name: 'FFF',
-            code: 'FFF',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 7,
-            name: 'GGG',
-            code: 'GGG',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 8,
-            name: 'HHH',
-            code: 'HHH',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 9,
-            name: 'III',
-            code: 'III',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 10,
-            name: 'JJJ',
-            code: 'JJJ',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 11,
-            name: 'Infosys',
-            code: 'Infy',
-            greenNum: 92.90,
-            rateRaw: 4.00,
-            isRising: true,
-            ratePercentage: 4.50
-          }, {
-            id: 12,
-            name: 'Niftybees',
-            code: 'Nifty',
-            greenNum: 958.10,
-            isRising: true,
-            rateRaw: 18.25,
-            ratePercentage: 1.94
-          }, {
-            id: 13,
-            name: 'Tesla Motors',
-            code: 'Tsla',
-            greenNum: 119.85,
-            isRising: false,
-            rateRaw: 5.05,
-            ratePercentage: 4.40
-          }, {
-            id: 14,
-            name: 'Apple Inc.',
-            code: 'Aapl',
-            greenNum: 2102.35,
-            isRising: true,
-            rateRaw: 42.30,
-            ratePercentage: 2.05
-          }, {
-            id: 15,
-            name: 'McDonalds',
-            code: 'MCDS',
-            greenNum: 128.25,
-            isRising: false,
-            rateRaw: 1.55,
-            ratePercentage: 1.22
-          }];
-          this.watchlists = [{
-            id: 1,
-            name: 'Trending',
-            companies: [this.companies[0], this.companies[1], this.companies[2], this.companies[3], this.companies[4], this.companies[5], this.companies[6], this.companies[7], this.companies[8], this.companies[9]]
-          }, {
-            id: 2,
-            name: 'W1',
-            companies: [this.companies[10], this.companies[11]]
-          }, {
-            id: 3,
-            name: 'W2',
-            companies: [this.companies[12], this.companies[13]]
-          }, {
-            id: 4,
-            name: 'W3',
-            companies: [this.companies[14]]
-          }];
+          this.http = http;
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'watchlist/';
+          this.updatedWatchlist = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
         }
 
         _createClass(WatchlistService, [{
           key: "getWatchlist",
           value: function getWatchlist(id) {
-            return this.watchlists.find(function (w) {
-              return w.id == id;
-            });
+            return this.http.get(this.apiUrl + id);
           }
         }, {
-          key: "getCompany",
-          value: function getCompany(id) {
-            return this.companies.find(function (c) {
-              return c.id == id;
-            });
+          key: "getUserWatchlists",
+          value: function getUserWatchlists() {
+            return this.http.get(this.apiUrl);
+          }
+        }, {
+          key: "getSimulatedWatchlists",
+          value: function getSimulatedWatchlists() {
+            return this.http.get(this.apiUrl + 'filter/simulated');
           }
         }, {
           key: "updateWatchlist",
-          value: function updateWatchlist(newWatchlist) {
-            this.watchlists = newWatchlist;
+          value: function updateWatchlist(newWatchlist) {// this.watchlists = newWatchlist
           }
         }, {
           key: "addToWatchlist",
-          value: function addToWatchlist(id, company) {
-            this.getWatchlist(id).companies.push(company);
+          value: function addToWatchlist(watchlistId, stockId) {
+            // needs to be a update watchlist method
+            // this.getWatchlist(id).companies.push(company)
+            return this.http.put(this.apiUrl + 'add/stock', {
+              watchlistId: watchlistId,
+              stockId: stockId
+            });
           }
         }, {
           key: "removeFromWatchlist",
-          value: function removeFromWatchlist(id, company) {
-            var watchlist = this.getWatchlist(id);
-            var indexOfCompany = watchlist.companies.indexOf(company);
-            this.getWatchlist(id).companies.splice(indexOfCompany, 1);
+          value: function removeFromWatchlist(watchlistId, stockId) {
+            // let watchlist
+            // this.getWatchlist(id).subscribe(res => watchlist = res)
+            // const indexOfStock = watchlist.companies.indexOf(company)
+            // watchlist.companies.splice(indexOfStock,1)
+            //update watchlist
+            return this.http.put(this.apiUrl + 'stock/remove', {
+              watchlistId: watchlistId,
+              stockId: stockId
+            });
           }
         }, {
           key: "createWatchlist",
           value: function createWatchlist(name) {
-            var watchlist = {
-              id: this.generateId(this.watchlists),
-              name: name,
-              companies: []
-            };
-            this.watchlists.push(watchlist);
+            // const watchlist: Watchlist = {id: this.generateId(this.watchlists), name, companies:[]}
+            // this.watchlists.push(watchlist)
+            return this.http.post(this.apiUrl + 'new', {
+              name: name
+            });
           }
         }, {
           key: "editWatchlist",
-          value: function editWatchlist(id, name) {
-            this.getWatchlist(id).name = name;
+          value: function editWatchlist(id, name) {// this.getWatchlist(id).name = name
           }
         }, {
           key: "deleteWatchlist",
           value: function deleteWatchlist(id) {
-            this.watchlists.splice(this.watchlists.indexOf(this.getWatchlist(id)), 1);
+            return this.http["delete"](this.apiUrl + id); // this.watchlists.splice(this.watchlists.indexOf(this.getWatchlist(id)), 1)
           }
         }, {
           key: "generateId",
@@ -1343,10 +1610,12 @@
       }();
 
       WatchlistService.ctorParameters = function () {
-        return [];
+        return [{
+          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]
+        }];
       };
 
-      WatchlistService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+      WatchlistService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
         providedIn: 'root'
       })], WatchlistService);
       /***/
@@ -1398,13 +1667,19 @@
       !*** ./src/app/app.module.ts ***!
       \*******************************/
 
-    /*! exports provided: AppModule */
+    /*! exports provided: tokenGetter, AppModule */
 
     /***/
     function ZAI4(module, __webpack_exports__, __webpack_require__) {
       "use strict";
 
       __webpack_require__.r(__webpack_exports__);
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "tokenGetter", function () {
+        return tokenGetter;
+      });
       /* harmony export (binding) */
 
 
@@ -1468,143 +1743,175 @@
       /* harmony import */
 
 
-      var _app_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+      /*! @auth0/angular-jwt */
+      "Nm8O");
+      /* harmony import */
+
+
+      var _app_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
       /*! ./app.component */
       "Sy1n");
       /* harmony import */
 
 
-      var _app_routing_module__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
+      var _app_routing_module__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(
       /*! ./app-routing.module */
       "vY5A");
       /* harmony import */
 
 
-      var _ionic_super_tabs_angular__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(
+      var _ionic_super_tabs_angular__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(
       /*! @ionic-super-tabs/angular */
       "k6Iy");
       /* harmony import */
 
 
-      var _angular_common__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(
+      var _angular_common__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(
       /*! @angular/common */
       "ofXK");
       /* harmony import */
 
 
-      var _modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(
+      var _modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(
       /*! ./modals/modal-watchlist/modal-watchlist.component */
       "Nbj3");
       /* harmony import */
 
 
-      var _modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(
+      var _modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(
       /*! ./modals/modal-watchlist-ce/modal-watchlist-ce.component */
       "1r9f");
       /* harmony import */
 
 
-      var _angular_forms__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(
+      var _angular_forms__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(
       /*! @angular/forms */
       "3Pt+");
       /* harmony import */
 
 
-      var _modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(
+      var _modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(
       /*! ./modals/buy-sell-modal-popup/buy-sell-modal-popup.component */
       "lNYK");
       /* harmony import */
 
 
-      var _angular_common_http__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(
       /*! @angular/common/http */
       "tk/3");
       /* harmony import */
 
 
-      var _ionic_native_Camera_ngx__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(
+      var _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(
+      /*! @swimlane/ngx-charts */
+      "zQsl");
+      /* harmony import */
+
+
+      var _ionic_native_Camera_ngx__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(
       /*! @ionic-native/Camera/ngx */
       "KqBo");
       /* harmony import */
 
 
-      var _ionic_native_File_ngx__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(
+      var _ionic_native_File_ngx__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(
       /*! @ionic-native/File/ngx */
       "B7Vy");
       /* harmony import */
 
 
-      var _ionic_native_ionic_webview_ngx__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(
+      var _ionic_native_ionic_webview_ngx__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(
       /*! @ionic-native/ionic-webview/ngx */
       "eHpL");
       /* harmony import */
 
 
-      var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(
+      var _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(
       /*! @ionic-native/file-path/ngx */
       "G769");
       /* harmony import */
 
 
-      var _ionic_storage__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(
+      var _ionic_storage__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(
       /*! @ionic/storage */
       "e8h1");
       /* harmony import */
 
 
-      var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(
+      var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(
       /*! @angular/platform-browser/animations */
       "R1ws");
       /* harmony import */
 
 
-      var _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(
+      var _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(
       /*! @angular/cdk/drag-drop */
       "5+WD");
       /* harmony import */
 
 
-      var _modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(
+      var _modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(
       /*! ./modals/modal-edit-watchlists/modal-edit-watchlists.component */
       "rdK+");
       /* harmony import */
 
 
-      var highcharts_angular__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(
-      /*! highcharts-angular */
-      "kAVD");
-      /* harmony import */
-
-
-      var _modals_modal_edit_order_modal_edit_order_component__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(
+      var _modals_modal_edit_order_modal_edit_order_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(
       /*! ./modals/modal-edit-order/modal-edit-order.component */
       "LX2U");
       /* harmony import */
 
 
-      var _modals_modal_change_password_modal_change_password_component__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(
+      var _modals_modal_change_password_modal_change_password_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(
       /*! ./modals/modal-change-password/modal-change-password.component */
       "K2jm");
       /* harmony import */
 
 
-      var _modals_modal_withdraw_add_funds_modal_withdraw_add_funds_component__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(
+      var _modals_modal_withdraw_add_funds_modal_withdraw_add_funds_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(
       /*! ./modals/modal-withdraw-add-funds/modal-withdraw-add-funds.component */
       "whIa");
+      /* harmony import */
+
+
+      var _interceptors_jwt_interceptor__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(
+      /*! ./interceptors/jwt.interceptor */
+      "hzlp");
+      /* harmony import */
+
+
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(
+      /*! src/environments/environment */
+      "AytR");
+
+      function tokenGetter() {
+        return localStorage.getItem("token");
+      }
 
       var AppModule = function AppModule() {
         _classCallCheck(this, AppModule);
       };
 
       AppModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-        declarations: [_app_component__WEBPACK_IMPORTED_MODULE_9__["AppComponent"], _modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_13__["ModalWatchlistComponent"], _modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_14__["ModalWatchlistCeComponent"], _modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_16__["BuySellModalPopupComponent"], _modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_25__["ModalEditWatchlistsComponent"], _modals_modal_edit_order_modal_edit_order_component__WEBPACK_IMPORTED_MODULE_27__["ModalEditOrderComponent"], _modals_modal_change_password_modal_change_password_component__WEBPACK_IMPORTED_MODULE_28__["ModalChangePasswordComponent"], _modals_modal_withdraw_add_funds_modal_withdraw_add_funds_component__WEBPACK_IMPORTED_MODULE_29__["ModalWithdrawAddFundsComponent"]],
-        imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"].forRoot(), _app_routing_module__WEBPACK_IMPORTED_MODULE_10__["AppRoutingModule"], _ionic_super_tabs_angular__WEBPACK_IMPORTED_MODULE_11__["SuperTabsModule"].forRoot(), _angular_common__WEBPACK_IMPORTED_MODULE_12__["CommonModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_15__["FormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_17__["HttpClientModule"], _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_24__["DragDropModule"], _ionic_storage__WEBPACK_IMPORTED_MODULE_22__["IonicStorageModule"].forRoot(), _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_23__["BrowserAnimationsModule"], highcharts_angular__WEBPACK_IMPORTED_MODULE_26__["HighchartsChartModule"]],
+        declarations: [_app_component__WEBPACK_IMPORTED_MODULE_10__["AppComponent"], _modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_14__["ModalWatchlistComponent"], _modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_15__["ModalWatchlistCeComponent"], _modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_17__["BuySellModalPopupComponent"], _modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_27__["ModalEditWatchlistsComponent"], _modals_modal_edit_order_modal_edit_order_component__WEBPACK_IMPORTED_MODULE_28__["ModalEditOrderComponent"], _modals_modal_change_password_modal_change_password_component__WEBPACK_IMPORTED_MODULE_29__["ModalChangePasswordComponent"], _modals_modal_withdraw_add_funds_modal_withdraw_add_funds_component__WEBPACK_IMPORTED_MODULE_30__["ModalWithdrawAddFundsComponent"]],
+        imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__["BrowserModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"].forRoot(), _app_routing_module__WEBPACK_IMPORTED_MODULE_11__["AppRoutingModule"], _ionic_super_tabs_angular__WEBPACK_IMPORTED_MODULE_12__["SuperTabsModule"].forRoot(), _angular_common__WEBPACK_IMPORTED_MODULE_13__["CommonModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_16__["FormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_18__["HttpClientModule"], _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_26__["DragDropModule"], _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_19__["NgxChartsModule"], _ionic_storage__WEBPACK_IMPORTED_MODULE_24__["IonicStorageModule"].forRoot(), _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_9__["JwtModule"].forRoot({
+          config: {
+            tokenGetter: tokenGetter,
+            allowedDomains: [src_environments_environment__WEBPACK_IMPORTED_MODULE_32__["environment"].apiUrl],
+            disallowedRoutes: [src_environments_environment__WEBPACK_IMPORTED_MODULE_32__["environment"].apiUrl + "auth"]
+          }
+        }), _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_25__["BrowserAnimationsModule"]],
         exports: [],
-        providers: [_ionic_native_Camera_ngx__WEBPACK_IMPORTED_MODULE_18__["Camera"], _ionic_native_File_ngx__WEBPACK_IMPORTED_MODULE_19__["File"], _ionic_native_ionic_webview_ngx__WEBPACK_IMPORTED_MODULE_20__["WebView"], _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_6__["StatusBar"], _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_5__["SplashScreen"], _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_21__["FilePath"], _ionic_native_clipboard_ngx__WEBPACK_IMPORTED_MODULE_7__["Clipboard"], _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_8__["SocialSharing"], {
+        providers: [_ionic_native_Camera_ngx__WEBPACK_IMPORTED_MODULE_20__["Camera"], _ionic_native_File_ngx__WEBPACK_IMPORTED_MODULE_21__["File"], _ionic_native_ionic_webview_ngx__WEBPACK_IMPORTED_MODULE_22__["WebView"], _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_6__["StatusBar"], _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_5__["SplashScreen"], _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_23__["FilePath"], _ionic_native_clipboard_ngx__WEBPACK_IMPORTED_MODULE_7__["Clipboard"], _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_8__["SocialSharing"], {
           provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"],
           useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicRouteStrategy"]
+        }, {
+          provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_18__["HTTP_INTERCEPTORS"],
+          useClass: _interceptors_jwt_interceptor__WEBPACK_IMPORTED_MODULE_31__["JwtInterceptor"],
+          multi: true
         }],
-        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_9__["AppComponent"]]
+        bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_10__["AppComponent"]]
       })], AppModule);
       /***/
     },
@@ -1646,6 +1953,86 @@
 
 
       __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Edit watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-item class=\"ion-margin-horizontal\">\n\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t</ion-item>\n\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"editWatchlistForm.invalid && editWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t<ion-button (click)=\"onEditWatchlist()\" class=\"ion-margin\" expand=\"block\">Save watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\">\n\t\t<div class=\"drag-box\" *ngFor=\"let company of companies\" cdkDrag>\n\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t<span>{{ company.name }}</span>\n\t\t</div>\n\t</div>\n</ion-content>\n";
+      /***/
+    },
+
+    /***/
+    "hzlp":
+    /*!*************************************************!*\
+      !*** ./src/app/interceptors/jwt.interceptor.ts ***!
+      \*************************************************/
+
+    /*! exports provided: JwtInterceptor */
+
+    /***/
+    function hzlp(module, __webpack_exports__, __webpack_require__) {
+      "use strict";
+
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "JwtInterceptor", function () {
+        return JwtInterceptor;
+      });
+      /* harmony import */
+
+
+      var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! tslib */
+      "mrSG");
+      /* harmony import */
+
+
+      var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! @angular/core */
+      "fXoL");
+      /* harmony import */
+
+
+      var _services_stock_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! ../services/stock.service */
+      "8hSh");
+      /* harmony import */
+
+
+      var _services_user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! ../services/user.service */
+      "qfBg");
+
+      var JwtInterceptor = /*#__PURE__*/function () {
+        function JwtInterceptor(stockService, userService) {
+          _classCallCheck(this, JwtInterceptor);
+
+          this.stockService = stockService;
+          this.userService = userService;
+        }
+
+        _createClass(JwtInterceptor, [{
+          key: "intercept",
+          value: function intercept(req, next) {
+            var token = this.userService.decodedToken;
+            req = req.clone({
+              setHeaders: {
+                Authorization: "Bearer ".concat(token)
+              }
+            });
+            return next.handle(req);
+          }
+        }]);
+
+        return JwtInterceptor;
+      }();
+
+      JwtInterceptor.ctorParameters = function () {
+        return [{
+          type: _services_stock_service__WEBPACK_IMPORTED_MODULE_2__["StockService"]
+        }, {
+          type: _services_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"]
+        }];
+      };
+
+      JwtInterceptor = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])()], JwtInterceptor);
       /***/
     },
 
@@ -1767,84 +2154,111 @@
       var _watchlist_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
       /*! ./watchlist.service */
       "Tl0h");
+      /* harmony import */
+
+
+      var _stock_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! ./stock.service */
+      "8hSh");
+      /* harmony import */
+
+
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      /*! @angular/common/http */
+      "tk/3");
+      /* harmony import */
+
+
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      /*! src/environments/environment */
+      "AytR");
 
       var OrderService = /*#__PURE__*/function () {
-        function OrderService(watchlistService) {
+        function OrderService(watchlistService, stockService, http) {
           _classCallCheck(this, OrderService);
 
           this.watchlistService = watchlistService;
-          this.position = [{
-            name: 'IOC',
-            code: 'IOC',
-            price: 78.1,
-            quantity: 100,
-            pAndL: 10.00,
-            LTP: 78.0,
-            SL: 77.5
-          }, {
-            name: 'Reliance',
-            code: 'Reliance',
-            price: 2100,
-            quantity: 100,
-            pAndL: 100.00,
-            LTP: 2101,
-            SL: 2095
-          }, {
-            name: 'SBIN',
-            code: 'SBIN',
-            price: 245,
-            quantity: -100,
-            pAndL: -90.00,
-            LTP: 245.9,
-            SL: 244.0
-          }];
-          this.completed = [{
-            name: 'IOC',
-            code: 'IOC',
-            price: 78.1,
-            quantity: 100,
-            status: 'CANCELLED',
-            pAndL: -10.00,
-            exitPrice: 78.0
-          }, {
-            name: 'Reliance',
-            code: 'Reliance',
-            price: 2100,
-            quantity: 100,
-            status: 'COMPLETE',
-            pAndL: 100.00,
-            exitPrice: 2101
-          }, {
-            name: 'SBIN',
-            code: 'SBIN',
-            price: 245,
-            quantity: -100,
-            status: 'COMPLETE',
-            pAndL: -90.00,
-            exitPrice: 245.9
-          }];
-          this.pending = [{
-            name: 'IOC',
-            code: 'IOC',
-            price: 78.1,
-            quantity: 100,
-            LTP: 78.5
-          }, {
-            name: 'Reliance',
-            code: 'Reliance',
-            price: 2100,
-            quantity: 100,
-            LTP: 2101
-          }, {
-            name: 'SBIN',
-            code: 'SBIN',
-            price: 245,
-            quantity: -100,
-            LTP: 245.9
-          }];
+          this.stockService = stockService;
+          this.http = http;
+          this.position = [];
+          this.completed = [];
+          this.pending = [];
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + 'stocks/';
         }
 
         _createClass(OrderService, [{
+          key: "getAllUserOrders",
+          value: function getAllUserOrders() {
+            return this.http.get(this.apiUrl + 'orders/all');
+          }
+        }, {
+          key: "getOrder",
+          value: function getOrder(id) {
+            return this.http.get(this.apiUrl + "orders/".concat(id));
+          }
+        }, {
+          key: "stopOrder",
+          value: function stopOrder(id) {
+            return this.http.post(this.apiUrl + 'order/stop', {
+              id: id
+            });
+          }
+        }, {
+          key: "updateOrder",
+          value: function updateOrder(id, stoploss, target) {
+            return this.http.post(this.apiUrl + 'order/update', {
+              id: id,
+              stoploss: stoploss,
+              target: target
+            });
+          }
+        }, {
+          key: "buy",
+          value: function buy(cId, quantity, stopLoss, target, order, price) {
+            var _this9 = this;
+
+            var company;
+            this.stockService.getStock(cId).subscribe(function (c) {
+              company = c.data;
+              var pending;
+              pending = {
+                stockId: cId,
+                volume: quantity,
+                stoploss: stopLoss,
+                target: target,
+                price: price
+              };
+              order == 'limit' ? _this9.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
+                return console.log('buy', r);
+              }) : _this9.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
+                return console.log('buy', r);
+              });
+            });
+          }
+        }, {
+          key: "sell",
+          value: function sell(cId, quantity, stopLoss, target, order, price) {
+            var _this10 = this;
+
+            var company;
+            this.stockService.getStock(cId).subscribe(function (c) {
+              company = c.data;
+              var pending;
+              pending = {
+                stockId: cId,
+                volume: quantity,
+                stoploss: stopLoss,
+                target: target,
+                price: price
+              };
+              order == 'limit' ? _this10.stockService.orderStockLimitSell(pending).subscribe(function (r) {
+                return console.log('sell', r);
+              }) : _this10.stockService.orderStockMarketSell(pending).subscribe(function (r) {
+                return console.log('sell', r);
+              });
+            });
+          }
+        }, {
           key: "totalPandL",
           value: function totalPandL() {
             var pos = this.position.map(function (p) {
@@ -1856,61 +2270,32 @@
             return val;
           }
         }, {
-          key: "buy",
-          value: function buy(cId, quantity, stopLoss, target, order, price) {
-            var company = this.watchlistService.getCompany(cId);
-            var pending;
-            order == 'limit' ? pending = {
-              name: company.name,
-              code: company.code,
-              quantity: quantity,
-              LTP: stopLoss,
-              price: price
-            } : pending = {
-              name: company.name,
-              code: company.code,
-              quantity: quantity,
-              LTP: stopLoss,
-              price: 0
-            };
-            this.pending.unshift(pending);
-          }
-        }, {
           key: "savePosition",
-          value: function savePosition(position) {
-            var positionToUpdate = this.position.find(function (p) {
-              return p.code == position.code;
-            });
-            var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate);
-            this.position.splice(indexOfPositionToUpdate, 1, position);
+          value: function savePosition(position) {// var positionToUpdate = this.position.find(p => p.code == position.code)
+            // var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate)
+            // this.position.splice(indexOfPositionToUpdate,1,position)
           }
         }, {
           key: "sellPosition",
-          value: function sellPosition(position) {
-            var positionToUpdate = this.position.find(function (p) {
-              return p.code == position.code;
-            });
-            var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate);
-            this.position.splice(indexOfPositionToUpdate, 1);
-            var completed = {
-              name: position.name,
-              code: position.code,
-              price: position.price,
-              quantity: -position.quantity,
-              status: 'COMPLETE',
-              pAndL: position.pAndL,
-              exitPrice: position.price
-            };
-            this.completed.unshift(completed);
+          value: function sellPosition(position) {// var positionToUpdate = this.position.find(p => p.code == position.code)
+            // var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate)
+            // this.position.splice(indexOfPositionToUpdate,1)
+            // const completed: Completed = {
+            //   name: position.name, 
+            //   code: position.code,  
+            //   price: position.price, 
+            //   quantity: -position.quantity,
+            //   status: 'COMPLETE',
+            //   pAndL: position.pAndL,
+            //   exitPrice: position.price
+            // }
+            // this.completed.unshift(completed)
           }
         }, {
           key: "savePending",
-          value: function savePending(pending) {
-            var pendingToUpdate = this.pending.find(function (p) {
-              return p.code == pending.code;
-            });
-            var indexOfPendingToUpdate = this.pending.indexOf(pendingToUpdate);
-            this.pending.splice(indexOfPendingToUpdate, 1, pending);
+          value: function savePending(pending) {// var pendingToUpdate = this.pending.find(p => p.code == pending.code)
+            // var indexOfPendingToUpdate = this.pending.indexOf(pendingToUpdate)
+            // this.pending.splice(indexOfPendingToUpdate,1,pending)
           }
         }]);
 
@@ -1920,6 +2305,10 @@
       OrderService.ctorParameters = function () {
         return [{
           type: _watchlist_service__WEBPACK_IMPORTED_MODULE_2__["WatchlistService"]
+        }, {
+          type: _stock_service__WEBPACK_IMPORTED_MODULE_3__["StockService"]
+        }, {
+          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]
         }];
       };
 
@@ -1987,23 +2376,30 @@
       /* harmony import */
 
 
-      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
-      /*! src/app/services/watchlist.service */
-      "Tl0h");
+      var src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! src/app/services/stock.service */
+      "8hSh");
 
       var BuySellModalPopupComponent = /*#__PURE__*/function () {
-        function BuySellModalPopupComponent(modalCtrl, watchlistService, router) {
+        function BuySellModalPopupComponent(modalCtrl, stockService, router) {
           _classCallCheck(this, BuySellModalPopupComponent);
 
           this.modalCtrl = modalCtrl;
-          this.watchlistService = watchlistService;
+          this.stockService = stockService;
           this.router = router;
         }
 
         _createClass(BuySellModalPopupComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.company = this.watchlistService.getCompany(this.selectedCompany);
+            var _this11 = this;
+
+            this.stockService.getStock(this.selectedStock.id).subscribe(function (stockData) {
+              _this11.selectedStock.ldp = stockData.data.historyData['1month'][stockData.data.historyData['1month'].length - 1].close;
+            });
+            this.stockService.listen(this.selectedStock.id).subscribe(function (res) {
+              _this11.selectedStock.ltp = res[0].price;
+            });
           }
         }, {
           key: "dismissModal",
@@ -2014,7 +2410,7 @@
           key: "onClick",
           value: function onClick(isBuy) {
             this.modalCtrl.dismiss();
-            this.router.navigate(['home', 'watchlist', 'buy-sell', this.company.id], {
+            this.router.navigate(['home', 'watchlist', 'buy-sell', this.selectedStock.id], {
               queryParams: {
                 isBuy: isBuy
               }
@@ -2024,7 +2420,7 @@
           key: "navigateToChart",
           value: function navigateToChart() {
             this.modalCtrl.dismiss();
-            this.router.navigate(['chart']);
+            this.router.navigate(['home', 'chart', 'tv-chart']);
           }
         }]);
 
@@ -2035,15 +2431,16 @@
         return [{
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"]
         }, {
-          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__["WatchlistService"]
+          type: src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_6__["StockService"]
         }, {
           type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
         }];
       };
 
       BuySellModalPopupComponent.propDecorators = {
-        selectedCompany: [{
-          type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["Input"]
+        selectedStock: [{
+          type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["Input"],
+          args: ['selectedStock']
         }]
       };
       BuySellModalPopupComponent = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
@@ -2082,115 +2479,150 @@
       /* harmony import */
 
 
-      var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! @angular/common/http */
+      "tk/3");
+      /* harmony import */
+
+
+      var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
       /*! @angular/core */
       "fXoL");
       /* harmony import */
 
 
-      var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! @angular/router */
       "tyNb");
       /* harmony import */
 
 
-      var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      var _capacitor_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! @capacitor/core */
       "gcOT");
       /* harmony import */
 
 
-      var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! rxjs */
       "qCKp");
+      /* harmony import */
 
-      var LocalNotifications = _capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Plugins"].LocalNotifications;
+
+      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! @auth0/angular-jwt */
+      "Nm8O");
+      /* harmony import */
+
+
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! src/environments/environment */
+      "AytR");
+
+      var LocalNotifications = _capacitor_core__WEBPACK_IMPORTED_MODULE_4__["Plugins"].LocalNotifications;
 
       var UserService = /*#__PURE__*/function () {
-        function UserService(router) {
+        function UserService(router, http) {
           _classCallCheck(this, UserService);
 
           this.router = router;
-          this.users = [{
-            id: 1,
-            firstname: 'Ibrahim',
-            lastname: 'Sefer',
-            email: 'seferibrahim2@gmail.com',
-            password: '1234567890',
-            imgUrl: 'IS',
-            balance: {
-              openBal: 6200,
-              availableBal: 6000,
-              pAndL: 100,
-              gain: 0.02
-            }
-          }];
-          this.isLoggedIn = false;
-          this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+          this.http = http;
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + "auth/";
+          this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + "settings";
+          this.user = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
+          this.isSimulated = true;
+          this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
         }
 
         _createClass(UserService, [{
+          key: "decodeToken",
+          value: function decodeToken(token) {
+            var helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__["JwtHelperService"]();
+            this.decodedToken = helper.decodeToken(token);
+            console.log(this.decodedToken);
+          }
+        }, {
           key: "logIn",
           value: function logIn(input) {
-            var email = input.email;
-            var password = input.password;
-            var userInDb = this.users.find(function (u) {
-              return u.email == email;
-            });
-
-            if (userInDb != null && userInDb.password == password) {
-              this.isLoggedIn = true; // await LocalNotifications.requestPermission()
-
-              this.user = userInDb;
-            } else this.isLoggedIn = false;
+            return this.http.post(this.apiUrl + "login", input);
           }
         }, {
           key: "signUp",
-          value: function signUp(user) {
-            if (!this.checkIfUserIsInDb(user.email)) {
-              this.users.push(user);
-              this.router.navigate(['home', 'login']);
-            } else return 'This email is already used.';
+          value: function signUp(input) {
+            return this.http.post(this.apiUrl + "signup", input);
+          }
+        }, {
+          key: "googleAuth",
+          value: function googleAuth() {
+            return this.http.get(this.apiUrl + 'google');
+          }
+        }, {
+          key: "accountDetails",
+          value: function accountDetails() {
+            return this.http.get(this.apiUrl + 'account');
+          }
+        }, {
+          key: "changePassword",
+          value: function changePassword(email, password) {
+            return this.http.post(this.apiUrl + 'password/change', {
+              email: email,
+              password: password
+            });
+          }
+        }, {
+          key: "emailExists",
+          value: function emailExists(email) {
+            return this.http.post(this.apiUrl + 'password/reset/emailcheck', email);
+          }
+        }, {
+          key: "checkCodeValid",
+          value: function checkCodeValid(email, code) {
+            return this.http.post(this.apiUrl + 'password/code/check', {
+              email: email,
+              code: code
+            });
+          }
+        }, {
+          key: "getSettings",
+          value: function getSettings() {
+            return this.http.get(this.apiSettingsUrl);
+          }
+        }, {
+          key: "updateSettings",
+          value: function updateSettings(id, datatype, risk, leverage) {
+            return this.http.put(this.apiSettingsUrl, {
+              id: id,
+              datatype: datatype,
+              risk: risk,
+              leverage: +leverage
+            });
           }
         }, {
           key: "logout",
           value: function logout() {
-            this.isLoggedIn = false;
+            this.user.next(null);
+            localStorage.removeItem('token');
+          }
+        }, {
+          key: "add",
+          value: function add(amount) {
+            this.user.subscribe(function (u) {
+              u.balance.openBal += amount;
+              u.balance.availableBal += amount;
+            });
+          }
+        }, {
+          key: "withdraw",
+          value: function withdraw(amount) {
+            this.user.subscribe(function (u) {
+              if (u.balance.openBal - amount >= 0) u.balance.openBal -= amount;
+              if (u.balance.availableBal - amount >= 0) u.balance.availableBal -= amount;
+            });
           }
         }, {
           key: "checkIfIsOnLoginOrSignUpPage",
           value: function checkIfIsOnLoginOrSignUpPage(link) {
             link.includes('login') || link.includes('sign-up') ? this.isOnLoginOrSignUpPage.next(true) : this.isOnLoginOrSignUpPage.next(false);
-          }
-        }, {
-          key: "generateId",
-          value: function generateId() {
-            if (this.users.length == 0) return 1;else return this.users.length + 1;
-          }
-        }, {
-          key: "checkIfUserIsInDb",
-          value: function checkIfUserIsInDb(email) {
-            var userInDb = this.users.find(function (u) {
-              return u.email == email;
-            });
-            if (userInDb != null) return true;else return false;
-          }
-        }, {
-          key: "changePassword",
-          value: function changePassword(newPassword, confirmPassword) {
-            if (newPassword == confirmPassword) this.user.password = newPassword;else return false;
-          }
-        }, {
-          key: "add",
-          value: function add(amount) {
-            this.user.balance.openBal += amount;
-            this.user.balance.availableBal += amount;
-          }
-        }, {
-          key: "withdraw",
-          value: function withdraw(amount) {
-            if (this.user.balance.openBal - amount >= 0) this.user.balance.openBal -= amount;
-            if (this.user.balance.availableBal - amount >= 0) this.user.balance.availableBal -= amount;
           }
         }]);
 
@@ -2199,11 +2631,13 @@
 
       UserService.ctorParameters = function () {
         return [{
-          type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]
+          type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]
+        }, {
+          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]
         }];
       };
 
-      UserService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
+      UserService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
         providedIn: 'root'
       })], UserService);
       /***/
@@ -2267,23 +2701,34 @@
       /* harmony import */
 
 
-      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! src/app/services/user.service */
+      "qfBg");
+      /* harmony import */
+
+
+      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! src/app/services/watchlist.service */
       "Tl0h");
 
       var ModalEditWatchlistsComponent = /*#__PURE__*/function () {
-        function ModalEditWatchlistsComponent(modalCtrl, watchlistService) {
+        function ModalEditWatchlistsComponent(modalCtrl, watchlistService, userService) {
           _classCallCheck(this, ModalEditWatchlistsComponent);
 
           this.modalCtrl = modalCtrl;
           this.watchlistService = watchlistService;
+          this.userService = userService;
           this.watchlists = [];
         }
 
         _createClass(ModalEditWatchlistsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.watchlists = this.watchlistService.watchlists;
+            var _this12 = this;
+
+            this.watchlistService.getUserWatchlists().subscribe(function (w) {
+              return _this12.watchlists = w.data;
+            });
           }
         }, {
           key: "dismissModal",
@@ -2295,14 +2740,16 @@
           value: function onCreateWatchlist(createWatchlistForm) {
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
-              this.watchlistService.createWatchlist(this.watchlistName);
+              this.watchlistService.createWatchlist(this.watchlistName).subscribe();
               this.watchlistName = '';
             }
           }
         }, {
           key: "drop",
           value: function drop(event) {
+            //needs to happen in backend
             Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_3__["moveItemInArray"])(this.watchlists, event.previousIndex, event.currentIndex);
+            this.watchlistService.updatedWatchlist.next(true);
           }
         }]);
 
@@ -2313,7 +2760,9 @@
         return [{
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"]
         }, {
-          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__["WatchlistService"]
+          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_7__["WatchlistService"]
+        }, {
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"]
         }];
       };
 
@@ -2479,7 +2928,11 @@
         _createClass(ModalWithdrawAddFundsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.user = this.userService.user;
+            var _this13 = this;
+
+            this.userService.user.subscribe(function (u) {
+              return _this13.user = u;
+            });
           }
         }, {
           key: "dismissModal",
@@ -2535,7 +2988,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title slot=\"start\"> {{ company.name }} </ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n\t<ion-toolbar>\n\t\t<ion-text slot=\"start\" class=\"subtitle\" *ngIf=\"company.isRising\">\n\t\t\t<h5 class=\"ion-margin-end\">{{ company.code }}</h5>\n\t\t\t<ion-text class=\"ion-margin-end\" color=\"success\">\n\t\t\t\t<h5>{{ company.greenNum }}</h5>\n\t\t\t</ion-text>\n\t\t\t<h5 class=\"ion-margin-end\">+{{ company.rateRaw }} (+{{ company.ratePercentage }}%)</h5>\n\t\t</ion-text>\n\t\t<ion-text slot=\"start\" class=\"subtitle\" *ngIf=\"!company.isRising\">\n\t\t\t<h5 class=\"ion-margin-end\">{{ company.code }}</h5>\n\t\t\t<ion-text class=\"ion-margin-end\" color=\"danger\">\n\t\t\t\t<h5>{{ company.greenNum }}</h5>\n\t\t\t</ion-text>\n\t\t\t<h5 class=\"ion-margin-end\">-{{ company.rateRaw }} (-{{ company.ratePercentage }}%)</h5>\n\t\t</ion-text>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row class=\"ion-margin-vertical\">\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"tertiary\" size=\"medium\" expand=\"full\" class=\"ion-margin-start buy-sell-btn\"\n\t\t\t\t(click)=\"onClick(true)\">Buy</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"danger\" size=\"medium\" expand=\"full\" class=\"ion-margin-end buy-sell-btn\"\n\t\t\t\t(click)=\"onClick(false)\">Sell</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-button (click)=\"navigateToChart()\" color=\"tertiary\" size=\"small\" expand=\"block\" fill=\"clear\" class=\"ion-margin-end ion-float-left\">\n\t\t\t\t\tView chart\n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<!-- <ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text>\n\t\t\t\t\t<h4 class=\"table-title ion-text-left\">Market depth</h4>\n\t\t\t\t</ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<table>\n\t\t\t\t\t<thead>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<th class=\"ion-text-left\">Bid</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-center ion-margin-horizontal\">Orders</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-end\">Qty</th>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</thead>\n\t\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td class=\"ion-text-left\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 771.20 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-center\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 1 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-end\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 33 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tbody>\n\t\t\t\t\t<tfoot>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td colspan=\"2\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> Total </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td colspan=\"1\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 9,03,720 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tfoot>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<table>\n\t\t\t\t\t<thead>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<th class=\"ion-text-left\">Offer</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-center ion-margin-horizontal\">Orders</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-end\">Qty</th>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</thead>\n\t\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td class=\"ion-text-left\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 773.05 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-center\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 1 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-end\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 29 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tbody>\n\t\t\t\t\t<tfoot>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td colspan=\"2\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> Total </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td colspan=\"1\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 11,84,482 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tfoot>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row> -->\n\t</ion-grid>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title slot=\"start\"> {{ selectedStock.name }} </ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n\t<ion-toolbar>\n\t\t<ion-text slot=\"start\" class=\"subtitle\" *ngIf=\"+selectedStock.ltp - +selectedStock.ldp >= 0\">\n\t\t\t<h5 class=\"ion-margin-end\">{{ selectedStock.name }}</h5>\n\t\t\t<ion-text class=\"ion-margin-end\" color=\"success\">\n\t\t\t\t<h5>{{ selectedStock.ltp }}</h5>\n\t\t\t</ion-text>\n\t\t\t<h5 class=\"ion-margin-end\">+{{+selectedStock.ltp - +selectedStock.ldp | number:'1.1-2'}} (+{{(+selectedStock.ltp - +selectedStock.ldp) / +selectedStock.ldp | percent:'1.1-2'}})</h5>\n\t\t</ion-text>\n\t\t<ion-text slot=\"start\" class=\"subtitle\" *ngIf=\"+selectedStock.ltp - +selectedStock.ldp < 0\">\n\t\t\t<h5 class=\"ion-margin-end\">{{ selectedStock.name }}</h5>\n\t\t\t<ion-text class=\"ion-margin-end\" color=\"danger\">\n\t\t\t\t<h5>{{ selectedStock.ltp }}</h5>\n\t\t\t</ion-text>\n\t\t\t<h5 class=\"ion-margin-end\">-{{+selectedStock.ltp - +selectedStock.ldp | number:'1.1-2'}} (-{{(+selectedStock.ltp - +selectedStock.ldp) / +selectedStock.ldp | percent:'1.1-2'}})</h5>\n\t\t</ion-text>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row class=\"ion-margin-vertical\">\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"tertiary\" size=\"medium\" expand=\"full\" class=\"ion-margin-start buy-sell-btn\"\n\t\t\t\t(click)=\"onClick(true)\">Buy</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"danger\" size=\"medium\" expand=\"full\" class=\"ion-margin-end buy-sell-btn\"\n\t\t\t\t(click)=\"onClick(false)\">Sell</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-button (click)=\"navigateToChart()\" color=\"tertiary\" size=\"small\" expand=\"block\" fill=\"clear\" class=\"ion-margin-end ion-float-left\">\n\t\t\t\t\tView chart\n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<!-- <ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text>\n\t\t\t\t\t<h4 class=\"table-title ion-text-left\">Market depth</h4>\n\t\t\t\t</ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<table>\n\t\t\t\t\t<thead>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<th class=\"ion-text-left\">Bid</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-center ion-margin-horizontal\">Orders</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-end\">Qty</th>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</thead>\n\t\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td class=\"ion-text-left\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 771.20 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-center\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 1 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-end\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 33 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tbody>\n\t\t\t\t\t<tfoot>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td colspan=\"2\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> Total </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td colspan=\"1\">\n\t\t\t\t\t\t\t\t<ion-text color=\"secondary\"> 9,03,720 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tfoot>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<table>\n\t\t\t\t\t<thead>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<th class=\"ion-text-left\">Offer</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-center ion-margin-horizontal\">Orders</th>\n\t\t\t\t\t\t\t<th class=\"ion-text-end\">Qty</th>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</thead>\n\t\t\t\t\t<tbody>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td class=\"ion-text-left\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 773.05 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-center\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 1 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td class=\"ion-text-end\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 29 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tbody>\n\t\t\t\t\t<tfoot>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td colspan=\"2\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> Total </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t<td colspan=\"1\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"> 11,84,482 </ion-text>\n\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t</tfoot>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row> -->\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 

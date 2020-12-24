@@ -13,8 +13,8 @@ export class AccountPage implements OnInit {
   constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit() {
-    this.user = this.userService.user
-    this.userService.accountDetails().subscribe(res => console.log(res))
+    this.userService.user.subscribe(u => this.user = u)
+    this.userService.accountDetails().subscribe()
   }
 
   logout(){

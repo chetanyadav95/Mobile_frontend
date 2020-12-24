@@ -146,7 +146,11 @@
         _createClass(ProfilePage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.user = this.userService.user;
+            var _this = this;
+
+            this.userService.user.subscribe(function (u) {
+              return _this.user = u;
+            });
           }
         }, {
           key: "navigateToAccount",
@@ -300,7 +304,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button [defaultHref]=\"['home','watchlist']\" (click)=\"navigateToAccount()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Profile</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<div class=\"ion-padding profile-header\">\n\t\t<div>\n\t\t\t<ion-text><h5>{{user.firstname + ' ' + user.lastname}}</h5></ion-text>\n\t\t\t<ion-text><p>{{user.email}}</p></ion-text>\n\t\t</div>\n\t\t<img\n\t\t\t*ngIf=\"!hasNoImgUrl\"\n\t\t\tsrc=\"https://images8.alphacoders.com/679/thumb-1920-679478.jpg\"\n\t\t\tclass=\"ion-float-right account-img\"\n\t\t/>\n\t\t<div *ngIf=\"hasNoImgUrl\" class=\"ion-float-right account-img\">\n\t\t\t<span>{{user.imgUrl}}</span>\n\t\t</div>\n\t</div>\n\t<hr />\n\t<ion-grid>\n\t\t<!-- <ion-row class=\"ion-margin-bottom\">\n      <ion-col size=6 class=\"ion-text-left subtitle\">E-mail</ion-col>\n      <ion-col size=6 class=\"ion-text-right\">{{user.email}}</ion-col>\n    </ion-row> -->\n\t\t<!-- <ion-row class=\"ion-margin-bottom\">\n      <ion-col size=6 class=\"ion-text-left subtitle\">Phone</ion-col>\n      <ion-col size=6 class=\"ion-text-right\">*7890</ion-col>\n    </ion-row> -->\n\t\t<ion-row class=\"ion-margin-bottom\">\n\t\t\t<ion-col size=\"6\" class=\"ion-text-left subtitle\">PAN</ion-col>\n\t\t\t<ion-col size=\"6\" class=\"ion-text-right\">*233H</ion-col>\n\t\t</ion-row>\n\t\t<ion-row class=\"ion-margin-bottom\">\n\t\t\t<ion-col size=\"6\" class=\"ion-text-left subtitle\">Demat (BO)</ion-col>\n\t\t\t<ion-col size=\"6\" class=\"ion-text-right\">1234567875434567</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<hr />\n\t<div class=\"ion-no-border ion-padding account-card-link\" (click)=\"openCompaniesModal()\">\n\t\t<ion-text>Change password</ion-text>\n\t\t<ion-icon name=\"sync-outline\" class=\"ion-margin-end icon\"></ion-icon>\n\t</div>\n\t<hr />\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button [defaultHref]=\"['home','watchlist']\" (click)=\"navigateToAccount()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Profile</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<div class=\"ion-padding profile-header\">\n\t\t<div>\n\t\t\t<ion-text><h5>{{user.username}}</h5></ion-text>\n\t\t\t<ion-text><p>{{user.email}}</p></ion-text>\n\t\t</div>\n\t\t<div class=\"ion-float-right account-img\">\n\t\t\t<span>{{user.username[0]+user.username[1]}}</span>\n\t\t</div>\n\t</div>\n\t<hr />\n\t<ion-grid>\n\t\t<ion-row class=\"ion-margin-bottom\">\n\t\t\t<ion-col size=\"6\" class=\"ion-text-left subtitle\">PAN</ion-col>\n\t\t\t<ion-col size=\"6\" class=\"ion-text-right\">*233H</ion-col>\n\t\t</ion-row>\n\t\t<ion-row class=\"ion-margin-bottom\">\n\t\t\t<ion-col size=\"6\" class=\"ion-text-left subtitle\">Demat (BO)</ion-col>\n\t\t\t<ion-col size=\"6\" class=\"ion-text-right\">1234567875434567</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<hr />\n\t<div class=\"ion-no-border ion-padding account-card-link\" (click)=\"openCompaniesModal()\">\n\t\t<ion-text>Change password</ion-text>\n\t\t<ion-icon name=\"sync-outline\" class=\"ion-margin-end icon\"></ion-icon>\n\t</div>\n\t<hr />\n</ion-content>\n";
       /***/
     },
 

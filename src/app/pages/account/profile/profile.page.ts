@@ -15,7 +15,7 @@ export class ProfilePage implements OnInit {
   constructor(private router: Router, private modalController: ModalController, private userService: UserService) { }
 
   ngOnInit() {
-    this.user = this.userService.user
+    this.userService.user.subscribe(u => this.user = u)
   }
 
   navigateToAccount(){

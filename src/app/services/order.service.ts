@@ -23,10 +23,16 @@ export class OrderService {
     return this.http.get(this.apiUrl + 'orders/all')
   }
 
-  totalPandL(){
-    const pos = this.position.map(p => p.pAndL)
-    const val = pos.reduce((p, c) => p + c)
-    return val
+  getOrder(id: string){
+    return this.http.get(this.apiUrl + `orders/${id}` )
+  }
+
+  stopOrder(id: string){
+    return this.http.post(this.apiUrl + 'order/stop', {id} )
+  }
+
+  updateOrder(id: string, stoploss: number, target: number){
+    return this.http.post(this.apiUrl + 'order/update', {id, stoploss, target} )
   }
   
   buy(cId: string,quantity: number, stopLoss: number, target: number, order: string, price?: number){
@@ -51,6 +57,12 @@ export class OrderService {
       ? this.stockService.orderStockLimitSell(pending).subscribe(r => console.log('sell',r))
       : this.stockService.orderStockMarketSell(pending).subscribe(r => console.log('sell',r))
     })
+  }
+
+  totalPandL(){
+    const pos = this.position.map(p => p.pAndL)
+    const val = pos.reduce((p, c) => p + c)
+    return val
   }
 
   savePosition(position: Position){

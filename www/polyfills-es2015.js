@@ -196,19 +196,6 @@ module.exports = function (it, TAG, STATIC) {
 
 /***/ }),
 
-/***/ 2:
-/*!***************************************************************************************************************************!*\
-  !*** multi ./src/polyfills.ts ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js ***!
-  \***************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/src/polyfills.ts */"hN/g");
-module.exports = __webpack_require__(/*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js */"LEsg");
-
-
-/***/ }),
-
 /***/ "2oRo":
 /*!**************************************************!*\
   !*** ./node_modules/core-js/internals/global.js ***!
@@ -229,6 +216,19 @@ module.exports =
   check(typeof global == 'object' && global) ||
   // eslint-disable-next-line no-new-func
   Function('return this')();
+
+
+/***/ }),
+
+/***/ 3:
+/*!***************************************************************************************************************************!*\
+  !*** multi ./src/polyfills.ts ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js ***!
+  \***************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/src/polyfills.ts */"hN/g");
+module.exports = __webpack_require__(/*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js */"LEsg");
 
 
 /***/ }),
@@ -6151,5 +6151,5 @@ module.exports = function (key, value) {
 
 /***/ })
 
-},[[2,"runtime"]]]);
+},[[3,"runtime"]]]);
 //# sourceMappingURL=polyfills-es2015.js.map

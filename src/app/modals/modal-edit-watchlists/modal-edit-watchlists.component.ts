@@ -19,7 +19,16 @@ export class ModalEditWatchlistsComponent implements OnInit {
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService, private userService: UserService) { }
 
   ngOnInit() {
-    this.watchlistService.getUserWatchlists().subscribe((w:any) => this.watchlists = w.data)
+    this.userService.getSettings().subscribe((r:any) => {
+    const datatype = r.data.datatype
+    if(datatype == 'simulated') this.watchlistService.getSimulatedWatchlists().subscribe(r => {
+      console.log('simulated',r)
+    })
+    if(datatype == 'realtime') this.watchlistService.getRealtimeWatchlists().subscribe((r:any) => {
+      console.log('realtime',r)
+      this.watchlists = r.data
+    })
+  })
   }
 
   dismissModal(){
@@ -29,7 +38,7 @@ export class ModalEditWatchlistsComponent implements OnInit {
   onCreateWatchlist(createWatchlistForm: NgForm){
     if(this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined){
       this.watchlistName = this.watchlistName.trim()
-      this.watchlistService.createWatchlist(this.watchlistName).subscribe(res => console.log(res))
+      this.watchlistService.createWatchlist(this.watchlistName).subscribe(r => console.log('w created',r))
       this.watchlistName = ''
     }
   }
@@ -37,6 +46,16 @@ export class ModalEditWatchlistsComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>){
     //needs to happen in backend
     moveItemInArray(this.watchlists, event.previousIndex, event.currentIndex);
+    this.changePosition()
+  }
+
+  changePosition(){
+    const positions: any[] = []
+    for (let i = 0; i < this.watchlists.length; i++) {
+      const w = this.watchlists[i];
+      positions.push({watchlistId:w._id, position:i})
+    }
+    this.watchlistService.updateWatchlistPositions(positions).subscribe()
     this.watchlistService.updatedWatchlist.next(true)
   }
 }

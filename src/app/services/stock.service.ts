@@ -34,7 +34,7 @@ export class StockService {
   }
 
   getStocks(){
-    return this.http.get(this.apiUrl)
+    return this.http.get(this.apiGetStock)
   }
   
   initStocks(){

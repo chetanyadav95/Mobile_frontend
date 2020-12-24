@@ -21,7 +21,6 @@ export class SignUpPage implements OnInit {
     if(this.checkIfPasswordsMatch(form.value.password, form.value.confirmPassword)){
       delete form.value.confirmPassword
       this.userService.signUp(form.value).subscribe((res: any) =>{
-        console.log(res)
         localStorage.setItem('token', res.jwt)
         this.userService.decodedToken = res.jwt
         let user: User = {
@@ -37,8 +36,7 @@ export class SignUpPage implements OnInit {
           user.balance.availableBal = res.account.initialValue
           user.balance.openBal = parseFloat(res.account.currentBalance)
           user.balance.currency = res.account.currency
-        })
-        this.userService.user = user
+        }, () => {}, () => this.userService.user.next(user))
         form.resetForm()
         this.router.navigate(['home','login'])
         this.userService.checkIfIsOnLoginOrSignUpPage('/home/login')

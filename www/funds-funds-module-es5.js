@@ -199,7 +199,11 @@
         _createClass(FundsPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.user = this.userService.user;
+            var _this = this;
+
+            this.userService.user.subscribe(function (u) {
+              return _this.user = u;
+            });
           }
         }, {
           key: "navigateToAccount",

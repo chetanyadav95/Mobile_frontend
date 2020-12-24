@@ -21,14 +21,11 @@ export class VideoSwiperDirective implements OnInit{
   }
   private onStart(){
     this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none')
-    console.log("start")
   }
   private onMove(){
     this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none')
-    console.log("move")
   }
   private onUp(){
     this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'all')
-    console.log("up")
   }
 }

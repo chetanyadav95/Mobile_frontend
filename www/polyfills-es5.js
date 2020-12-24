@@ -496,38 +496,6 @@
     },
 
     /***/
-    1:
-    /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-      !*** multi ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-polyfills.js zone.js/dist/zone-legacy ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-jit-polyfills.js ./src/polyfills.ts ***!
-      \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-
-    /*! no static exports found */
-
-    /***/
-    function _(module, exports, __webpack_require__) {
-      __webpack_require__(
-      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-polyfills.js */
-      "mRIq");
-
-      __webpack_require__(
-      /*! zone.js/dist/zone-legacy */
-      "R0gw");
-
-      __webpack_require__(
-      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js */
-      "LEsg");
-
-      __webpack_require__(
-      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-jit-polyfills.js */
-      "YJXN");
-
-      module.exports = __webpack_require__(
-      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/src/polyfills.ts */
-      "hN/g");
-      /***/
-    },
-
-    /***/
     "14Sl":
     /*!******************************************************************************!*\
       !*** ./node_modules/core-js/internals/fix-regexp-well-known-symbol-logic.js ***!
@@ -851,6 +819,38 @@
           }
         }
       });
+      /***/
+    },
+
+    /***/
+    2:
+    /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+      !*** multi ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-polyfills.js zone.js/dist/zone-legacy ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js ./node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-jit-polyfills.js ./src/polyfills.ts ***!
+      \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+    /*! no static exports found */
+
+    /***/
+    function _(module, exports, __webpack_require__) {
+      __webpack_require__(
+      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-polyfills.js */
+      "mRIq");
+
+      __webpack_require__(
+      /*! zone.js/dist/zone-legacy */
+      "R0gw");
+
+      __webpack_require__(
+      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/jit-polyfills.js */
+      "LEsg");
+
+      __webpack_require__(
+      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/node_modules/@angular-devkit/build-angular/src/angular-cli-files/models/es5-jit-polyfills.js */
+      "YJXN");
+
+      module.exports = __webpack_require__(
+      /*! /Users/ibrahimsefer/Desktop/demo trading app front end/demo-trading-platform-app-frontend/src/polyfills.ts */
+      "hN/g");
       /***/
     },
 
@@ -20338,6 +20338,6 @@
       });
       /***/
     }
-  }, [[1, "runtime"]]]);
+  }, [[2, "runtime"]]]);
 })();
 //# sourceMappingURL=polyfills-es5.js.map

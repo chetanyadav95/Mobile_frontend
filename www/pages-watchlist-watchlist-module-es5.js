@@ -143,74 +143,117 @@
       /* harmony import */
 
 
-      var _angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-      /*! @angular/cdk/drag-drop */
-      "5+WD");
-      /* harmony import */
-
-
-      var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! @angular/core */
       "fXoL");
       /* harmony import */
 
 
-      var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! @ionic/angular */
       "TEn/");
       /* harmony import */
 
 
-      var src_app_modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var src_app_modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! src/app/modals/buy-sell-modal-popup/buy-sell-modal-popup.component */
       "lNYK");
       /* harmony import */
 
 
-      var src_app_modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      var src_app_modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! src/app/modals/modal-edit-watchlists/modal-edit-watchlists.component */
       "rdK+");
       /* harmony import */
 
 
-      var src_app_modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      var src_app_modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! src/app/modals/modal-watchlist-ce/modal-watchlist-ce.component */
       "1r9f");
       /* harmony import */
 
 
-      var src_app_modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+      var src_app_modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
       /*! src/app/modals/modal-watchlist/modal-watchlist.component */
       "Nbj3");
       /* harmony import */
 
 
-      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
+      var src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
+      /*! src/app/services/stock.service */
+      "8hSh");
+      /* harmony import */
+
+
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
+      /*! src/app/services/user.service */
+      "qfBg");
+      /* harmony import */
+
+
+      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(
       /*! src/app/services/watchlist.service */
       "Tl0h");
 
       var WatchlistPage = /*#__PURE__*/function () {
-        function WatchlistPage(modalController, watchlistService, actionSheetController) {
+        function WatchlistPage(modalController, watchlistService, actionSheetController, stockService, userService) {
           _classCallCheck(this, WatchlistPage);
 
           this.modalController = modalController;
           this.watchlistService = watchlistService;
           this.actionSheetController = actionSheetController;
+          this.stockService = stockService;
+          this.userService = userService;
           this.companies = [];
           this.watchlists = [];
-          this.selectedWatchlist = 1;
+          this.subscribedSockets = [];
         }
 
         _createClass(WatchlistPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.companies = this.watchlistService.companies;
-            this.watchlists = this.watchlistService.watchlists;
+            this.selectedWatchlist = 0;
+            this.dataLoaded = false;
+            this.watchlistService.getSimulatedWatchlists().subscribe(function (w) {
+              console.log(w); // this.watchlists = w.data
+              // this.updateLtp()
+            });
+            this.isSimualted = this.userService.isSimulated;
           }
         }, {
-          key: "drop",
-          value: function drop(event) {
-            Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_3__["moveItemInArray"])(this.watchlists, event.previousIndex, event.currentIndex);
+          key: "ionViewDidEnter",
+          value: function ionViewDidEnter() {
+            this.updateLtp();
+          }
+        }, {
+          key: "updateLtp",
+          value: function updateLtp() {
+            var _this = this;
+
+            this.unsubscribeFromSockets();
+            this.watchlists.forEach(function (w) {
+              w.stockIds.forEach(function (s) {
+                var socketSub = _this.stockService.listen(s.id).subscribe(function (res) {
+                  s.ltp = res[0].price;
+                });
+
+                _this.stockService.getStock(s.id).subscribe(function (stockData) {
+                  s.ldp = stockData.data.historyData['1month'][stockData.data.historyData['1month'].length - 1].close;
+                }, function () {}, function () {
+                  return _this.dataLoaded = true;
+                });
+
+                _this.subscribedSockets.push(socketSub);
+              });
+            });
+          }
+        }, {
+          key: "unsubscribeFromSockets",
+          value: function unsubscribeFromSockets() {
+            this.subscribedSockets.forEach(function (s) {
+              s.unsubscribe();
+            });
+            this.subscribedSockets.splice(0, this.subscribedSockets.length);
           }
         }, {
           key: "openCompaniesModal",
@@ -223,7 +266,7 @@
                     case 0:
                       _context.next = 2;
                       return this.modalController.create({
-                        component: src_app_modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_9__["ModalWatchlistComponent"],
+                        component: src_app_modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_8__["ModalWatchlistComponent"],
                         componentProps: {
                           selectedWatchlist: id
                         }
@@ -256,7 +299,7 @@
                     case 0:
                       _context2.next = 2;
                       return this.modalController.create({
-                        component: src_app_modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_8__["ModalWatchlistCeComponent"],
+                        component: src_app_modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_7__["ModalWatchlistCeComponent"],
                         componentProps: {
                           isEdit: isEdit,
                           selectedWatchlist: this.selectedWatchlist
@@ -281,7 +324,7 @@
           }
         }, {
           key: "openBuySellModal",
-          value: function openBuySellModal(id) {
+          value: function openBuySellModal(stock) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
               var modal;
               return regeneratorRuntime.wrap(function _callee3$(_context3) {
@@ -290,9 +333,9 @@
                     case 0:
                       _context3.next = 2;
                       return this.modalController.create({
-                        component: src_app_modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_6__["BuySellModalPopupComponent"],
+                        component: src_app_modals_buy_sell_modal_popup_buy_sell_modal_popup_component__WEBPACK_IMPORTED_MODULE_5__["BuySellModalPopupComponent"],
                         componentProps: {
-                          selectedCompany: id
+                          selectedStock: stock
                         }
                       });
 
@@ -323,7 +366,7 @@
                     case 0:
                       _context4.next = 2;
                       return this.modalController.create({
-                        component: src_app_modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_7__["ModalEditWatchlistsComponent"]
+                        component: src_app_modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_6__["ModalEditWatchlistsComponent"]
                       });
 
                     case 2:
@@ -356,7 +399,7 @@
           key: "watchlistTitleActionSheet",
           value: function watchlistTitleActionSheet() {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-              var _this = this;
+              var _this2 = this;
 
               var actionSheet;
               return regeneratorRuntime.wrap(function _callee5$(_context5) {
@@ -370,7 +413,7 @@
                           text: 'Manage',
                           icon: 'cog',
                           handler: function handler() {
-                            _this.openManageWatchlists();
+                            _this2.openManageWatchlists();
                           }
                         }, {
                           text: 'Cancel',
@@ -396,7 +439,7 @@
           key: "watchlistEditActionSheet",
           value: function watchlistEditActionSheet() {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-              var _this2 = this;
+              var _this3 = this;
 
               var actionSheet;
               return regeneratorRuntime.wrap(function _callee6$(_context6) {
@@ -410,14 +453,15 @@
                           text: 'Edit',
                           icon: 'create-outline',
                           handler: function handler() {
-                            _this2.openWatchlistModal(true);
+                            _this3.openWatchlistModal(true);
                           }
                         }, {
                           text: 'Delete',
                           role: 'destructive',
                           icon: 'trash-outline',
                           handler: function handler() {
-                            _this2.deleteWatchlist();
+                            // this.removeWatchlist('')
+                            console.log('update delete');
                           }
                         }, {
                           text: 'Cancel',
@@ -440,14 +484,25 @@
             }));
           }
         }, {
-          key: "deleteWatchlist",
-          value: function deleteWatchlist() {
-            this.watchlistService.deleteWatchlist(this.selectedWatchlist);
+          key: "removeWatchlist",
+          value: function removeWatchlist(id) {
+            this.watchlistService.deleteWatchlist(id);
           }
         }, {
           key: "tabIndex",
-          value: function tabIndex(event) {
-            this.selectedWatchlist = event;
+          value: function tabIndex(tab) {
+            if (typeof tab == 'number') this.selectedWatchlist = tab;else this.selectedWatchlist = tab.detail;
+            this.updateLtp();
+          }
+        }, {
+          key: "ionViewDidLeave",
+          value: function ionViewDidLeave() {
+            this.unsubscribeFromSockets();
+          }
+        }, {
+          key: "ngOnDestroy",
+          value: function ngOnDestroy() {
+            this.unsubscribeFromSockets();
           }
         }]);
 
@@ -456,15 +511,19 @@
 
       WatchlistPage.ctorParameters = function () {
         return [{
-          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"]
+          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"]
         }, {
-          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_10__["WatchlistService"]
+          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_11__["WatchlistService"]
         }, {
-          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ActionSheetController"]
+          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ActionSheetController"]
+        }, {
+          type: src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_9__["StockService"]
+        }, {
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_10__["UserService"]
         }];
       };
 
-      WatchlistPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["Component"])({
+      WatchlistPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
         selector: 'app-watchlist',
         template: _raw_loader_watchlist_page_html__WEBPACK_IMPORTED_MODULE_1__["default"],
         styles: [_watchlist_page_scss__WEBPACK_IMPORTED_MODULE_2__["default"]]
@@ -524,14 +583,14 @@
         _createClass(DoubleTapDirective, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this3 = this;
+            var _this4 = this;
 
             var gesture = this.gestureCtrl.create({
               gestureName: 'double-tap',
               el: this.el.nativeElement,
               threshold: 0,
               onStart: function onStart() {
-                _this3.onStart();
+                _this4.onStart();
               }
             });
             gesture.enable();
@@ -716,7 +775,8 @@
 
       var routes = [{
         path: '',
-        component: _watchlist_page__WEBPACK_IMPORTED_MODULE_4__["WatchlistPage"]
+        component: _watchlist_page__WEBPACK_IMPORTED_MODULE_4__["WatchlistPage"],
+        children: []
       }, {
         path: 'buy-sell/:id',
         component: _buy_sell_buy_sell_page__WEBPACK_IMPORTED_MODULE_3__["BuySellPage"]
@@ -749,7 +809,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header #header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title (click)=\"onWatchlistTitleClick()\">Watchlist</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<super-tabs #superTabs *ngIf=\"watchlists.length > 0\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\" [scrollable]=\"watchlists.length > 4\" [scrollablePadding]=\"watchlists.length < 3\">\n\t\t\t<super-tab-button (click)=\"tabIndex(1)\" (eventHandler)=\"onWatchlistTabClick()\">\n\t\t\t\t<ion-label>{{'Trending'.length > 8 ? 'Trending'.substring(0,8) + '...' : 'Trending'}}</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button *ngFor=\"let w of watchlists | slice:1\" (click)=\"tabIndex(w.id)\" appDoubleTap (eventHandler)=\"onWatchlistTabClick()\">\n\t\t\t\t<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container>\n\t\t\t<super-tab *ngFor=\"let w of watchlists\">\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let company of w.companies\" (click)=\"openBuySellModal(company.id)\">\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t<h3>{{company.code | uppercase}}</h3>\n\t\t\t\t\t\t\t<p>{{company.name}}</p>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"company.isRising\">\n\t\t\t\t\t\t\t<ion-text color=\"success\"><h3>{{company.greenNum}}</h3></ion-text>\n\t\t\t\t\t\t\t<p>+{{company.rateRaw}} (+{{company.ratePercentage}}%)</p>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"!company.isRising\">\n\t\t\t\t\t\t\t<ion-text color=\"danger\"><h3>{{company.greenNum}}</h3></ion-text>\n\t\t\t\t\t\t\t<p>-{{company.rateRaw}} (-{{company.ratePercentage}}%)</p>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t\t<ion-fab horizontal=\"end\" vertical=\"bottom\" *ngIf=\"w.name != 'Trending'\">\n\t\t\t\t\t<ion-fab-button (click)=\"openCompaniesModal(w.id)\">\n\t\t\t\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t\t\t\t</ion-fab-button>\n\t\t\t\t</ion-fab>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<ion-content padding *ngIf=\"watchlists.length == 0\">\n\t\t<div>\n\t\t\t<h6 class=\"gray\">Go on and create your personal watchlist <br>\n\t\t\tby pressing 'Watchlist' in the toolbar</h6>\n\t\t</div>\n\t</ion-content>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title (click)=\"onWatchlistTitleClick()\">Watchlist</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<super-tabs *ngIf=\"!dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label style=\"width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center;\">\n\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container>\n\t\t\t<super-tab>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let item of [].constructor(9)\" class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-label class=\"ion-padding-start\" style=\"display: flex; flex-direction: column; align-items: flex-start;\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 40%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 30%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label style=\"display: flex; flex-direction: column; align-items: flex-end;\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t<ion-label style=\"display: flex; flex-direction: row; justify-content: flex-end; width: 100%;\">\n\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%; margin-right: 10px;\"></ion-skeleton-text> \n\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<super-tabs *ngIf=\"watchlists.length > 0 && dataLoaded\">\n\t\t<super-tabs-toolbar\n\t\t\tslot=\"top\"\n\t\t\tcolor=\"translucent\"\n\t\t\t[scrollable]=\"watchlists.length > 4\"\n\t\t\t[scrollablePadding]=\"watchlists.length < 3\">\n\t\t\t<super-tab-button\n\t\t\t\t*ngFor=\"let w of watchlists; let i = index\"\n\t\t\t\t(click)=\"tabIndex(i)\"\n\t\t\t\tappDoubleTap\n\t\t\t\t(eventHandler)=\"onWatchlistTabClick()\">\n\t\t\t\t<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container (activeTabIndexChange)=\"tabIndex($event)\">\n\t\t\t<super-tab *ngFor=\"let w of watchlists\">\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let c of w.stockIds\" (click)=\"openBuySellModal(c)\">\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t<h3>{{c.name}}</h3>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"+c.ltp - +c.ldp >= 0\">\n\t\t\t\t\t\t\t<ion-text color=\"success\"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>\n\t\t\t\t\t\t\t<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"+c.ltp - +c.ldp < 0\">\n\t\t\t\t\t\t\t<ion-text color=\"danger\"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>\n\t\t\t\t\t\t\t<p>-{{+c.ltp - +c.ldp | number:'1.1-2'}} (-{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t\t<ion-fab horizontal=\"end\" vertical=\"bottom\" *ngIf=\"w.name != 'Trending'\">\n\t\t\t\t\t<ion-fab-button (click)=\"openCompaniesModal(w._id)\">\n\t\t\t\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t\t\t\t</ion-fab-button>\n\t\t\t\t</ion-fab>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<ion-content padding *ngIf=\"watchlists.length == 0\">\n\t\t<div>\n\t\t\t<h6 class=\"gray\">\n\t\t\t\tGo on and create your personal watchlist <br />\n\t\t\t\tby pressing 'Watchlist' in the toolbar\n\t\t\t</h6>\n\t\t</div>\n\t</ion-content>\n</ion-content>\n";
       /***/
     },
 
@@ -811,33 +871,58 @@
       /* harmony import */
 
 
-      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
-      /*! src/app/services/watchlist.service */
-      "Tl0h");
+      var src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! src/app/services/stock.service */
+      "8hSh");
+      /* harmony import */
+
+
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! src/app/services/user.service */
+      "qfBg");
 
       var BuySellPage = /*#__PURE__*/function () {
-        function BuySellPage(route, watchlistService, orderService, router) {
+        function BuySellPage(route, stockService, orderService, router, userService) {
           _classCallCheck(this, BuySellPage);
 
           this.route = route;
-          this.watchlistService = watchlistService;
+          this.stockService = stockService;
           this.orderService = orderService;
           this.router = router;
+          this.userService = userService;
+          this.limitVal = 0;
         }
 
         _createClass(BuySellPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this4 = this;
+            var _this5 = this;
 
-            this.availableBalance = 100000;
             this.approxMargin = 2167;
             this.capitalAtRisk = this.approxMargin / this.availableBalance;
+            this.userService.accountDetails().subscribe(function (res) {
+              _this5.availableBalance = res.account.currentBalance;
+            });
             this.route.queryParams.subscribe(function (data) {
-              data.isBuy == 'true' ? _this4.isBuy = true : _this4.isBuy = false;
+              data.isBuy == 'true' ? _this5.isBuy = true : _this5.isBuy = false;
             });
             this.route.params.subscribe(function (data) {
-              return _this4.company = _this4.watchlistService.getCompany(data["id"]);
+              return _this5.stockService.getStock(data["id"]).subscribe(function (c) {
+                _this5.company = c.data;
+
+                _this5.updateLtp();
+              });
+            });
+          }
+        }, {
+          key: "updateLtp",
+          value: function updateLtp() {
+            var _this6 = this;
+
+            var _a;
+
+            this.stockService.listen((_a = this.company) === null || _a === void 0 ? void 0 : _a._id).subscribe(function (res) {
+              _this6.company.ltp = res[0].price;
             });
           }
         }, {
@@ -860,28 +945,14 @@
             var target = this.buySellForm.value.target;
 
             if (quantity != '' && order != '' && price != '' && quantity > 0) {
-              if (order != 'market' && price > 0) {
-                console.log({
-                  formVal: this.buySellForm.value
-                });
-                this.orderService.buy(this.company.id, quantity, stopLoss, target, order, price);
-                this.router.navigate(['home', 'orders'], {
-                  queryParams: {
-                    selectTab: 2
-                  }
-                });
+              if (order == 'limit' && price > 0) {
+                this.isBuy ? this.orderService.buy(this.company._id, quantity, stopLoss, target, order, price) : this.orderService.sell(this.company._id, quantity, stopLoss, target, order, price);
+                this.router.navigate(['home', 'orders']);
               } else {
-                console.log({
-                  formVal: this.buySellForm.value
-                });
-                this.orderService.buy(this.company.id, quantity, stopLoss, target, order);
-                this.router.navigate(['home', 'orders'], {
-                  queryParams: {
-                    selectTab: 2
-                  }
-                });
+                this.isBuy ? this.orderService.buy(this.company._id, quantity, stopLoss, target, order, this.company.ltp) : this.orderService.sell(this.company._id, quantity, stopLoss, target, order, this.company.ltp);
+                this.router.navigate(['home', 'orders']);
               }
-            } else alert('err');
+            }
           }
         }]);
 
@@ -892,11 +963,13 @@
         return [{
           type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"]
         }, {
-          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__["WatchlistService"]
+          type: src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_6__["StockService"]
         }, {
           type: src_app_services_order_service__WEBPACK_IMPORTED_MODULE_5__["OrderService"]
         }, {
           type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
+        }, {
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__["UserService"]
         }];
       };
 
@@ -930,7 +1003,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header translucent>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button [defaultHref]=\"['home','watchlist']\" (click)=\"navigateToWatchlist()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>{{company.name}}</ion-title>\n\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button>\n\t\t\t\t<ion-select ok-text=\"Okay\" cancel-text=\"Cancel\" value=\"{{isBuy ? 'true' : 'false'}}\" (ionChange)=\"changeType($event)\">\n\t\t\t\t\t<ion-select-option value=\"true\">Buy</ion-select-option>\n\t\t\t\t\t<ion-select-option value=\"false\">Sale</ion-select-option>\n\t\t\t\t</ion-select>\n\t\t\t</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<form #buySellForm=\"ngForm\" id=\"buySellForm\">\n\t\t<ion-card>\n\t\t\t<ion-grid>\n\t\t\t\t<ion-row>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Quantity</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Lot: 1</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"quantity\" ngModel required min=0></ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Price</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Tick: 0.05</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\t\tname=\"price\"\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'disabled-input':marketRadio.checked}\"\n\t\t\t\t\t\t\t\t[required]=\"!marketRadio.checked\"\n\t\t\t\t\t\t\t\t[disabled]=\"marketRadio.checked\"\n\t\t\t\t\t\t\t\tmin=0\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t</ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t</ion-row>\n\t\t\t</ion-grid>\n\t\t</ion-card>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=6>\n\t\t\t\t\t<ion-item>\n\t\t\t\t\t  <ion-label position=\"floating\">Stop-loss</ion-label>\n\t\t\t\t\t  <ion-input type=\"number\" name=\"stopLoss\" ngModel required></ion-input>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=6>\n\t\t\t\t\t<ion-item>\n\t\t\t\t\t  <ion-label position=\"floating\">Target</ion-label>\n\t\t\t\t\t  <ion-input type=\"number\" name=\"target\" ngModel required></ion-input>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"bs-radio-group\">\n\t\t\t\t\t<ion-text><h5>Order</h5></ion-text>\n\t\t\t\t\t<ul class=\"radios\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t#marketRadio\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"market\"\n\t\t\t\t\t\t\t\tid=\"radio-market\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-market\">MARKET</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"limit\"\n\t\t\t\t\t\t\t\tid=\"radio-limit\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-limit\">LIMIT</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr />\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=6 class=\"ion-text-left\">\n\t\t\t\t\t<ion-text><p>Approx. Margin:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Available Balance:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Capital at Risk:</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=6 class=\"ion-text-right\">\n\t\t\t\t\t<ion-text><p>{{approxMargin}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{availableBalance}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{capitalAtRisk | percent:'1.1'}}</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</form>\n</ion-content>\n<ion-footer>\n\t<ion-toolbar>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"tertiary\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm buy\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"!isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"danger\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm sale\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</ion-toolbar>\n</ion-footer>\n";
+      __webpack_exports__["default"] = "<ion-header translucent>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"['home','watchlist']\" (click)=\"navigateToWatchlist()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>{{company?.companyName}}</ion-title>\n\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button>\n\t\t\t\t<ion-select ok-text=\"Okay\" cancel-text=\"Cancel\" value=\"{{isBuy ? 'true' : 'false'}}\" (ionChange)=\"changeType($event)\">\n\t\t\t\t\t<ion-select-option value=\"true\">Buy</ion-select-option>\n\t\t\t\t\t<ion-select-option value=\"false\">Sale</ion-select-option>\n\t\t\t\t</ion-select>\n\t\t\t</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<form #buySellForm=\"ngForm\" id=\"buySellForm\">\n\t\t<ion-card>\n\t\t\t<ion-grid>\n\t\t\t\t<ion-row>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Quantity</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Lot: 1</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"quantity\" ngModel required min=0></ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Price</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Tick: 0.05</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\t\tname=\"price\"\n\t\t\t\t\t\t\t\t[(ngModel)]=\"marketRadio.checked ? company?.ltp : limitVal\"\n\t\t\t\t\t\t\t\t[ngClass]=\"{'disabled-input':marketRadio.checked}\"\n\t\t\t\t\t\t\t\t[required]=\"!marketRadio.checked\"\n\t\t\t\t\t\t\t\t[disabled]=\"marketRadio.checked\"\n\t\t\t\t\t\t\t\tmin=0\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t</ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t</ion-row>\n\t\t\t</ion-grid>\n\t\t</ion-card>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"stopLoss\" ngModel required min=0></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"target\" ngModel required min=0></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"bs-radio-group\">\n\t\t\t\t\t<ion-text><h5>Order</h5></ion-text>\n\t\t\t\t\t<ul class=\"radios\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t#marketRadio\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"market\"\n\t\t\t\t\t\t\t\tid=\"radio-market\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tchecked=\"true\"\n\t\t\t\t\t\t\t\t[ngModel]='true'\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-market\">MARKET</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"limit\"\n\t\t\t\t\t\t\t\tid=\"radio-limit\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-limit\">LIMIT</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr />\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=6 class=\"ion-text-left\">\n\t\t\t\t\t<ion-text><p>Approx. Margin:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Available Balance:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Capital at Risk:</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=6 class=\"ion-text-right\">\n\t\t\t\t\t<ion-text><p>{{approxMargin}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{availableBalance}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{capitalAtRisk | percent:'1.1'}}</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</form>\n</ion-content>\n<ion-footer>\n\t<ion-toolbar>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"tertiary\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm buy\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"!isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"danger\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm sale\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</ion-toolbar>\n</ion-footer>\n";
       /***/
     }
   }]);

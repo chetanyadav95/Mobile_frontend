@@ -1,25 +1,53 @@
-<ion-header [ngClass]="{'ion-no-border': watchlists.length > 0, '': watchlists.length == 0 }">
+<ion-header class="ion-no-border">
 	<ion-toolbar>
 		<ion-title (click)="onWatchlistTitleClick()">Watchlist</ion-title>
 		<ion-img slot="end" src="/assets/logo_no_back.png" class="logo"></ion-img>
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-	<super-tabs *ngIf="watchlists.length > 0">
+	<super-tabs *ngIf="!dataLoaded">
+		<super-tabs-toolbar slot="top" color="translucent">
+			<super-tab-button>
+				<ion-label style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+				</ion-label>
+			</super-tab-button>
+		</super-tabs-toolbar>
+		<super-tabs-container>
+			<super-tab>
+				<ion-list>
+					<ion-item *ngFor="let item of [].constructor(9)" class="ion-no-padding">
+						<ion-label class="ion-padding-start" style="display: flex; flex-direction: column; align-items: flex-start;">
+							<ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+							<ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+						</ion-label>
+						<ion-label style="display: flex; flex-direction: column; align-items: flex-end;">
+							<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+							<ion-label style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
+								<ion-skeleton-text animated style="width: 20%; margin-right: 10px;"></ion-skeleton-text> 
+								<ion-skeleton-text animated style="width: 20%;"></ion-skeleton-text>
+							</ion-label>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+			</super-tab>
+		</super-tabs-container>
+	</super-tabs>
+	<super-tabs *ngIf="watchlists.length > 0 && dataLoaded">
 		<super-tabs-toolbar
 			slot="top"
 			color="translucent"
 			[scrollable]="watchlists.length > 4"
 			[scrollablePadding]="watchlists.length < 3">
 			<super-tab-button
-				*ngFor="let w of watchlists"
-				(click)="tabIndex(w._id)"
+				*ngFor="let w of watchlists; let i = index"
+				(click)="tabIndex(i)"
 				appDoubleTap
 				(eventHandler)="onWatchlistTabClick()">
 				<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
-		<super-tabs-container>
+		<super-tabs-container (activeTabIndexChange)="tabIndex($event)">
 			<super-tab *ngFor="let w of watchlists">
 				<ion-list>
 					<ion-item *ngFor="let c of w.stockIds" (click)="openBuySellModal(c)">
@@ -32,7 +60,7 @@
 						</ion-label>
 						<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp < 0">
 							<ion-text color="danger"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
-							<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
+							<p>-{{+c.ltp - +c.ldp | number:'1.1-2'}} (-{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
 						</ion-label>
 					</ion-item>
 				</ion-list>
@@ -44,7 +72,7 @@
 			</super-tab>
 		</super-tabs-container>
 	</super-tabs>
-	<ion-content padding *ngIf="watchlists.length == 0">
+	<ion-content padding *ngIf="watchlists.length == 0 && dataLoaded">
 		<div>
 			<h6 class="gray">
 				Go on and create your personal watchlist <br />

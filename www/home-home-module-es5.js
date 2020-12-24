@@ -107,6 +107,23 @@
               return m.OrdersPageModule;
             });
           }
+        }, // {
+        //   path: 'chart',
+        //   canActivate: [AuthGuard],
+        //   loadChildren: () => import('../pages/chart/chart.module').then( m => m.ChartPageModule)
+        // },
+        {
+          path: 'learning',
+          canActivate: [_guards_auth_guard_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]],
+          loadChildren: function loadChildren() {
+            return __webpack_require__.e(
+            /*! import() | pages-learning-learning-module */
+            "pages-learning-learning-module").then(__webpack_require__.bind(null,
+            /*! ../pages/learning/learning.module */
+            "hxX9")).then(function (m) {
+              return m.LearningPageModule;
+            });
+          }
         }, {
           path: 'login',
           loadChildren: function loadChildren() {
@@ -127,30 +144,6 @@
             /*! ../pages/sign-up/sign-up.module */
             "J606")).then(function (m) {
               return m.SignUpPageModule;
-            });
-          }
-        }, {
-          path: 'chart',
-          canActivate: [_guards_auth_guard_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]],
-          loadChildren: function loadChildren() {
-            return __webpack_require__.e(
-            /*! import() | pages-chart-chart-module */
-            "pages-chart-chart-module").then(__webpack_require__.bind(null,
-            /*! ../pages/chart/chart.module */
-            "ThXp")).then(function (m) {
-              return m.ChartPageModule;
-            });
-          }
-        }, {
-          path: 'learning',
-          canActivate: [_guards_auth_guard_guard__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]],
-          loadChildren: function loadChildren() {
-            return __webpack_require__.e(
-            /*! import() | pages-learning-learning-module */
-            "pages-learning-learning-module").then(__webpack_require__.bind(null,
-            /*! ../pages/learning/learning.module */
-            "hxX9")).then(function (m) {
-              return m.LearningPageModule;
             });
           }
         }]
@@ -248,13 +241,19 @@
       var _home_routing_module__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! ./home-routing.module */
       "A3+G");
+      /* harmony import */
+
+
+      var _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! @swimlane/ngx-charts */
+      "zQsl");
 
       var HomePageModule = function HomePageModule() {
         _classCallCheck(this, HomePageModule);
       };
 
       HomePageModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-        imports: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["IonicModule"], _home_routing_module__WEBPACK_IMPORTED_MODULE_6__["HomePageRoutingModule"]],
+        imports: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["CommonModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormsModule"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["IonicModule"], _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_7__["NgxChartsModule"], _home_routing_module__WEBPACK_IMPORTED_MODULE_6__["HomePageRoutingModule"]],
         declarations: [_home_page__WEBPACK_IMPORTED_MODULE_5__["HomePage"]]
       })], HomePageModule);
       /***/

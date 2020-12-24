@@ -29,7 +29,6 @@ export class BuySellPage implements OnInit {
     this.approxMargin = 2167
     this.capitalAtRisk = this.approxMargin / this.availableBalance
     this.userService.accountDetails().subscribe((res:any) => {
-      console.log(res.account.currentBalance)
       this.availableBalance = res.account.currentBalance
     })
     this.route.queryParams.subscribe(data => {
@@ -37,7 +36,6 @@ export class BuySellPage implements OnInit {
     })
     this.route.params.subscribe(data => 
       this.stockService.getStock(data["id"]).subscribe((c:any) => {
-        console.log(c)
         this.company = c.data
         this.updateLtp()
       })
@@ -66,13 +64,11 @@ export class BuySellPage implements OnInit {
     const target = this.buySellForm.value.target
     if(quantity != '' && order != '' && price != '' && quantity > 0 ){
       if(order == 'limit' && price > 0){
-        console.log({formVal: this.buySellForm.value})
         this.isBuy 
           ?  this.orderService.buy(this.company._id, quantity, stopLoss, target, order, price)
           :  this.orderService.sell(this.company._id, quantity, stopLoss, target, order, price)
         this.router.navigate(['home','orders'])
       } else {
-        console.log({formVal: this.buySellForm.value})
         this.isBuy 
           ?  this.orderService.buy(this.company._id, quantity, stopLoss, target, order, this.company.ltp)
           :  this.orderService.sell(this.company._id, quantity, stopLoss, target, order, this.company.ltp)

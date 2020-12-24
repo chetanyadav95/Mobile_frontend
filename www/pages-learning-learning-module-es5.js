@@ -461,19 +461,16 @@
           key: "onStart",
           value: function onStart() {
             this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none');
-            console.log("start");
           }
         }, {
           key: "onMove",
           value: function onMove() {
             this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none');
-            console.log("move");
           }
         }, {
           key: "onUp",
           value: function onUp() {
             this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'all');
-            console.log("up");
           }
         }]);
 
@@ -947,7 +944,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Share Name</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\"> \n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon> \n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\"> \n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon> \n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 
@@ -2025,24 +2022,18 @@
                         buttons: [{
                           text: 'Camera',
                           icon: 'camera',
-                          handler: function handler() {
-                            // this.accessCamera()
-                            console.log('Camera clicked');
+                          handler: function handler() {// this.accessCamera()
                           }
                         }, {
                           text: 'Gallery',
                           icon: 'image',
-                          handler: function handler() {
-                            // this.accessGallery()
-                            console.log('Gallery clicked');
+                          handler: function handler() {// this.accessGallery()
                           }
                         }, {
                           text: 'Cancel',
                           icon: 'close',
                           role: 'cancel',
-                          handler: function handler() {
-                            console.log('Cancel clicked');
-                          }
+                          handler: function handler() {}
                         }]
                       });
 

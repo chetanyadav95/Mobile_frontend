@@ -22,7 +22,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button [defaultHref]=\"['home','watchlist']\" (click)=\"navigateToAccount()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Settings</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<ion-list>\n\t\t<ion-item>\n\t\t\t<ion-label>Data type</ion-label>\n\t\t\t<ion-select value=\"simulated\">\n\t\t\t\t<ion-select-option value=\"real-time\">Real-time</ion-select-option>\n\t\t\t\t<ion-select-option value=\"simulated\">Simulated</ion-select-option>\n\t\t\t</ion-select>\n\t\t</ion-item>\n\t\t<ion-item>\n\t\t  <ion-label>Risk %</ion-label>\n\t\t  <ion-input type=\"number\"></ion-input>\n\t\t</ion-item>\n\t\t<ion-item>\n\t\t  <ion-label>Leverage</ion-label>\n\t\t  <ion-select value=\"0\">\n\t\t\t  <ion-select-option value=\"0\">0</ion-select-option>\n\t\t\t  <ion-select-option value=\"1\">1</ion-select-option>\n\t\t\t  <ion-select-option value=\"2\">2</ion-select-option>\n\t\t\t  <ion-select-option value=\"3\">3</ion-select-option>\n\t\t\t  <ion-select-option value=\"4\">4</ion-select-option>\n\t\t\t  <ion-select-option value=\"5\">5</ion-select-option>\n\t\t\t  <ion-select-option value=\"6\">6</ion-select-option>\n\t\t  </ion-select>\n\t\t</ion-item>\n\t</ion-list>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button [defaultHref]=\"['home','watchlist']\" (click)=\"navigateToAccount()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Settings</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<ion-list>\n\t\t<ion-item>\n\t\t\t<ion-label>Data type</ion-label>\n\t\t\t<ion-select value=\"simulated\" (ionChange)=\"dataChange()\" [(ngModel)]=\"datatype\">\n\t\t\t\t<ion-select-option value=\"realtime\">Real-time</ion-select-option>\n\t\t\t\t<ion-select-option value=\"simulated\">Simulated</ion-select-option>\n\t\t\t</ion-select>\n\t\t</ion-item>\n\t\t<ion-item>\n\t\t  <ion-label>Risk %</ion-label>\n\t\t  <ion-input class=\"ion-text-right\" type=\"number\" [(ngModel)]=\"risk\" (ionChange)=\"dataChange()\"></ion-input>\n\t\t</ion-item>\n\t\t<ion-item>\n\t\t  <ion-label>Leverage</ion-label>\n\t\t  <ion-select value=\"0\" [(ngModel)]=\"leverage\" (ionChange)=\"dataChange()\">\n\t\t\t  <ion-select-option value=\"0\">0</ion-select-option>\n\t\t\t  <ion-select-option value=\"1\">1</ion-select-option>\n\t\t\t  <ion-select-option value=\"2\">2</ion-select-option>\n\t\t\t  <ion-select-option value=\"3\">3</ion-select-option>\n\t\t\t  <ion-select-option value=\"4\">4</ion-select-option>\n\t\t\t  <ion-select-option value=\"5\">5</ion-select-option>\n\t\t\t  <ion-select-option value=\"6\">6</ion-select-option>\n\t\t  </ion-select>\n\t\t</ion-item>\n\t</ion-list>\n</ion-content>\n";
       /***/
     },
 
@@ -208,21 +208,47 @@
       var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! @angular/router */
       "tyNb");
+      /* harmony import */
+
+
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      /*! src/app/services/user.service */
+      "qfBg");
 
       var SettingsPage = /*#__PURE__*/function () {
-        function SettingsPage(router) {
+        function SettingsPage(router, userService) {
           _classCallCheck(this, SettingsPage);
 
           this.router = router;
+          this.userService = userService;
         }
 
         _createClass(SettingsPage, [{
           key: "ngOnInit",
-          value: function ngOnInit() {}
+          value: function ngOnInit() {
+            var _this = this;
+
+            this.userService.user.subscribe(function (u) {
+              return _this.user = u;
+            });
+            this.userService.getSettings().subscribe(function (r) {
+              console.log(r);
+              _this.datatype = r.data.datatype;
+              _this.risk = r.data.risk;
+              _this.leverage = r.data.leverage.toString();
+            });
+          }
         }, {
           key: "navigateToAccount",
           value: function navigateToAccount() {
             this.router.navigate(['home', 'account']);
+          }
+        }, {
+          key: "dataChange",
+          value: function dataChange() {
+            this.userService.updateSettings(this.user.id, this.datatype, this.risk, this.leverage).subscribe(function (r) {
+              return console.log(r);
+            });
           }
         }]);
 
@@ -232,6 +258,8 @@
       SettingsPage.ctorParameters = function () {
         return [{
           type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
+        }, {
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"]
         }];
       };
 

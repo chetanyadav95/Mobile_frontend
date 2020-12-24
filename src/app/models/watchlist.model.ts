@@ -5,4 +5,5 @@ export interface Watchlist{
     userId: string
     name: string
     stockIds: Stock[]
+    position: number
 }

@@ -5,19 +5,94 @@
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-	<super-tabs (tabChange)="tabIndex($event)">
+	<super-tabs *ngIf="!dataLoaded">
 		<super-tabs-toolbar slot="top" color="translucent">
 			<super-tab-button>
-				<ion-label>Position</ion-label>
+				<ion-label
+					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
+				>
+					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+				</ion-label>
 			</super-tab-button>
 			<super-tab-button>
-				<ion-label>Completed</ion-label>
+				<ion-label
+					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
+				>
+					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+				</ion-label>
 			</super-tab-button>
 			<super-tab-button>
-				<ion-label>Pending</ion-label>
+				<ion-label
+					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
+				>
+					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+				</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
 		<super-tabs-container>
+			<super-tab>
+				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-card>
+					<ion-card-content>
+						<ion-card-subtitle class="skeleton-row">
+							<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+						</ion-card-subtitle>
+						<ion-card-title class="skeleton-row">
+							<ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+						</ion-card-title>
+					</ion-card-content>
+				</ion-card>
+				<ion-list>
+					<ion-item class="ion-no-padding" *ngFor="let item of [].constructor(6)">
+						<ion-grid class="ion-no-padding ion-padding-vertical">
+							<ion-row>
+								<ion-col col="6" class="ion-padding-start">
+									<span style="display: flex; flex-direction: row; justify-content: flex-start;">
+										<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+									</span>
+									<span style="display: flex; flex-direction: row; justify-content: flex-start;">
+										<ion-skeleton-text animated style="width: 25%;margin-right: 10px;"></ion-skeleton-text>
+										<ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+									</span>
+									<span style="display: flex; flex-direction: row; justify-content: flex-start;">
+										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
+										<ion-skeleton-text animated style="width: 25%"></ion-skeleton-text>
+									</span>
+								</ion-col>
+								<ion-col col="6" class="ion-padding-end">
+									<span style="display: flex; flex-direction: row; justify-content: flex-end;">
+										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
+										<ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+									</span>
+									<span style="display: flex; flex-direction: row; justify-content: flex-end;">
+										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
+										<ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
+									</span>
+									<span style="display: flex; flex-direction: row; justify-content: flex-end;">
+										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
+										<ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
+									</span>
+								</ion-col>
+							</ion-row>
+						</ion-grid>
+					</ion-item>
+				</ion-list>
+			</super-tab>
+		</super-tabs-container>
+	</super-tabs>
+	<super-tabs (tabChange)="tabIndex($event)" *ngIf="dataLoaded">
+		<super-tabs-toolbar slot="top" color="translucent">
+			<super-tab-button (click)="tabIndex(0)">
+				<ion-label>Position</ion-label>
+			</super-tab-button>
+			<super-tab-button (click)="tabIndex(1)">
+				<ion-label>Completed</ion-label>
+			</super-tab-button>
+			<super-tab-button (click)="tabIndex(2)">
+				<ion-label>Pending</ion-label>
+			</super-tab-button>
+		</super-tabs-toolbar>
+		<super-tabs-container (activeTabIndexChange)="tabIndex($event)">
 			<super-tab>
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
 				<!-- <ion-card>
@@ -30,13 +105,11 @@
 				</ion-card> -->
 				<ion-list>
 					<ion-item class="ion-no-padding" *ngFor="let p of position" (click)="ordersActionSheet(p)">
-						<ion-grid>
+						<ion-grid class="ion-no-padding ion-padding-vertical">
 							<ion-row>
-								<ion-col col="6">
+								<ion-col col="6" class="ion-padding-start">
 									<p>
-										<span [ngClass]="{'buy': p.volume > 0, 'sell': p.volume < 0}">
-											{{p.stockId}}
-										</span>
+										<span [ngClass]="{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}"> {{p.stockName}} </span>
 									</p>
 									<p>Price: {{p.price}}</p>
 									<p>Quantity: {{p.volume}}</p>
@@ -50,9 +123,9 @@
 												</td>
 												<td>
 													<p>
-														<span [ngClass]="{'success': +p.ltp - p.price > 0, 'failure':+p.ltp - p.price < 0}">
+														<ion-text [color]="+p.ltp - p.price >= 0 ? 'success' : 'danger'">
 															{{+p.ltp - p.price > 0 ? ' +' : ' '}}{{+p.ltp - p.price | number:'1.2'}}
-														</span>
+														</ion-text>
 													</p>
 												</td>
 											</tr>
@@ -84,30 +157,30 @@
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
 				<ion-list>
 					<ion-item class="ion-no-padding" *ngFor="let c of completed">
-						<ion-grid>
+						<ion-grid class="ion-no-padding ion-padding-vertical">
 							<ion-row>
-								<ion-col col="6">
+								<ion-col col="6" class="ion-padding-start">
 									<p>
-										<span [ngClass]="{'buy': c.volume > 0, 'sell': c.volume < 0}">
-											{{c.stockId}}
-										</span>
+										<span [ngClass]="{'buy': c.orderCategory == 'buy', 'sell': c.orderCategory == 'sell'}"> {{c.stockName}} </span>
 									</p>
 									<p>Price: {{c.price}}</p>
 									<p>Quantity: {{c.volume}}</p>
 								</ion-col>
 								<ion-col col="6" class="ion-text-right">
 									<p>
-										<span [ngClass]="{'cancelled': c.status == 'CANCELLED', 'complete': c.status == 'COMPLETE'}">
-											{{c.status}}
+										<span [ngClass]="{'cancelled': c.status == 'cancelled', 'complete': c.status == 'completed'}">
+											{{c.status | uppercase}}
 										</span>
 									</p>
 									<p>
 										<strong>P&L</strong>
 										<!-- <span [ngClass]="{'success': c.pAndL > 0, 'failure':c.pAndL < 0}">
 											{{c.pAndL > 0 ? ' +' : ' '}}{{c.pAndL}}
-										</span> --> 0
+										</span> -->
+										0
 									</p>
-									<p><strong>Exit Price</strong> 
+									<p>
+										<strong>Exit Price</strong>
 										<!-- {{c.exitPrice}} -->
 										0
 									</p>
@@ -121,13 +194,11 @@
 				<ion-searchbar showCancelButton="focus"></ion-searchbar>
 				<ion-list>
 					<ion-item class="ion-no-padding" *ngFor="let p of pending" (click)="ordersActionSheet(p)">
-						<ion-grid>
+						<ion-grid class="ion-no-padding ion-padding-vertical">
 							<ion-row>
-								<ion-col col="6">
-									<p> 
-										<span [ngClass]="{'buy': p.volume > 0, 'sell': p.volume < 0}">
-											{{p.stockId}}
-										</span>
+								<ion-col col="6" class="ion-padding-start">
+									<p>
+										<span [ngClass]="{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}"> {{p.stockName}} </span>
 									</p>
 									<p>Price: {{p.isStopLoss == true ? p.stoploss : p.target}}</p>
 									<p>Quantity: {{p.volume}}</p>

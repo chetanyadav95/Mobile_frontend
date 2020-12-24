@@ -101,7 +101,7 @@ let FundsPage = class FundsPage {
         this.userService = userService;
     }
     ngOnInit() {
-        this.user = this.userService.user;
+        this.userService.user.subscribe(u => this.user = u);
     }
     navigateToAccount() {
         this.router.navigate(['home', 'account']);

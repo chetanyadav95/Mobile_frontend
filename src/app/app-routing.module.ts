@@ -7,11 +7,11 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
-  // {
-  //   path: 'chart',
-  //   canActivate: [],
-  //   loadChildren: () => import('./pages/chart/chart.module').then( m => m.ChartPageModule)
-  // },
+  {
+    path: 'chart',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/chart/chart.module').then( m => m.ChartPageModule)
+  },
   {
     path: '',
     canActivate: [AuthGuard],

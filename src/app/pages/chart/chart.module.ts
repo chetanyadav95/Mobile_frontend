@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { ChartPageRoutingModule } from './chart-routing.module';
 import { ChartPage } from './chart.page';
-import { TvChartPage } from './tv-chart/tv-chart.page';
 
 @NgModule({
   imports: [
@@ -17,7 +16,6 @@ import { TvChartPage } from './tv-chart/tv-chart.page';
   ],
   declarations: [
     ChartPage, 
-    // TvChartPage,
   ]
 })
 export class ChartPageModule {}

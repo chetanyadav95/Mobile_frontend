@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Completed } from 'src/app/models/completed.model';
 import { Pending } from 'src/app/models/pending.model';
 import { Position } from 'src/app/models/position.model';
@@ -9,27 +9,35 @@ import { ModalEditOrderComponent } from 'src/app/modals/modal-edit-order/modal-e
 import { Order } from 'src/app/models/order.model';
 import { StockService } from 'src/app/services/stock.service';
 import { Stock } from 'src/app/models/stock.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.page.html',
   styleUrls: ['./orders.page.scss'],
 })
-export class OrdersPage implements OnInit {
+export class OrdersPage implements OnInit, OnDestroy {
   position: Order[] = []
   completed: Order[] = []
   pending: Order[] = []
+  dataLoaded: boolean
   totalPandL: number
-  pageIndex: number = 0
+  pageIndex: number
+  subscribedPositionSockets: Subscription[] = []
+  subscribedPendingSockets: Subscription[] = []
   constructor(private orderService: OrderService, 
     private modalCtrl: ModalController,
     private actionSheetController: ActionSheetController,
     private stockService: StockService) { }
 
   ngOnInit() {
+    this.dataLoaded = false
+    this.pageIndex = 0
     this.orderService.getAllUserOrders().subscribe((res:any) => {
-      console.log(res)
       res.data.forEach((o: Order) => {
+        this.stockService.getStock(o.stockId).subscribe((s:any) => {
+          o.stockName = s.data.companyName
+        })
         switch (o.status) {
           case 'positioned':
             this.position.push(o)
@@ -44,11 +52,15 @@ export class OrdersPage implements OnInit {
           default:
             break;
         }
+        console.log(o)
       })
-      this.updatePositionLtp()
-      this.updatePendingLtp()
+      this.updateLtp()
       // this.totalPandL = this.orderService.totalPandL()
     })
+  }
+
+  ionViewDidEnter(){
+    this.updateLtp()
   }
 
   checkIfOrderIsCompleted(complete: Order){
@@ -72,33 +84,24 @@ export class OrdersPage implements OnInit {
     }
   }
 
-  getStockName(id){
-    let name
-    this.stockService.getStock(id).subscribe((s:any) => {
-      console.log('stock names',s)
-      name = s.data.name
-    })
-    return name
-  }
-
-  updatePositionLtp(){
+  updateLtp(){
+    this.unsubscribeFromSockets()
     this.position.forEach(s => {
-      this.stockService.listen(s.stockId).subscribe((res:any) => {
+      let stockSub : Subscription = this.stockService.listen(s.stockId).subscribe((res:any) => {
         s.ltp = res[0].price
+        this.dataLoaded = true
       })
+      this.subscribedPositionSockets.push(stockSub)
     });
-  }
-
-  updatePendingLtp(){
     this.pending.forEach(s => {
-      this.stockService.listen(s.stockId).subscribe((res:any) => {
+      let stockSub : Subscription = this.stockService.listen(s.stockId).subscribe((res:any) => {
         s.ltp = res[0].price
+        this.dataLoaded = true
       })
+      this.subscribedPendingSockets.push(stockSub)
     });
-  }
-
-  tabIndex(ev){
-    this.pageIndex = ev.detail.index
+    if(this.position.length == 0 && this.pending.length == 0 && this.completed.length == 0 || this.completed.length > 0)
+      this.dataLoaded = true
   }
 
   async ordersActionSheet(order){
@@ -138,5 +141,30 @@ export class OrdersPage implements OnInit {
       componentProps: {pending}
     });
     return await modal.present();
+  }
+
+  unsubscribeFromSockets(){
+    this.subscribedPendingSockets.forEach(s => {
+      s.unsubscribe()
+    })
+    this.subscribedPendingSockets.splice(0, this.subscribedPendingSockets.length)
+    this.subscribedPositionSockets.forEach(s => {
+      s.unsubscribe()
+    })
+    this.subscribedPositionSockets.splice(0, this.subscribedPositionSockets.length)
+  }
+
+  tabIndex(tab){
+    if(typeof(tab) == 'number') this.pageIndex = tab
+    else this.pageIndex = tab.detail.index
+    this.updateLtp()
+  }
+
+  ionViewDidLeave(){
+    this.unsubscribeFromSockets()
+  }
+
+  ngOnDestroy(){
+    this.unsubscribeFromSockets()
   }
 }

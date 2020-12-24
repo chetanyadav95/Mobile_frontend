@@ -6,20 +6,20 @@
 		</ion-buttons>
 	</ion-toolbar>
 	<ion-toolbar>
-		<ion-text slot="start" class="subtitle">
+		<ion-text slot="start" class="subtitle" *ngIf="+selectedStock.ltp - +selectedStock.ldp >= 0">
 			<h5 class="ion-margin-end">{{ selectedStock.name }}</h5>
 			<ion-text class="ion-margin-end" color="success">
 				<h5>{{ selectedStock.ltp }}</h5>
 			</ion-text>
-			<!-- <h5 class="ion-margin-end">+{{ selectedStock.rateRaw }} (+{{ selectedStock.ratePercentage }}%)</h5> -->
+			<h5 class="ion-margin-end">+{{+selectedStock.ltp - +selectedStock.ldp | number:'1.1-2'}} (+{{(+selectedStock.ltp - +selectedStock.ldp) / +selectedStock.ldp | percent:'1.1-2'}})</h5>
 		</ion-text>
-		<!-- <ion-text slot="start" class="subtitle" *ngIf="!selectedStock.isRising">
-			<h5 class="ion-margin-end">{{ selectedStock.code }}</h5>
+		<ion-text slot="start" class="subtitle" *ngIf="+selectedStock.ltp - +selectedStock.ldp < 0">
+			<h5 class="ion-margin-end">{{ selectedStock.name }}</h5>
 			<ion-text class="ion-margin-end" color="danger">
-				<h5>{{ selectedStock.greenNum }}</h5>
+				<h5>{{ selectedStock.ltp }}</h5>
 			</ion-text>
-			<h5 class="ion-margin-end">-{{ selectedStock.rateRaw }} (-{{ selectedStock.ratePercentage }}%)</h5>
-		</ion-text> -->
+			<h5 class="ion-margin-end">-{{+selectedStock.ltp - +selectedStock.ldp | number:'1.1-2'}} (-{{(+selectedStock.ltp - +selectedStock.ldp) / +selectedStock.ldp | percent:'1.1-2'}})</h5>
+		</ion-text>
 	</ion-toolbar>
 </ion-header>
 <ion-content>

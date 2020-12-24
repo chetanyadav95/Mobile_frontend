@@ -84,7 +84,7 @@
 								id="radio-market"
 								name="order"
 								checked="true"
-								ngModel
+								[ngModel]='true'
 								[ngClass]="{'red':!isBuy,'blue':isBuy}"
 							/>
 							<label for="radio-market">MARKET</label>

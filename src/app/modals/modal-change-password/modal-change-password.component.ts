@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -9,9 +10,12 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class ModalChangePasswordComponent implements OnInit {
   passwordsDontMatch: boolean
+  user: User
   constructor(private modalCtrl: ModalController, private userService: UserService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.userService.user.subscribe(u => this.user = u)
+  }
 
   dismissModal(){
     this.modalCtrl.dismiss()
@@ -19,8 +23,7 @@ export class ModalChangePasswordComponent implements OnInit {
 
   changePassword(input){
     if(input.newPassword == input.confirmPassword){
-      this.userService.changePassword(this.userService.user.email, input.newPassword).subscribe(res => {
-        console.log(res)
+      this.userService.changePassword(this.user.email, input.newPassword).subscribe(res => {
       })
     }
     // if(this.userService.changePassword(input.newPassword, input.confirmPassword)) {

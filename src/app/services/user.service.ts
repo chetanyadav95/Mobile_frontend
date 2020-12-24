@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plugins } from '@capacitor/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { environment } from 'src/environments/environment';
@@ -13,7 +13,8 @@ const { LocalNotifications } = Plugins;
 })
 export class UserService {
   apiUrl: string = environment.apiUrl + "auth/"
-  user: User
+  apiSettingsUrl: string = environment.apiUrl + "settings"
+  user = new BehaviorSubject<User>(null)
   isSimulated: boolean = true
   decodedToken
 
@@ -54,21 +55,33 @@ export class UserService {
     return this.http.post(this.apiUrl + 'password/code/check', {email, code})
   }
 
+  getSettings(){
+    return this.http.get(this.apiSettingsUrl)
+  }
+
+  updateSettings(id: string, datatype: string, risk: number, leverage: string){
+    return this.http.put(this.apiSettingsUrl, {id, datatype, risk, leverage:+leverage})
+  }
+
   logout(){
-    this.user = null
+    this.user.next(null)
     localStorage.removeItem('token')
   }
 
   add(amount: number){
-    this.user.balance.openBal += amount
-    this.user.balance.availableBal += amount
+    this.user.subscribe(u => {
+      u.balance.openBal += amount
+      u.balance.availableBal += amount
+    })
   }
   
   withdraw(amount: number){
-    if((this.user.balance.openBal - amount) >= 0)
-      this.user.balance.openBal -= amount
-    if((this.user.balance.availableBal - amount) >= 0)
-      this.user.balance.availableBal -= amount
+    this.user.subscribe(u => {
+      if((u.balance.openBal - amount) >= 0)
+        u.balance.openBal -= amount
+      if((u.balance.availableBal - amount) >= 0)
+        u.balance.availableBal -= amount
+    })
   }
 
   checkIfIsOnLoginOrSignUpPage(link: string){

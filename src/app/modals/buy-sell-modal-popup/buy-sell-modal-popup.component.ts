@@ -17,6 +17,9 @@ export class BuySellModalPopupComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    this.stockService.getStock(this.selectedStock.id).subscribe((stockData:any) => {
+      this.selectedStock.ldp = stockData.data.historyData['1month'][stockData.data.historyData['1month'].length - 1].close
+    })
     this.stockService.listen(this.selectedStock.id).subscribe((res:any) => {
       this.selectedStock.ltp = res[0].price
     })

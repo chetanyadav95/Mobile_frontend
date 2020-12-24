@@ -36,7 +36,6 @@ export class AppComponent implements OnInit{
 
   connectionLostEvent(){
     this.networkListener = Network.addListener('networkStatusChange', async status => {
-      console.log('Network status changed', status)
       this.networkStatus = status
       if(!this.networkStatus.connected)
         await this.connectionLostNotification()

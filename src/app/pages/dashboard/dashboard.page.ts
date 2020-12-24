@@ -16,7 +16,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 export class DashboardPage implements OnInit {
   data = [
     {
-      "name": "Germany",
+      "name": "Open balance",
       "series": [
         {
           "name": "1",
@@ -43,7 +43,36 @@ export class DashboardPage implements OnInit {
           "value": 680
         },
       ]
-    }
+    },
+    {
+      "name": "Init balance",
+      "series": [
+        {
+          "name": "1",
+          "value": 500
+        },
+        {
+          "name": "5",
+          "value": 500
+        },
+        {
+          "name": "10",
+          "value": 500
+        },
+        {
+          "name": "15",
+          "value": 500
+        },
+        {
+          "name": "20",
+          "value": 500
+        },
+        {
+          "name": "25",
+          "value": 500
+        },
+      ]
+    },
   ];
   view: any[] = [700, 300];
   leaderboard
@@ -57,7 +86,7 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
     this.leaderboard = this.leaderboardService.leaderboard
-    this.user = this.userService.user
+    this.userService.user.subscribe(u => this.user = u)
     this.checkIfItIsDashboard()
   }
 
