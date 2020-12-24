@@ -10,7 +10,6 @@ import { Watchlist } from '../models/watchlist.model';
 })
 export class WatchlistService {
   apiUrl = environment.apiUrl + 'watchlist/'
-  updatedWatchlist = new Subject<boolean>()
 
   constructor(private http: HttpClient) { }
 
@@ -53,14 +52,14 @@ export class WatchlistService {
     return this.http.delete(this.apiUrl + id)
   }
 
-  moveInArray(watchlist, prevIndex, currIndex){
-    if (currIndex >= watchlist.length) {
-      var k = currIndex - watchlist.length + 1;
+  moveInArray(arr, prevIndex, currIndex){
+    if (currIndex >= arr.length) {
+      var k = currIndex - arr.length + 1;
       while (k--) {
-        watchlist.push(undefined);
+        arr.push(undefined);
       }
     }
-    watchlist.splice(currIndex, 0, watchlist.splice(prevIndex, 1)[0]);
-    return watchlist; 
+    arr.splice(currIndex, 0, arr.splice(prevIndex, 1)[0]);
+    return arr; 
   }
 }

@@ -16,10 +16,12 @@
 			Please enter the name of watchlist
 		</ion-label> -->
 	<ion-button (click)="onEditWatchlist()" class="ion-margin" expand="block">Save watchlist</ion-button>
-	<div cdkDropList class="drag-list" (cdkDropListDropped)="drop($event)" *ngIf="companies.length > 0">
-		<div class="drag-box" *ngFor="let company of companies" cdkDrag>
-			<ion-icon name="reorder-three-outline" class="ion-margin-end"></ion-icon>
-			<span>{{ company.name }}</span>
+	<div cdkDropList class="drag-list" (cdkDropListDropped)="drop($event)" *ngIf="stocks.length > 0">
+		<div *ngFor="let stock of stocks" style="width: 100%;" cdkDrag class="drag-box">
+			<div *ngIf="stock != undefined">
+				<ion-icon name="reorder-three-outline" class="ion-margin-end"></ion-icon>
+				<span>{{ stock.name }}</span>
+			</div>
 		</div>
 	</div>
 </ion-content>

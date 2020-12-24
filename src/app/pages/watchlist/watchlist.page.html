@@ -8,7 +8,9 @@
 	<super-tabs *ngIf="!dataLoaded">
 		<super-tabs-toolbar slot="top" color="translucent">
 			<super-tab-button>
-				<ion-label style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center;">
+				<ion-label
+					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
+				>
 					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
 				</ion-label>
 			</super-tab-button>
@@ -17,15 +19,15 @@
 			<super-tab>
 				<ion-list>
 					<ion-item *ngFor="let item of [].constructor(9)" class="ion-no-padding">
-						<ion-label class="ion-padding-start" style="display: flex; flex-direction: column; align-items: flex-start;">
+						<ion-label class="ion-padding-start" style="display: flex; flex-direction: column; align-items: flex-start">
 							<ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
 							<ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
 						</ion-label>
-						<ion-label style="display: flex; flex-direction: column; align-items: flex-end;">
+						<ion-label style="display: flex; flex-direction: column; align-items: flex-end">
 							<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-							<ion-label style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%;">
-								<ion-skeleton-text animated style="width: 20%; margin-right: 10px;"></ion-skeleton-text> 
-								<ion-skeleton-text animated style="width: 20%;"></ion-skeleton-text>
+							<ion-label style="display: flex; flex-direction: row; justify-content: flex-end; width: 100%">
+								<ion-skeleton-text animated style="width: 20%; margin-right: 10px"></ion-skeleton-text>
+								<ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
 							</ion-label>
 						</ion-label>
 					</ion-item>
@@ -38,31 +40,35 @@
 			slot="top"
 			color="translucent"
 			[scrollable]="watchlists.length > 4"
-			[scrollablePadding]="watchlists.length < 3">
+			[scrollablePadding]="watchlists.length < 3"
+		>
 			<super-tab-button
 				*ngFor="let w of watchlists; let i = index"
 				(click)="tabIndex(i)"
 				appDoubleTap
-				(eventHandler)="onWatchlistTabClick()">
+				(eventHandler)="onWatchlistTabClick()"
+			>
 				<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
 		<super-tabs-container (activeTabIndexChange)="tabIndex($event)">
 			<super-tab *ngFor="let w of watchlists">
 				<ion-list>
-					<ion-item *ngFor="let c of w.stockIds" (click)="openBuySellModal(c)">
-						<ion-label>
-							<h3>{{c.name}}</h3>
-						</ion-label>
-						<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp >= 0">
-							<ion-text color="success"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
-							<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
-						</ion-label>
-						<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp < 0">
-							<ion-text color="danger"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
-							<p>-{{+c.ltp - +c.ldp | number:'1.1-2'}} (-{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
-						</ion-label>
-					</ion-item>
+					<div *ngFor="let c of w.stockIds" (click)="openBuySellModal(c)" class="ion-no-padding" style="width: 100%;">
+						<ion-item *ngIf="c != undefined" style="width: 100%;" class="ion-no-padding">
+							<ion-label class="ion-padding-start">
+								<h3>{{c.name}}</h3>
+							</ion-label>
+							<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp >= 0">
+								<ion-text color="success"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
+								<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
+							</ion-label>
+							<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp < 0">
+								<ion-text color="danger"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
+								<p>-{{+c.ltp - +c.ldp | number:'1.1-2'}} (-{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
+							</ion-label>
+						</ion-item>
+					</div>
 				</ion-list>
 				<ion-fab horizontal="end" vertical="bottom" *ngIf="w.name != 'Trending'">
 					<ion-fab-button (click)="openCompaniesModal(w._id)">

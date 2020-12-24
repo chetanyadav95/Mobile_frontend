@@ -68,10 +68,12 @@ export class WatchlistPage implements OnInit, OnDestroy {
     this.unsubscribeFromSockets()
     this.watchlists.forEach(w => {
       w.stockIds.forEach(s => {
-        const socketSub: Subscription = this.stockService.listen(s.id).subscribe((res:any) => {
-          s.ltp = res[0].price
-        })
-        this.subscribedSockets.push(socketSub)
+        if(s != undefined || s != null){
+          const socketSub: Subscription = this.stockService.listen(s.id).subscribe((res:any) => {
+            s.ltp = res[0].price
+          })
+          this.subscribedSockets.push(socketSub)
+        }
       });
       // if(w.stockIds.length == 0) this.dataLoaded = true
     })
@@ -189,9 +191,15 @@ export class WatchlistPage implements OnInit, OnDestroy {
 
   moveInArray(){
     for (let i = 0; i < this.watchlists.length; i++) {
-      const w = this.watchlists[i];
-      this.watchlistService.moveInArray(this.watchlists,i,w.position)
+      this.watchlists.sort(this.sortByPosition)
+      this.watchlists[i].stockIds.sort(this.sortByPosition)
     }
+  }
+
+  sortByPosition(a, b){
+    if ( a.position < b.position ) return -1;
+    if ( a.position > b.position ) return 1;
+    return 0;
   }
 
   ionViewDidLeave(){

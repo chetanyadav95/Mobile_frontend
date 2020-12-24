@@ -3,4 +3,5 @@ export interface Stock{
     name: string
     ltp?: string
     ldp?: string
+    position: number
 }

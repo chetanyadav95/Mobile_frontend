@@ -50,12 +50,12 @@ export class ModalEditWatchlistsComponent implements OnInit {
   }
 
   changePosition(){
+    // this.watchlists = this.watchlistService.moveInArray(this.watchlists, event.previousIndex, event.currentIndex)
     const positions: any[] = []
     for (let i = 0; i < this.watchlists.length; i++) {
       const w = this.watchlists[i];
       positions.push({watchlistId:w._id, position:i})
     }
     this.watchlistService.updateWatchlistPositions(positions).subscribe()
-    this.watchlistService.updatedWatchlist.next(true)
   }
 }

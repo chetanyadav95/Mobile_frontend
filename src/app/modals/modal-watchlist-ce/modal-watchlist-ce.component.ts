@@ -13,14 +13,12 @@ import { Watchlist } from 'src/app/models/watchlist.model';
 export class ModalWatchlistCeComponent implements OnInit {
   @Input() selectedWatchlist: Watchlist
   watchlistName: string
-  companies = []
+  stocks = []
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService) { }
 
   ngOnInit() {
-    // this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w:any)=>{
-      this.companies = this.selectedWatchlist.stockIds
-      this.watchlistName = this.selectedWatchlist.name
-    // })
+    this.stocks = this.selectedWatchlist.stockIds
+    this.watchlistName = this.selectedWatchlist.name
   }
 
   dismissModal(){
@@ -36,17 +34,16 @@ export class ModalWatchlistCeComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>){
     //needs to happen in backend
-    moveItemInArray(this.companies, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.stocks, event.previousIndex, event.currentIndex);
     this.changePosition()
   }
 
   changePosition(){
-    const positions: any[] = []
-    for (let i = 0; i < this.watchlists.length; i++) {
-      const w = this.watchlists[i];
-      positions.push({watchlistId:w._id, position:i})
+    const stocks: any[] = []
+    for (let i = 0; i < this.stocks.length; i++) {
+      const s = this.stocks[i];
+      stocks.push({stockId:s.id, position:i})
     }
-    this.watchlistService.updateWatchlistPositions(positions).subscribe()
-    this.watchlistService.updatedWatchlist.next(true)
+    this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id,stocks).subscribe(r => console.log('stock position',r))
   }
 }
