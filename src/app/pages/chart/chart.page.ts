@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as HighCharts from 'highcharts';
 import { DomSanitizer } from '@angular/platform-browser';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-chart',
@@ -8,23 +8,11 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./chart.page.scss'],
 })
 export class ChartPage implements OnInit {
-  videos = [
-    {
-      name: 'Video 1',
-      url: 'https://www.youtube.com/embed/1ozGKlOzEVc',
-    },
-    {
-      name: 'Video 2',
-      url: 'https://www.youtube.com/embed/vZv9-TWdBJM',
-    },
-  ]
-  constructor(private sanitizer: DomSanitizer){
- }
+  constructor(private stockService: StockService){}
 
   ngOnInit() {
-  }
-  
-  sanitizeUrl(url:string){
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    this.stockService.listen('stockid').subscribe(data=>{
+      console.log(data)
+    })
   }
 }

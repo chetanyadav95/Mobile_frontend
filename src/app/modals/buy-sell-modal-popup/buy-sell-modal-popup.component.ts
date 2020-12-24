@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
-import { Company } from 'src/app/models/company.model';
-import { WatchlistService } from 'src/app/services/watchlist.service';
+import { Stock } from 'src/app/models/stock.model';
+import { StockService } from 'src/app/services/stock.service';
 
 @Component({
   selector: 'app-buy-sell-modal-popup',
@@ -10,14 +10,16 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
   styleUrls: ['./buy-sell-modal-popup.component.scss'],
 })
 export class BuySellModalPopupComponent implements OnInit {
-  @Input() selectedCompany: number
-  company: Company
+  @Input('selectedStock') selectedStock: Stock
+  company: Stock
   constructor(private modalCtrl: ModalController, 
-    private watchlistService: WatchlistService,
+    private stockService: StockService,
     private router: Router) { }
 
   ngOnInit() {
-    this.company = this.watchlistService.getCompany(this.selectedCompany)
+    this.stockService.listen(this.selectedStock.id).subscribe((res:any) => {
+      this.selectedStock.ltp = res[0].price
+    })
   }
 
   dismissModal(){
@@ -26,10 +28,10 @@ export class BuySellModalPopupComponent implements OnInit {
 
   onClick(isBuy: boolean){
     this.modalCtrl.dismiss()
-    this.router.navigate(['home','watchlist','buy-sell',this.company.id],{queryParams: {isBuy}})
+    this.router.navigate(['home','watchlist','buy-sell',this.selectedStock.id],{queryParams: {isBuy}})
   }
   navigateToChart(){
     this.modalCtrl.dismiss()
-    this.router.navigate(['chart'])
+    this.router.navigate(['home','chart','tv-chart'])
   }
 }

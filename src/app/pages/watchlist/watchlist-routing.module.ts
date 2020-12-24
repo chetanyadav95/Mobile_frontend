@@ -8,7 +8,10 @@ const routes: Routes = [
   {
     path: '',
     component: WatchlistPage,
+    children:[
+    ]
   },
+
   {
     path:'buy-sell/:id', 
     component: BuySellPage

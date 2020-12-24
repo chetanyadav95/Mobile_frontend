@@ -6,3 +6,4 @@ git pull
 git push -f origin master
 
 pot fix for app name: change name in strings.xml as well.
+open -na Google\ Chrome --args --user-data-dir=/tmp/temporary-chrome-profile-dir --disable-web-security --disable-site-isolation-trials

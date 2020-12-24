@@ -8,7 +8,7 @@
 	<ion-grid>
 		<ion-row>
 			<ion-col size="12">
-				<ion-text> <h5>Hi {{user.firstname}}</h5> </ion-text>
+				<ion-text> <h5>Hi {{user.username}}</h5> </ion-text>
 			</ion-col>
 		</ion-row>
 		<hr />
@@ -19,24 +19,24 @@
 				<table class="balance-overview-table">
 					<tr>
 						<td><ion-label>Opening bal:</ion-label></td>
-						<td class="ion-padding-start"><ion-label>{{user.balance.openBal}}</ion-label></td>
+						<td class="ion-padding-start ion-text-right"><ion-label>{{user.balance.currency}} {{user?.balance.openBal != null ? user.balance.openBal : 0}}</ion-label></td>
 					</tr>
 					<tr>
 						<td><ion-label>Available bal:</ion-label></td>
-						<td class="ion-padding-start"><ion-label>{{user.balance.availableBal}}</ion-label></td>
+						<td class="ion-padding-start ion-text-right"><ion-label>{{user.balance.currency}} {{user?.balance.availableBal != null ? user.balance.availableBal : 0}}</ion-label></td>
 					</tr>
 					<tr>
 						<td><ion-label>P/L:</ion-label></td>
-						<td class="ion-padding-start"><ion-label>{{user.balance.pAndL}}</ion-label></td>
+						<td class="ion-padding-start ion-text-right"><ion-label>{{user.balance.currency}} {{user?.balance.pAndL != null ? user.balance.pAndL : 0}}</ion-label></td>
 					</tr>
 					<tr>
 						<td><ion-label>% gain:</ion-label></td>
-						<td class="ion-padding-start"><ion-label>{{user.balance.gain * 100}}%</ion-label></td>
+						<td class="ion-padding-start ion-text-right"><ion-label>{{user?.balance.gain != null ? user.balance.gain * 100 : 0}}%</ion-label></td>
 					</tr>
 				</table>
 			</ion-col>
 		</ion-row>
-		<hr />
+		<!-- <hr /> -->
 		<ion-row>
 			<ion-col>
 				<ion-title class="ion-no-padding">Leaderboard</ion-title>
@@ -72,8 +72,18 @@
 			</ion-col>
 		</ion-row>
 		<ion-row>
+			<ion-title class="ion-margin-vertical">Funds Chart</ion-title>
 			<ion-col>
-				<div id="highcharts" style="width:100%; height:400px;"></div>
+				<ngx-charts-line-chart
+					[legend]="false"
+					[showXAxisLabel]="false"
+					[showYAxisLabel]="false"
+					[xAxis]="true"
+					[yAxis]="true"
+					[timeline]="true"
+					[results]="data"
+				>
+				</ngx-charts-line-chart>
 			</ion-col>
 		</ion-row>
 	</ion-grid>

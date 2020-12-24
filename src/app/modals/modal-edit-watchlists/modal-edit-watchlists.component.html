@@ -7,16 +7,16 @@
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-		<ion-item class="ion-margin-horizontal">
-			<ion-label position="floating">Name of watchlist</ion-label>
-			<ion-input [(ngModel)]="watchlistName"></ion-input>
-		</ion-item>
-		<!-- <ion-label position="floating" color="danger" class="ion-padding"
+	<ion-item class="ion-margin-horizontal">
+		<ion-label position="floating">Name of watchlist</ion-label>
+		<ion-input [(ngModel)]="watchlistName"></ion-input>
+	</ion-item>
+	<!-- <ion-label position="floating" color="danger" class="ion-padding"
 			*ngIf="createWatchlistForm.invalid && createWatchlistForm.touched">
 			Please enter the name of watchlist
 		</ion-label> -->
-		<ion-button class="ion-margin" expand="block" (click)="onCreateWatchlist()">Create watchlist</ion-button>
-	<div cdkDropList class="drag-list" (cdkDropListDropped)="drop($event)">
+	<ion-button class="ion-margin" expand="block" (click)="onCreateWatchlist()">Create watchlist</ion-button>
+	<div cdkDropList class="drag-list" (cdkDropListDropped)="drop($event)" *ngIf="watchlists.length > 0">
 		<div class="drag-box" *ngFor="let watchlist of watchlists" cdkDrag>
 			<ion-icon name="reorder-three-outline" class="ion-margin-end"></ion-icon>
 			<span>{{ watchlist.name }}</span>

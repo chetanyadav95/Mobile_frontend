@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Company } from 'src/app/models/company.model';
+import { Stock } from 'src/app/models/stock.model';
 import { OrderService } from 'src/app/services/order.service';
-import { WatchlistService } from 'src/app/services/watchlist.service';
+import { StockService } from 'src/app/services/stock.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-buy-sell',
@@ -12,26 +13,43 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
 })
 export class BuySellPage implements OnInit {
   isBuy: boolean
-  company: Company
+  company: any
   availableBalance: number
   approxMargin: number
   capitalAtRisk: number
+  limitVal: number = 0
   @ViewChild('buySellForm') buySellForm: NgForm
   constructor(private route: ActivatedRoute, 
-    private watchlistService: WatchlistService,
+    private stockService: StockService,
     private orderService: OrderService,
-    private router: Router) { }
+    private router: Router,
+    private userService: UserService) { }
 
   ngOnInit() {
-    this.availableBalance = 100000
     this.approxMargin = 2167
     this.capitalAtRisk = this.approxMargin / this.availableBalance
+    this.userService.accountDetails().subscribe((res:any) => {
+      console.log(res.account.currentBalance)
+      this.availableBalance = res.account.currentBalance
+    })
     this.route.queryParams.subscribe(data => {
       data.isBuy == 'true' ? this.isBuy = true : this.isBuy = false
     })
-    this.route.params.subscribe(data => this.company = this.watchlistService.getCompany(data["id"]))
+    this.route.params.subscribe(data => 
+      this.stockService.getStock(data["id"]).subscribe((c:any) => {
+        console.log(c)
+        this.company = c.data
+        this.updateLtp()
+      })
+    )
   }
   
+  updateLtp(){
+    this.stockService.listen(this.company?._id).subscribe((res:any) => {
+      this.company.ltp = res[0].price
+    })
+  }
+
   navigateToWatchlist(){
     this.router.navigate(['home','watchlist'])
   }
@@ -47,15 +65,19 @@ export class BuySellPage implements OnInit {
     const stopLoss = this.buySellForm.value.stopLoss
     const target = this.buySellForm.value.target
     if(quantity != '' && order != '' && price != '' && quantity > 0 ){
-      if(order != 'market' && price > 0){
+      if(order == 'limit' && price > 0){
         console.log({formVal: this.buySellForm.value})
-        this.orderService.buy(this.company.id, quantity, stopLoss, target, order, price)
-        this.router.navigate(['home','orders'],{queryParams: {selectTab: 2}})
+        this.isBuy 
+          ?  this.orderService.buy(this.company._id, quantity, stopLoss, target, order, price)
+          :  this.orderService.sell(this.company._id, quantity, stopLoss, target, order, price)
+        this.router.navigate(['home','orders'])
       } else {
         console.log({formVal: this.buySellForm.value})
-        this.orderService.buy(this.company.id, quantity, stopLoss, target, order)
-        this.router.navigate(['home','orders'],{queryParams: {selectTab: 2}})
+        this.isBuy 
+          ?  this.orderService.buy(this.company._id, quantity, stopLoss, target, order, this.company.ltp)
+          :  this.orderService.sell(this.company._id, quantity, stopLoss, target, order, this.company.ltp)
+        this.router.navigate(['home','orders'])
       }
-    } else alert('err')
+    }
   }
 }

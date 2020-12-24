@@ -1,35 +1,30 @@
-<ion-header>
+<ion-header class="ion-no-border">
 	<ion-toolbar>
-		<!-- <ion-buttons slot="start">
-			<ion-back-button defaultHref="home/dashboard"></ion-back-button>
-		</ion-buttons> -->
-		<ion-img slot="end" src="/assets/logo_no_back.png" class="logo"></ion-img>
+		<ion-img src="/assets/logo_no_back.png" class="logo"></ion-img>
 	</ion-toolbar>
 </ion-header>
+<!-- 
+	123 pg, pitanja activity 6
+	105 pg tekst, pitanja sa strane, roze kockice
 
+ -->
 <ion-content>
-	<form #signUpForm="ngForm" (ngSubmit)="signUp(signUpForm.value)">
-		<ion-title class="ion-text-center ion-margin-vertical" color="warning"><h1>Welcome to Empuraan</h1></ion-title>
+	<form #signUpForm="ngForm" (ngSubmit)="signUp(signUpForm)">
+		<!-- <ion-title class="ion-text-center ion-margin-vertical" color="warning"><h1>Welcome to Empuraan</h1></ion-title> -->
 		<ion-title class="ion-text-center ion-margin-vertical"><h2>Sign Up</h2></ion-title>
 		<ion-grid>
 			<ion-row>
-				<ion-col col="6">
+				<ion-col>
 					<ion-item class="ion-no-padding">
-						<ion-label position="floating">Name</ion-label>
-						<ion-input required ngModel name="firstname"></ion-input>
-					</ion-item>
-				</ion-col>
-				<ion-col col="6">
-					<ion-item class="ion-no-padding">
-						<ion-label position="floating">Surname</ion-label>
-						<ion-input required ngModel name="lastname"></ion-input>
+						<ion-label position="floating">Username</ion-label>
+						<ion-input required ngModel name="username"></ion-input>
 					</ion-item>
 				</ion-col>
 			</ion-row>
 			<ion-row>
 				<ion-col>
 					<ion-item class="ion-no-padding">
-						<ion-label position="floating">Email or Phone Number</ion-label>
+						<ion-label position="floating">Email</ion-label>
 						<ion-input type="email" required ngModel name="email"></ion-input>
 					</ion-item>
 				</ion-col>
@@ -52,21 +47,21 @@
 			</ion-row>
 			<ion-row>
 				<ion-col>
-					<ion-button type="submit" class="sign-up-button">Sign Up</ion-button>
+					<button type="submit" class="button sign-up-button">Sign Up</button>
 				</ion-col>
 			</ion-row>
 			<ion-row>
 				<ion-col>
-					<ion-button
+					<button
 						color="tertiary"
 						size="small"
 						expand="block"
 						fill="clear"
-						class="ion-float-left"
-						(click)="navigateToLogin()"
+						class="ion-float-left link-button"
+						routerLink="/home/login"
 					>
 						Already have an account?
-					</ion-button>
+					</button>
 				</ion-col>
 			</ion-row>
 		</ion-grid>

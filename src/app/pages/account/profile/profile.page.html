@@ -10,28 +10,15 @@
 <ion-content>
 	<div class="ion-padding profile-header">
 		<div>
-			<ion-text><h5>{{user.firstname + ' ' + user.lastname}}</h5></ion-text>
+			<ion-text><h5>{{user.username}}</h5></ion-text>
 			<ion-text><p>{{user.email}}</p></ion-text>
 		</div>
-		<img
-			*ngIf="!hasNoImgUrl"
-			src="https://images8.alphacoders.com/679/thumb-1920-679478.jpg"
-			class="ion-float-right account-img"
-		/>
-		<div *ngIf="hasNoImgUrl" class="ion-float-right account-img">
-			<span>{{user.imgUrl}}</span>
+		<div class="ion-float-right account-img">
+			<span>{{user.username[0]+user.username[1]}}</span>
 		</div>
 	</div>
 	<hr />
 	<ion-grid>
-		<!-- <ion-row class="ion-margin-bottom">
-      <ion-col size=6 class="ion-text-left subtitle">E-mail</ion-col>
-      <ion-col size=6 class="ion-text-right">{{user.email}}</ion-col>
-    </ion-row> -->
-		<!-- <ion-row class="ion-margin-bottom">
-      <ion-col size=6 class="ion-text-left subtitle">Phone</ion-col>
-      <ion-col size=6 class="ion-text-right">*7890</ion-col>
-    </ion-row> -->
 		<ion-row class="ion-margin-bottom">
 			<ion-col size="6" class="ion-text-left subtitle">PAN</ion-col>
 			<ion-col size="6" class="ion-text-right">*233H</ion-col>

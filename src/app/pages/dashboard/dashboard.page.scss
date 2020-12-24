@@ -93,6 +93,19 @@ span{
 ion-title{
     color:black;
   }
+.balance-overview-table{
+    width: 100%;
+    // tr:first-child{
+    //     border-bottom: 1px solid #cecece;
+    // }
+    tr{
+        border-bottom: 1px solid #cecece;
+    }
+    td{
+        padding:15px;
+        width: 50%;
+    }
+}
 @media screen and (max-width: 360px) {
     h4{
         font-size: 20px;

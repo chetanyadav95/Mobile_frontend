@@ -1,24 +1,67 @@
+*:focus {
+    outline: none;
+}
 .logo{
-    height: 70px;
-    width: 70px;
-    padding-right: 10px;
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+form{
+    margin-top: 5%;
+}
+.button-col{
+    width: 100%;
+}
+.button{
+    width: 100%; 
+    margin-top: 10px;
+    border-radius: 5px;
+    height: 45px;
+    font-size: 14px;
 }
 .login-button{
-    width: 100%; 
-    height: 50px;
+    background-color: #2879cf;
+    color:white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.google-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #ee1b1b;
+    color:white;
+    span{
+        padding-left: 10px;
+    }
+}
+.new-user-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #dedede;
+    color:black;
+}
+.link-button{
+    float: left;
+    text-align: left;
+    background-color: transparent;
+    margin-top: 20px;
 }
 .links-block{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0 5px;
-    margin-bottom: 10px;
+    flex-direction: column;
 }
 .or-line{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     span{
         position: absolute;
         background-color: #d2d2d2;

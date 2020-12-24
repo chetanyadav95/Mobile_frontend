@@ -1,6 +1,0 @@
-<app-chart-wrapper [config]="candleStickChartConfig" *ngIf="showChart"></app-chart-wrapper>
-
-<ng-container #popupContainer></ng-container>
-<ng-template #popupTemplate>
-  <app-buy-sell-trade (closePopup)="closePopup()"></app-buy-sell-trade>
-</ng-template>

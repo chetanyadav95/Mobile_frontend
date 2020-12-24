@@ -11,8 +11,8 @@
 	<ion-list>
 		<ion-item>
 			<ion-label>Data type</ion-label>
-			<ion-select value="simulated">
-				<ion-select-option value="real-time">Real-time</ion-select-option>
+			<ion-select value="simulated" (ionChange)="dataType($event)">
+				<ion-select-option value="realTime">Real-time</ion-select-option>
 				<ion-select-option value="simulated">Simulated</ion-select-option>
 			</ion-select>
 		</ion-item>

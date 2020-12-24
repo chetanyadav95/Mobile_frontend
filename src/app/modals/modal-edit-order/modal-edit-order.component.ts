@@ -1,3 +1,4 @@
+import { Order } from 'android/app/build/intermediates/merged_assets/debug/out/public/assets/charting_library/charting_library';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Completed } from 'src/app/models/completed.model';
@@ -11,8 +12,8 @@ import { OrderService } from 'src/app/services/order.service';
   styleUrls: ['./modal-edit-order.component.scss'],
 })
 export class ModalEditOrderComponent implements OnInit {
-  @Input() position: Position
-  @Input() pending: Pending
+  @Input() position: Order
+  @Input() pending: Order
   
   constructor(private modalCtrl: ModalController, private orderService: OrderService) { }
 
@@ -23,18 +24,18 @@ export class ModalEditOrderComponent implements OnInit {
   }
 
   savePosition(){
-    (this.position != null) && this.orderService.savePosition(this.position)
-    this.dismissModal()
+    // (this.position != null) && this.orderService.savePosition(this.position)
+    // this.dismissModal()
   }
 
   sellPosition(){
-    (this.position != null) && this.orderService.sellPosition(this.position)
-    this.dismissModal()
+    // (this.position != null) && this.orderService.sellPosition(this.position)
+    // this.dismissModal()
   }
 
   savePending(){
-    (this.pending != null) && this.orderService.savePending(this.pending)
-    this.dismissModal()
+    // (this.pending != null) && this.orderService.savePending(this.pending)
+    // this.dismissModal()
   }
 
 }

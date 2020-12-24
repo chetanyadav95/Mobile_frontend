@@ -9,12 +9,12 @@
 <ion-content vertical="top">
 	<ion-searchbar showCancelButton="focus" (ionChange)="filter($event.detail.value)"></ion-searchbar>
 	<ion-list>
-		<ion-item *ngFor="let company of filteredData || companies">
-			<ion-label>{{ company.name }}</ion-label>
+		<ion-item *ngFor="let stock of filteredData || stocks">
+			<ion-label>{{ stock.companyName }}</ion-label>
 			<ion-checkbox
 				slot="end"
-				[checked]="seeIfChecked(company)"
-				(ionChange)="onSelect($event.detail.checked, company)"
+				[checked]="seeIfChecked(stock)"
+				(ionChange)="onSelect($event.detail.checked, stock)"
 			></ion-checkbox>
 		</ion-item>
 	</ion-list>

@@ -1,7 +1,7 @@
 export interface Pending {
-    name: string
-    code: string
-    price: number
-    quantity: number
-    LTP: number
+    stockId: string
+    stoploss: number
+    price?: number
+    target: number
+    volume: number
 }

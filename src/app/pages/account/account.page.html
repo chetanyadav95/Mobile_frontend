@@ -9,13 +9,12 @@
 		<ion-grid>
 			<ion-row class="ion-align-items-center">
 				<ion-col size="8">
-					<ion-card-title>{{user.firstname + ' ' + user.lastname}}</ion-card-title>
+					<ion-card-title>{{user.username}}</ion-card-title>
 					<ion-card-subtitle>{{user.email}}</ion-card-subtitle>
 				</ion-col>
 				<ion-col size="4">
-					<img *ngIf="!hasNoImgUrl" src="https://images8.alphacoders.com/679/thumb-1920-679478.jpg" class="ion-float-right account-img" />
-					<div *ngIf="hasNoImgUrl" class="ion-float-right account-img">
-						<span>{{user.imgUrl}}</span>
+					<div class="ion-float-right account-img">
+						<span>{{user.username[0]+user.username[1]}}</span>
 					</div>
 				</ion-col>
 			</ion-row>

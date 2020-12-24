@@ -1,39 +1,43 @@
-<ion-header #header class="ion-no-border">
+<ion-header [ngClass]="{'ion-no-border': watchlists.length > 0, '': watchlists.length == 0 }">
 	<ion-toolbar>
 		<ion-title (click)="onWatchlistTitleClick()">Watchlist</ion-title>
 		<ion-img slot="end" src="/assets/logo_no_back.png" class="logo"></ion-img>
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-	<super-tabs #superTabs *ngIf="watchlists.length > 0">
-		<super-tabs-toolbar slot="top" color="translucent" [scrollable]="watchlists.length > 4" [scrollablePadding]="watchlists.length < 3">
-			<super-tab-button (click)="tabIndex(1)" (eventHandler)="onWatchlistTabClick()">
-				<ion-label>{{'Trending'.length > 8 ? 'Trending'.substring(0,8) + '...' : 'Trending'}}</ion-label>
-			</super-tab-button>
-			<super-tab-button *ngFor="let w of watchlists | slice:1" (click)="tabIndex(w.id)" appDoubleTap (eventHandler)="onWatchlistTabClick()">
+	<super-tabs *ngIf="watchlists.length > 0">
+		<super-tabs-toolbar
+			slot="top"
+			color="translucent"
+			[scrollable]="watchlists.length > 4"
+			[scrollablePadding]="watchlists.length < 3">
+			<super-tab-button
+				*ngFor="let w of watchlists"
+				(click)="tabIndex(w._id)"
+				appDoubleTap
+				(eventHandler)="onWatchlistTabClick()">
 				<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
 		<super-tabs-container>
 			<super-tab *ngFor="let w of watchlists">
 				<ion-list>
-					<ion-item *ngFor="let company of w.companies" (click)="openBuySellModal(company.id)">
+					<ion-item *ngFor="let c of w.stockIds" (click)="openBuySellModal(c)">
 						<ion-label>
-							<h3>{{company.code | uppercase}}</h3>
-							<p>{{company.name}}</p>
+							<h3>{{c.name}}</h3>
 						</ion-label>
-						<ion-label class="ion-margin-start ion-text-right" *ngIf="company.isRising">
-							<ion-text color="success"><h3>{{company.greenNum}}</h3></ion-text>
-							<p>+{{company.rateRaw}} (+{{company.ratePercentage}}%)</p>
+						<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp >= 0">
+							<ion-text color="success"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
+							<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
 						</ion-label>
-						<ion-label class="ion-margin-start ion-text-right" *ngIf="!company.isRising">
-							<ion-text color="danger"><h3>{{company.greenNum}}</h3></ion-text>
-							<p>-{{company.rateRaw}} (-{{company.ratePercentage}}%)</p>
+						<ion-label class="ion-margin-start ion-text-right" *ngIf="+c.ltp - +c.ldp < 0">
+							<ion-text color="danger"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>
+							<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>
 						</ion-label>
 					</ion-item>
 				</ion-list>
 				<ion-fab horizontal="end" vertical="bottom" *ngIf="w.name != 'Trending'">
-					<ion-fab-button (click)="openCompaniesModal(w.id)">
+					<ion-fab-button (click)="openCompaniesModal(w._id)">
 						<ion-icon name="add"></ion-icon>
 					</ion-fab-button>
 				</ion-fab>
@@ -42,8 +46,10 @@
 	</super-tabs>
 	<ion-content padding *ngIf="watchlists.length == 0">
 		<div>
-			<h6 class="gray">Go on and create your personal watchlist <br>
-			by pressing 'Watchlist' in the toolbar</h6>
+			<h6 class="gray">
+				Go on and create your personal watchlist <br />
+				by pressing 'Watchlist' in the toolbar
+			</h6>
 		</div>
 	</ion-content>
 </ion-content>

@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { WatchlistService } from 'src/app/services/watchlist.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Watchlist } from 'src/app/models/watchlist.model';
 
 @Component({
   selector: 'app-modal-watchlist-ce',
@@ -10,14 +11,18 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   styleUrls: ['./modal-watchlist-ce.component.scss'],
 })
 export class ModalWatchlistCeComponent implements OnInit {
-  @Input() selectedWatchlist: number
+  @Input() selectedWatchlist: string
   watchlistName: string
   companies = []
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService) { }
 
   ngOnInit() {
-    this.watchlistName = this.watchlistService.getWatchlist(this.selectedWatchlist).name
-    this.companies = this.watchlistService.getWatchlist(this.selectedWatchlist).companies
+    this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w:Watchlist)=>{
+      this.watchlistName = w.name
+    })
+    this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w:Watchlist)=>{
+      this.companies = w.stockIds
+    })
   }
 
   dismissModal(){
@@ -33,6 +38,7 @@ export class ModalWatchlistCeComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>){
+    //needs to happen in backend
     moveItemInArray(this.companies, event.previousIndex, event.currentIndex);
   }
 }

@@ -14,6 +14,7 @@ export class AccountPage implements OnInit {
 
   ngOnInit() {
     this.user = this.userService.user
+    this.userService.accountDetails().subscribe(res => console.log(res))
   }
 
   logout(){

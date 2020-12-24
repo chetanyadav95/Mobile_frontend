@@ -7,46 +7,100 @@
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-title class="ion-padding" *ngIf="position != null">{{position.name}}</ion-title>
-  <ion-title class="ion-padding" *ngIf="pending != null">{{pending.name}}</ion-title>
+	<ion-title class="ion-padding" *ngIf="position != null">{{ position.name }}</ion-title>
+	<ion-title class="ion-padding" *ngIf="pending != null">{{ pending.name }}</ion-title>
 	<ion-grid>
 		<ion-row *ngIf="position != null">
-			<ion-col>
-				<ion-item>
-					<ion-label>Stop-Loss</ion-label>
-					<ion-input type="number" min=0 [(ngModel)]="position.SL"></ion-input>
-				</ion-item>
-				<ion-item>
-					<ion-label>Target</ion-label>
-					<ion-input type="number" min=0 [(ngModel)]="position.LTP"></ion-input>
-				</ion-item>
+			<ion-col size="6">
+				<ion-card-header>
+					<ion-card-title>Stop-loss</ion-card-title>
+				</ion-card-header>
+				<ion-card-content>
+					<ion-input
+						type="number"
+						class="card-input"
+						name="stopLoss"
+						[(ngModel)]="position.stoploss"
+						required
+						min="0"
+					></ion-input>
+				</ion-card-content>
+				<!-- <ion-label>Stop-Loss</ion-label>
+					<ion-input type="number" min=0 [(ngModel)]="position.stoploss"></ion-input> -->
+			</ion-col>
+			<ion-col size="6">
+				<ion-card-header>
+					<ion-card-title>Target</ion-card-title>
+				</ion-card-header>
+				<ion-card-content>
+					<ion-input
+						type="number"
+						class="card-input"
+						name="target"
+						[(ngModel)]="position.target"
+						required
+						min="0"
+					></ion-input>
+				</ion-card-content>
+				<!-- <ion-label>Target</ion-label>
+					<ion-input type="number" min=0 [(ngModel)]="position.target"></ion-input> -->
 			</ion-col>
 		</ion-row>
 		<ion-row *ngIf="pending != null">
 			<ion-col>
-				<ion-item>
-					<ion-label>Target</ion-label>
-					<ion-input type="number" [(ngModel)]="pending.LTP"></ion-input>
-				</ion-item>
+				<div *ngIf="!pending.isStopLoss">
+					<ion-card-header>
+						<ion-card-title>Target</ion-card-title>
+					</ion-card-header>
+					<ion-card-content>
+						<ion-input
+							type="number"
+							class="card-input"
+							name="target"
+							[(ngModel)]="pending.target"
+							required
+							min="0"
+						></ion-input>
+					</ion-card-content>
+					<!-- <ion-label>Target</ion-label>
+					<ion-input type="number" [(ngModel)]="pending.target"></ion-input> -->
+				</div>
+				<div *ngIf="pending.isStopLoss">
+					<ion-card-header>
+						<ion-card-title>Stop-loss</ion-card-title>
+					</ion-card-header>
+					<ion-card-content>
+						<ion-input
+							type="number"
+							class="card-input"
+							name="stopLoss"
+							[(ngModel)]="pending.stoploss"
+							required
+							min="0"
+						></ion-input>
+					</ion-card-content>
+					<!-- <ion-label>Stop-loss</ion-label>
+					<ion-input type="number" [(ngModel)]="pending.stoploss"></ion-input> -->
+				</div>
 			</ion-col>
 		</ion-row>
 	</ion-grid>
 </ion-content>
 <ion-footer class="ion-padding">
-  <div *ngIf="position != null">
-    <ion-button expand="block" color="success" (click)="savePosition()">
-      <ion-icon name="save-outline" style="padding-right: 5px"></ion-icon>
-      Save
-    </ion-button>
-    <ion-button expand="block" color="danger" (click)="sellPosition()">
-      <ion-icon name="trash-outline" style="padding-right: 5px"></ion-icon>
-      Sell
-    </ion-button>
-  </div>
-  <div *ngIf="pending != null">
-    <ion-button expand="block" color="success" (click)="savePending()">
-      <ion-icon name="save-outline" style="padding-right: 5px"></ion-icon>
-      Save
-    </ion-button>
-  </div>
+	<div *ngIf="position != null">
+		<ion-button expand="block" color="success" (click)="savePosition()">
+			<ion-icon name="save-outline" style="padding-right: 5px"></ion-icon>
+			Save
+		</ion-button>
+		<ion-button expand="block" color="danger" (click)="sellPosition()">
+			<ion-icon name="trash-outline" style="padding-right: 5px"></ion-icon>
+			Sell
+		</ion-button>
+	</div>
+	<div *ngIf="pending != null">
+		<ion-button expand="block" color="success" (click)="savePending()">
+			<ion-icon name="save-outline" style="padding-right: 5px"></ion-icon>
+			Save
+		</ion-button>
+	</div>
 </ion-footer>

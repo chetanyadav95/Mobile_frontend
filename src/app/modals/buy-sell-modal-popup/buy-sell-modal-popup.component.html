@@ -1,25 +1,25 @@
 <ion-header>
 	<ion-toolbar>
-		<ion-title slot="start"> {{ company.name }} </ion-title>
+		<ion-title slot="start"> {{ selectedStock.name }} </ion-title>
 		<ion-buttons slot="end">
 			<ion-button (click)="dismissModal()">Close</ion-button>
 		</ion-buttons>
 	</ion-toolbar>
 	<ion-toolbar>
-		<ion-text slot="start" class="subtitle" *ngIf="company.isRising">
-			<h5 class="ion-margin-end">{{ company.code }}</h5>
+		<ion-text slot="start" class="subtitle">
+			<h5 class="ion-margin-end">{{ selectedStock.name }}</h5>
 			<ion-text class="ion-margin-end" color="success">
-				<h5>{{ company.greenNum }}</h5>
+				<h5>{{ selectedStock.ltp }}</h5>
 			</ion-text>
-			<h5 class="ion-margin-end">+{{ company.rateRaw }} (+{{ company.ratePercentage }}%)</h5>
+			<!-- <h5 class="ion-margin-end">+{{ selectedStock.rateRaw }} (+{{ selectedStock.ratePercentage }}%)</h5> -->
 		</ion-text>
-		<ion-text slot="start" class="subtitle" *ngIf="!company.isRising">
-			<h5 class="ion-margin-end">{{ company.code }}</h5>
+		<!-- <ion-text slot="start" class="subtitle" *ngIf="!selectedStock.isRising">
+			<h5 class="ion-margin-end">{{ selectedStock.code }}</h5>
 			<ion-text class="ion-margin-end" color="danger">
-				<h5>{{ company.greenNum }}</h5>
+				<h5>{{ selectedStock.greenNum }}</h5>
 			</ion-text>
-			<h5 class="ion-margin-end">-{{ company.rateRaw }} (-{{ company.ratePercentage }}%)</h5>
-		</ion-text>
+			<h5 class="ion-margin-end">-{{ selectedStock.rateRaw }} (-{{ selectedStock.ratePercentage }}%)</h5>
+		</ion-text> -->
 	</ion-toolbar>
 </ion-header>
 <ion-content>

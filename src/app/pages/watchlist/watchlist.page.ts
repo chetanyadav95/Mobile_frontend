@@ -1,12 +1,13 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { BuySellModalPopupComponent } from 'src/app/modals/buy-sell-modal-popup/buy-sell-modal-popup.component';
 import { ModalEditWatchlistsComponent } from 'src/app/modals/modal-edit-watchlists/modal-edit-watchlists.component';
 import { ModalWatchlistCeComponent } from 'src/app/modals/modal-watchlist-ce/modal-watchlist-ce.component';
 import { ModalWatchlistComponent } from 'src/app/modals/modal-watchlist/modal-watchlist.component';
-import { Company } from 'src/app/models/company.model';
+import { Stock } from 'src/app/models/stock.model';
 import { Watchlist } from 'src/app/models/watchlist.model';
+import { StockService } from 'src/app/services/stock.service';
+import { UserService } from 'src/app/services/user.service';
 import { WatchlistService } from 'src/app/services/watchlist.service';
 
 @Component({
@@ -15,20 +16,36 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
   styleUrls: ['./watchlist.page.scss'],
 })
 export class WatchlistPage implements OnInit {
-  companies: Company[] = []
+  companies: Stock[] = []
   watchlists: Watchlist[] = []
-  selectedWatchlist: number = 1
+  selectedWatchlist: string = '1'
+  isSimualted: boolean
   constructor(private modalController: ModalController, 
     private watchlistService: WatchlistService, 
-    private actionSheetController: ActionSheetController) { }
+    private actionSheetController: ActionSheetController,
+    private stockService: StockService,
+    private userService: UserService) { }
 
   ngOnInit() {
-    this.companies = this.watchlistService.companies
-    this.watchlists = this.watchlistService.watchlists
+    this.watchlistService.getUserWatchlists().subscribe((w:any) => {
+      this.watchlists = w.data
+      this.selectedWatchlist = this.watchlists[0]._id
+      this.updateLtp(0)
+      console.log('user watchlist',this.watchlists)
+    })
+    this.isSimualted = this.userService.isSimulated
   }
 
-  drop(event: CdkDragDrop<string[]>){
-    moveItemInArray(this.watchlists, event.previousIndex, event.currentIndex);
+  updateLtp(watchlistId: number){
+    this.watchlists[watchlistId].stockIds.forEach((s,i) => {
+      this.stockService.getStock(s.id).subscribe((stockData:any) => {
+        console.log(stockData.data.historyData['1month'])
+        s.ldp = stockData.data.historyData['1month'][stockData.data.historyData['1month'].length - 1].close
+      })
+      this.stockService.listen(s.id).subscribe((res:any) => {
+        s.ltp = res[0].price
+      })
+    });
   }
 
   async openCompaniesModal(id) {
@@ -47,10 +64,10 @@ export class WatchlistPage implements OnInit {
     return await modal.present();
   }
 
-  async openBuySellModal(id: number) {
+  async openBuySellModal(stock: Stock) {
     const modal = await this.modalController.create({
       component: BuySellModalPopupComponent,
-      componentProps: {selectedCompany: id}
+      componentProps: {selectedStock: stock}
     });
     return await modal.present();
   }
@@ -123,5 +140,6 @@ export class WatchlistPage implements OnInit {
 
   tabIndex(event: any){
     this.selectedWatchlist = event
+    console.log(event)
   }
 }

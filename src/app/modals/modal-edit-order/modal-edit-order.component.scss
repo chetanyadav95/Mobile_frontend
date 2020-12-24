@@ -1,0 +1,20 @@
+ion-card-header{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+ion-card-title{
+    font-size: 15px;
+}
+ion-card-subtitle{
+    margin-top: 0;
+    font-size:14px;
+    color:#ababab;
+}
+.card-input{
+    border: 1px solid rgb(184, 184, 184, 0.69);
+    color: black;
+    padding: 11px 0;
+    font-size:18px;
+}

@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Company } from 'src/app/models/company.model';
+import { Stock } from 'src/app/models/stock.model';
 import { Watchlist } from 'src/app/models/watchlist.model';
+import { StockService } from 'src/app/services/stock.service';
 import { WatchlistService } from 'src/app/services/watchlist.service';
 
 @Component({
@@ -10,36 +11,36 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
   styleUrls: ['./modal-watchlist.component.scss'],
 })
 export class ModalWatchlistComponent implements OnInit{
-  companies: Company[]
-  filteredData: Company[]
+  stocks: Stock[]
+  filteredData: Stock[]
   sWatchlist: Watchlist
-  @Input() selectedWatchlist: number
+  @Input() selectedWatchlist: string
 
-  constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService) { }
+  constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService, private stockService: StockService) { }
   
   ngOnInit(){
-    this.companies = this.watchlistService.companies
-    this.sWatchlist = this.watchlistService.getWatchlist(this.selectedWatchlist)
+    this.stockService.getStocks().subscribe((s: any) => this.stocks = s.data)
+    this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w:any)=> this.sWatchlist = w.data)
   }
 
   dismissModal(){
     this.modalCtrl.dismiss()
   }
 
-  onSelect(event: boolean, company: Company){
+  onSelect(event: boolean, stock: Stock){
     if(event == true)
-      this.watchlistService.addToWatchlist(this.selectedWatchlist, company)
+      this.watchlistService.addToWatchlist(this.selectedWatchlist, stock)
     else if(event == false) 
-      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, company)
+      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock)
   }
 
   filter(filterValue: any){
-    this.filteredData = this.companies.filter(company => company.name.toLowerCase().includes(filterValue.toLowerCase()))
+    this.filteredData = this.stocks.filter(stock => stock.name.toLowerCase().includes(filterValue.toLowerCase()))
   }
 
-  seeIfChecked(company: Company){
-    if(this.sWatchlist.companies != undefined || this.sWatchlist.companies != null)
-      return this.sWatchlist.companies.find(c => c.name == company.name)
+  seeIfChecked(stock: Stock){
+    if(this.sWatchlist.stockIds.length > 0)
+      return this.sWatchlist.stockIds.find(s => s.id == stock.id)
     else false
   }
 }

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
 
 import { DashboardPage } from './dashboard.page';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeaderboardPage } from './leaderboard/leaderboard.page';
 
 @NgModule({
@@ -14,6 +15,7 @@ import { LeaderboardPage } from './leaderboard/leaderboard.page';
     CommonModule,
     FormsModule,
     IonicModule,
+    NgxChartsModule,
     DashboardPageRoutingModule,
   ],
   declarations: [DashboardPage, LeaderboardPage]

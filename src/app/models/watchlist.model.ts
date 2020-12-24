@@ -1,7 +1,8 @@
-import { Company } from './company.model';
+import { Stock } from './stock.model';
 
 export interface Watchlist{
-    id: number
+    _id: string
+    userId: string
     name: string
-    companies?: Company[]
+    stockIds: Stock[]
 }

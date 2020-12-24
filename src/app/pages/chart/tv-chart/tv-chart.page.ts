@@ -13,6 +13,7 @@ import {
   ResolutionBackValues,
   SeriesFormat,
 } from '../../../../assets/charting_library/charting_library';
+import * as data from 'src/assets/reliance-data.json';
 
 @Component({
   selector: 'app-tv-chart',

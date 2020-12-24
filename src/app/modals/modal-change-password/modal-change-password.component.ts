@@ -18,9 +18,14 @@ export class ModalChangePasswordComponent implements OnInit {
   }
 
   changePassword(input){
-    if(this.userService.changePassword(input.newPassword, input.confirmPassword) != false) {
-      this.userService.changePassword(input.newPassword, input.confirmPassword)
-      this.dismissModal() 
-    } else this.passwordsDontMatch = false
+    if(input.newPassword == input.confirmPassword){
+      this.userService.changePassword(this.userService.user.email, input.newPassword).subscribe(res => {
+        console.log(res)
+      })
+    }
+    // if(this.userService.changePassword(input.newPassword, input.confirmPassword)) {
+    //   this.userService.changePassword(input.newPassword, input.confirmPassword)
+    //   this.dismissModal() 
+    // } else this.passwordsDontMatch = false
   }
 }
