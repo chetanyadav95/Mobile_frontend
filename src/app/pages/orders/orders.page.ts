@@ -1,7 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Completed } from 'src/app/models/completed.model';
-import { Pending } from 'src/app/models/pending.model';
-import { Position } from 'src/app/models/position.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/services/order.service';
 import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
@@ -10,6 +7,7 @@ import { Order } from 'src/app/models/order.model';
 import { StockService } from 'src/app/services/stock.service';
 import { Stock } from 'src/app/models/stock.model';
 import { Subscription } from 'rxjs';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-orders',
@@ -17,9 +15,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./orders.page.scss'],
 })
 export class OrdersPage implements OnInit, OnDestroy {
-  position: Order[] = []
-  completed: Order[] = []
-  pending: Order[] = []
+  position: [] = []
+  completed: [] = []
+  pending: [] = []
   dataLoaded: boolean
   totalPandL: number
   pageIndex: number
@@ -33,67 +31,109 @@ export class OrdersPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.dataLoaded = false
     this.pageIndex = 0
+  }
+
+  ionViewDidEnter(){
+    this.getOrders()
+  }
+
+  getOrders(){
+    this.dataLoaded = false
+    this.pending = []
+    this.position = []
+    this.completed = []
     this.orderService.getAllUserOrders().subscribe((res:any) => {
       res.data.forEach((o: Order) => {
-        this.stockService.getStock(o.stockId).subscribe((s:any) => {
-          o.stockName = s.data.companyName
-        })
-        switch (o.status) {
-          case 'positioned':
-            this.position.push(o)
-            this.checkIfOrderIsCompleted(o)
-            break;
-          case 'completed':
-            this.completed.push(o)
-            break;
-          case 'pending':
-            this.pending.push(o)
-            break;
-          default:
-            break;
+        const order: any = {
+          id: o._id,
+          stockId: o.stockId,
+          orderCategory: o.orderCategory,
+          name: o.companyName,
+          price: o.price,
+          quantity: o.volume
         }
-        console.log(o)
+        this.orderPlacement(o.transactionOne.status, order, o.transactionOne.price) // completed
+        this.orderPlacement(o.transactionTwo.stoplossStatus, order, o.stoploss, o.orderCategory, 'stoploss') // pending
+        this.orderPlacement(o.transactionTwo.targetStatus, order, o.target, o.orderCategory, 'target') // pending
+        if(o.status == 'positioned' && o.transactionOne.status == 'completed'){
+          order.stoploss = o.stoploss
+          order.target = o.target
+          this.position.push(Object.assign({},order))
+        }
+        else if(o.status == 'completed' && o.transactionTwo.stoplossStatus == 'notFilled' && o.transactionTwo.targetStatus == 'notFilled') {   
+          const o = Object.assign({},order)
+          o['status'] = 'completed' 
+          o.orderCategory = order.orderCategory == 'buy' ? 'sell' : 'buy'
+          this.completed.push(o)
+        }
       })
       this.updateLtp()
       // this.totalPandL = this.orderService.totalPandL()
     })
   }
 
-  ionViewDidEnter(){
-    this.updateLtp()
-  }
-
-  checkIfOrderIsCompleted(complete: Order){
-    if(complete.transactionOne.status == "completed"){
-      this.completed.push(complete)
-    }
-    else if(complete.transactionOne.status == "pending"){
-      this.pending.push(complete)
-    }
-    if(complete.transactionTwo.status == "pending"){
-      if(complete.stoploss){
-        let order = Object.assign({},complete)
-        order['isStopLoss'] = true
-        this.pending.push(order)
-      }
-      if(complete.target){
-        let order = Object.assign({},complete)
-        order['isStopLoss'] = false
-        this.pending.push(order)
-      }
+  // checkIfOrderIsCompleted(complete: Order){
+  //   if(complete.transactionOne.status == "completed"){
+  //     this.completed.push(complete)
+  //   }
+  //   else if(complete.transactionOne.status == "pending"){
+  //     this.pending.push(complete)
+  //   }
+  //   if(complete.transactionTwo.status == "pending"){
+  //     if(complete.stoploss){
+  //       let order = Object.assign({},complete)
+  //       order['isStopLoss'] = true
+  //       this.pending.push(order)
+  //     }
+  //     if(complete.target){
+  //       let order = Object.assign({},complete)
+  //       order['isStopLoss'] = false
+  //       this.pending.push(order)
+  //     }
+  //   }
+  // }
+  orderPlacement(status, order, price, orderCategory?, key?){
+    const o = Object.assign({},order)
+    switch (status) {
+      case 'completed':
+        if(orderCategory != null)
+          o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy'
+        else o.orderCategory = order.orderCategory
+        o.price = price
+        o['status'] = status
+        this.completed.push(o)
+        console.log(o,order)
+        break;
+      case 'pending':
+        if(orderCategory != null)
+          o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy'
+        else o.orderCategory = order.orderCategory
+        o.key = key ? key : 'price'
+        this.pending.push(o)
+        break;
+      case 'notFilled':
+        if(orderCategory != null)
+          o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy'
+        else o.orderCategory = order.orderCategory
+        o.price = price
+        o['status'] = 'cancelled'
+        this.completed.push(o)
+        break;
+      default:
+        break;
     }
   }
 
   updateLtp(){
     this.unsubscribeFromSockets()
-    this.position.forEach(s => {
+    this.position.forEach((s:any) => {
       let stockSub : Subscription = this.stockService.listen(s.stockId).subscribe((res:any) => {
         s.ltp = res[0].price
         this.dataLoaded = true
       })
       this.subscribedPositionSockets.push(stockSub)
     });
-    this.pending.forEach(s => {
+    this.pending.forEach((s:any) => {
       let stockSub : Subscription = this.stockService.listen(s.stockId).subscribe((res:any) => {
         s.ltp = res[0].price
         this.dataLoaded = true

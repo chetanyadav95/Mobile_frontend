@@ -8,25 +8,13 @@
 	<super-tabs *ngIf="!dataLoaded">
 		<super-tabs-toolbar slot="top" color="translucent">
 			<super-tab-button>
-				<ion-label
-					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
-				>
-					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-				</ion-label>
+				<ion-label>Position</ion-label>
 			</super-tab-button>
 			<super-tab-button>
-				<ion-label
-					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
-				>
-					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-				</ion-label>
+				<ion-label>Completed</ion-label>
 			</super-tab-button>
 			<super-tab-button>
-				<ion-label
-					style="width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center"
-				>
-					<ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-				</ion-label>
+				<ion-label>Pending</ion-label>
 			</super-tab-button>
 		</super-tabs-toolbar>
 		<super-tabs-container>
@@ -109,12 +97,13 @@
 							<ion-row>
 								<ion-col col="6" class="ion-padding-start">
 									<p>
-										<span [ngClass]="{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}"> {{p.stockName}} </span>
+										<span [ngClass]="{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}"> {{p.name}} </span>
 									</p>
 									<p>Price: {{p.price}}</p>
-									<p>Quantity: {{p.volume}}</p>
+									<p>Quantity: {{p?.orderCategory == 'sell' ? '-' : '+'}}{{p.quantity}}</p>
 								</ion-col>
 								<ion-col col="6" class="ion-text-right ion-no-padding">
+									<!-- todo : CENTRALIZE -->
 									<table class="ion-float-right">
 										<tbody>
 											<tr>
@@ -137,14 +126,14 @@
 													<p>{{p.ltp}}</p>
 												</td>
 											</tr>
-											<tr>
+											<!-- <tr>
 												<td>
 													<p><strong>SL</strong></p>
 												</td>
 												<td>
 													<p>{{p.stoploss}}</p>
 												</td>
-											</tr>
+											</tr> -->
 										</tbody>
 									</table>
 								</ion-col>
@@ -161,10 +150,10 @@
 							<ion-row>
 								<ion-col col="6" class="ion-padding-start">
 									<p>
-										<span [ngClass]="{'buy': c.orderCategory == 'buy', 'sell': c.orderCategory == 'sell'}"> {{c.stockName}} </span>
+										<span [ngClass]="{'buy': c.orderCategory == 'buy', 'sell': c.orderCategory == 'sell'}"> {{c.name}} </span>
 									</p>
-									<p>Price: {{c.price}}</p>
-									<p>Quantity: {{c.volume}}</p>
+									<!-- <p>Price: {{c.price}}</p> -->
+									<p>Quantity: {{c?.orderCategory == 'sell' ? '-' : '+'}}{{c.quantity}}</p>
 								</ion-col>
 								<ion-col col="6" class="ion-text-right">
 									<p>
@@ -173,17 +162,21 @@
 										</span>
 									</p>
 									<p>
+										<strong>Price</strong>
+										{{c.price}}
+									</p>
+									<!-- <p>
 										<strong>P&L</strong>
-										<!-- <span [ngClass]="{'success': c.pAndL > 0, 'failure':c.pAndL < 0}">
+										<span [ngClass]="{'success': c.pAndL > 0, 'failure':c.pAndL < 0}">
 											{{c.pAndL > 0 ? ' +' : ' '}}{{c.pAndL}}
-										</span> -->
+										</span>
 										0
-									</p>
-									<p>
+									</p> -->
+									<!-- <p>
 										<strong>Exit Price</strong>
-										<!-- {{c.exitPrice}} -->
+										{{c.exitPrice}}
 										0
-									</p>
+									</p> -->
 								</ion-col>
 							</ion-row>
 						</ion-grid>
@@ -198,13 +191,13 @@
 							<ion-row>
 								<ion-col col="6" class="ion-padding-start">
 									<p>
-										<span [ngClass]="{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}"> {{p.stockName}} </span>
+										<span [ngClass]="{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}"> {{p.name}} </span>
 									</p>
-									<p>Price: {{p.isStopLoss == true ? p.stoploss : p.target}}</p>
-									<p>Quantity: {{p.volume}}</p>
+									<p>Quantity: {{p?.orderCategory == 'sell' ? '-' : '+'}}{{p.quantity}}</p>
 								</ion-col>
 								<ion-col col="6" class="ion-text-right column-centralise-text">
-									<p><strong>LTP</strong> {{p.ltp}}</p>
+									<p style="margin-bottom:0px"><strong>LTP</strong> {{p.ltp}}</p>
+									<p><strong>{{p.key | titlecase}}</strong> {{p.price}}</p>
 								</ion-col>
 							</ion-row>
 						</ion-grid>

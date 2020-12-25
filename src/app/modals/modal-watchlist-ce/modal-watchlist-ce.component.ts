@@ -44,6 +44,6 @@ export class ModalWatchlistCeComponent implements OnInit {
       const s = this.stocks[i];
       stocks.push({stockId:s.id, position:i})
     }
-    this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id,stocks).subscribe(r => console.log('stock position',r))
+    this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id,stocks).subscribe()
   }
 }

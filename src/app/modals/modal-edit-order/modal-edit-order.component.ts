@@ -1,9 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Completed } from 'src/app/models/completed.model';
-import { Order } from 'src/app/models/order.model';
-import { Pending } from 'src/app/models/pending.model';
-import { Position } from 'src/app/models/position.model';
 import { OrderService } from 'src/app/services/order.service';
 
 @Component({
@@ -12,8 +8,8 @@ import { OrderService } from 'src/app/services/order.service';
   styleUrls: ['./modal-edit-order.component.scss'],
 })
 export class ModalEditOrderComponent implements OnInit {
-  @Input() position: Order
-  @Input() pending: Order
+  @Input() position
+  @Input() pending
   
   constructor(private modalCtrl: ModalController, private orderService: OrderService) { }
 
@@ -24,13 +20,13 @@ export class ModalEditOrderComponent implements OnInit {
   }
 
   savePosition(){
-    // (this.position != null) && this.orderService.savePosition(this.position)
-    // this.dismissModal()
+    (this.position != null) && this.orderService.savePosition(this.position.id, this.position.target, this.position.stoploss).subscribe(r => console.log(r))
+    this.dismissModal()
   }
 
   sellPosition(){
-    // (this.position != null) && this.orderService.sellPosition(this.position)
-    // this.dismissModal()
+    (this.position != null) && this.orderService.exitPosition(this.position.id).subscribe(r => console.log(r))
+    this.dismissModal()
   }
 
   savePending(){

@@ -2,7 +2,7 @@ export interface Order {
     _id: string
     userId: string
     stockId: string
-    stockName?: string
+    companyName: string
     created_date: string
     orderCategory: string
     type: string
@@ -12,7 +12,6 @@ export interface Order {
     stoploss: number
     target: number
     ltp?: string
-    
     isStopLoss?: boolean
     transactionOne: {
         price: number

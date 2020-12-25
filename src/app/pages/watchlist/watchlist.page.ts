@@ -75,7 +75,6 @@ export class WatchlistPage implements OnInit, OnDestroy {
           this.subscribedSockets.push(socketSub)
         }
       });
-      // if(w.stockIds.length == 0) this.dataLoaded = true
     })
   }
 
@@ -119,8 +118,10 @@ export class WatchlistPage implements OnInit, OnDestroy {
   async openManageWatchlists(){
     const modal = await this.modalController.create({
       component: ModalEditWatchlistsComponent,
-      // componentProps: {selectedCompany: id}
     });
+    modal.onDidDismiss().then(() => {
+      this.getWatchlists()
+    })
     return await modal.present();
   }
   
@@ -190,8 +191,8 @@ export class WatchlistPage implements OnInit, OnDestroy {
   }
 
   moveInArray(){
+    this.watchlists.sort(this.sortByPosition)
     for (let i = 0; i < this.watchlists.length; i++) {
-      this.watchlists.sort(this.sortByPosition)
       this.watchlists[i].stockIds.sort(this.sortByPosition)
     }
   }
