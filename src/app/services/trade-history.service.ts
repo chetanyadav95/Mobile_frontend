@@ -28,7 +28,7 @@ export class TradeHistoryService {
 					toTs:  to ? to : '',
 					limit: limit ? limit : 2000
         }
-const stockId = '5fe2f69dc47d3374729430fe';
+const stockId = '5fe2f6a0c47d337472943107';
     // return this.baseService.getLocalMockData(mockUrl).pipe(
         // return  this.http.get(`${this.baseUrl}${url}`,{params:qs}).pipe(
         return this.http.get(`${this.apiUrl}${stockId}`).pipe(

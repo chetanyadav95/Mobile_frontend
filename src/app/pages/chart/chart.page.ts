@@ -20,8 +20,8 @@ import {
   styleUrls: ['./chart.page.scss'],
 })
 export class ChartPage implements OnInit, OnDestroy {
-  private _symbol: ChartingLibraryWidgetOptions['symbol'] = '5fe2f69dc47d3374729430fe';
-  private _interval: ChartingLibraryWidgetOptions['interval'] = 'D' as ResolutionString;
+  private _symbol: ChartingLibraryWidgetOptions['symbol'] = '5fe2f6a0c47d337472943107';
+  private _interval: ChartingLibraryWidgetOptions['interval'] = '1' as ResolutionString;
   // BEWARE: no trailing slash is expected in feed URL
   // private _datafeedUrl = 'https://demo_feed.tradingview.com';
   private _libraryPath: ChartingLibraryWidgetOptions['library_path'] =
@@ -154,7 +154,7 @@ export class ChartPage implements OnInit, OnDestroy {
   }
 
   Datafeed:IBasicDataFeed;
-  timezone:Timezone='Etc/UTC';
+  timezone:Timezone='Asia/Kolkata';
   supportedResolutions:ResolutionString[] = [
     "1" as ResolutionString,
     "5" as ResolutionString,
@@ -192,22 +192,25 @@ export class ChartPage implements OnInit, OnDestroy {
         
         console.log('ResolveSymbol running');
         
-        var split_data = symbolName.split(/[:/]/);
+        // var split_data = symbolName.split(/[:/]/);
         
         var symbol_stub = {
           name: symbolName,
-          description: `${split_data[1]}/${split_data[2]}`,
-          type: 'crypto',
-          session: '24x7',
+          description: symbolName,
+          type: 'stock',
+          session: '0915-1530',
           timezone: this.timezone,
           ticker: symbolName,
-          exchange: split_data[0],
+          exchange: '',
           minmov: 1,
           pricescale: 100,
           has_intraday: true,
-          intraday_multipliers: ['1', '60'],
+          intraday_multipliers: ['1','5', '15', '60', 'D'],
+          has_daily: true,
+          has_weekly_and_monthly: false,
           supported_resolutions:  this.supportedResolutions,
-          volume_precision: 8,
+          volume_precision: 0,
+          data_status: 'streaming',
           full_name:'full_name',
           listed_exchange:'listed_exchange',
           format: 'price' as SeriesFormat
@@ -242,7 +245,7 @@ export class ChartPage implements OnInit, OnDestroy {
           if (res.data.historyData['1month'].length) {
             var bars = res.data.historyData['1month'].map(el => {
               return {
-                time: el.date * 1000, 
+                time: el.date, 
                 low: el.low,
                 high: el.high,
                 open: el.open,
