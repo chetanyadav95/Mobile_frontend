@@ -1,11 +1,13 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, OnInit } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { environment } from 'src/environments/environment';
+import { Platform } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { map } from 'rxjs/operators';
 const { LocalNotifications } = Plugins;
 
 @Injectable({
@@ -15,11 +17,15 @@ export class UserService {
   apiUrl: string = environment.apiUrl + "auth/"
   apiSettingsUrl: string = environment.apiUrl + "settings"
   user = new BehaviorSubject<User>(null)
-  isSimulated: boolean = true
+  authenticated = new BehaviorSubject<any>(false)
   decodedToken
-
   isOnLoginOrSignUpPage = new Subject<boolean>()
-  constructor(private router: Router, private http: HttpClient) { }
+
+  constructor(private http: HttpClient, private storage: Storage, private platform: Platform) {
+    this.platform.ready().then(()=>{
+      this.checkToken()
+    })
+  }
 
   decodeToken(token){
     const helper = new JwtHelperService();
@@ -63,9 +69,23 @@ export class UserService {
     return this.http.put(this.apiSettingsUrl, {id, datatype, risk, leverage:+leverage})
   }
 
+  authenticate(user, token){
+    return this.storage.set('token',{user, token}).then(r => this.authenticated.next({user, token}))
+  }
+
+  checkToken(){
+    return this.storage.get('token').then(r => {
+      if(r) {
+        this.authenticated.next(r)
+        this.user.next(r.user)
+      }
+    })
+  }
+
   logout(){
     this.user.next(null)
     localStorage.removeItem('token')
+    return this.storage.remove('token').then(r => this.authenticated.next(false))
   }
 
   add(amount: number){

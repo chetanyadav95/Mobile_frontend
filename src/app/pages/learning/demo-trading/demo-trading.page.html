@@ -6,6 +6,13 @@
 			</ion-col>
 		</ion-row>
 	</ion-grid>
+	<ion-card *ngFor="let demo of demotrading" (click)="openPostModal(demo)">
+		<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>
+		<ion-card-content>
+			<ion-img [src]="demo.embededurl" class="ion-margin-bottom"></ion-img>
+			<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>
+		</ion-card-content>
+	</ion-card>
 	<ion-fab horizontal="end" vertical="bottom">
 		<ion-fab-button (click)="openUploadPostModal()">
 			<ion-icon name="add"></ion-icon>

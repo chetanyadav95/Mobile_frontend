@@ -131,42 +131,49 @@
       /* harmony import */
 
 
-      var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! @ionic/angular */
+      "TEn/");
+      /* harmony import */
+
+
+      var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! @angular/core */
       "fXoL");
       /* harmony import */
 
 
-      var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! @angular/router */
       "tyNb");
       /* harmony import */
 
 
-      var src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! src/app/services/leaderboard.service */
       "NONO");
       /* harmony import */
 
 
-      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! src/app/services/user.service */
       "qfBg");
       /* harmony import */
 
 
-      var src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
-      /*! src/app/services/stock.service */
-      "8hSh");
+      var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      /*! @ionic-native/screen-orientation/ngx */
+      "0QAI");
 
       var DashboardPage = /*#__PURE__*/function () {
-        function DashboardPage(router, leaderboardService, userService, stockService) {
+        function DashboardPage(router, leaderboardService, userService, platform, screenOrientation) {
           _classCallCheck(this, DashboardPage);
 
           this.router = router;
           this.leaderboardService = leaderboardService;
           this.userService = userService;
-          this.stockService = stockService;
+          this.platform = platform;
+          this.screenOrientation = screenOrientation;
           this.data = [{
             "name": "Open balance",
             "series": [{
@@ -210,7 +217,7 @@
               "value": 500
             }]
           }];
-          this.view = [700, 300];
+          this.view = [];
         }
 
         _createClass(DashboardPage, [{
@@ -220,9 +227,19 @@
 
             this.leaderboard = this.leaderboardService.leaderboard;
             this.userService.user.subscribe(function (u) {
-              return _this.user = u;
+              _this.user = u;
+
+              _this.userService.accountDetails().subscribe(function (r) {
+                _this.user.balance.availableBal = r.account.initialAmount;
+                _this.user.balance.openBal = parseFloat(r.account.currentBalance);
+                _this.user.balance.currency = r.account.currency;
+              });
             });
             this.checkIfItIsDashboard();
+            this.view = [this.platform.width(), this.platform.height() * 0.6];
+            this.screenOrientation.onChange().subscribe(function () {
+              return _this.view = [_this.platform.width(), _this.platform.height() * 0.5];
+            });
           }
         }, {
           key: "navigateToLeaderboard",
@@ -246,17 +263,19 @@
 
       DashboardPage.ctorParameters = function () {
         return [{
-          type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
+          type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]
         }, {
-          type: src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_5__["LeaderboardService"]
+          type: src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_6__["LeaderboardService"]
         }, {
-          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"]
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__["UserService"]
         }, {
-          type: src_app_services_stock_service__WEBPACK_IMPORTED_MODULE_7__["StockService"]
+          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"]
+        }, {
+          type: _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__["ScreenOrientation"]
         }];
       };
 
-      DashboardPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
+      DashboardPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["Component"])({
         selector: 'app-dashboard',
         template: _raw_loader_dashboard_page_html__WEBPACK_IMPORTED_MODULE_1__["default"],
         styles: [_dashboard_page_scss__WEBPACK_IMPORTED_MODULE_2__["default"]]
@@ -539,7 +558,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title>Dashboard</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content class=\"ion-padding-top\">\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text> <h5>Hi {{user.username}}</h5> </ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<hr />\n\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-title class=\"ion-no-padding ion-padding-bottom\">Funds</ion-title>\n\t\t\t\t<table class=\"balance-overview-table\">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Opening bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user.balance.currency}} {{user?.balance.openBal != null ? user.balance.openBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Available bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user.balance.currency}} {{user?.balance.availableBal != null ? user.balance.availableBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>P/L:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user.balance.currency}} {{user?.balance.pAndL != null ? user.balance.pAndL : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>% gain:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.gain != null ? user.balance.gain * 100 : 0}}%</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<!-- <hr /> -->\n\t\t<!-- <ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-title class=\"ion-no-padding\">Leaderboard</ion-title>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard | slice:0:5 ; let i=index\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{i + 1}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user.name}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user.score | percent:'1.1'}}</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-button\n\t\t\t\t\t\t\t(click)=\"navigateToLeaderboard()\"\n\t\t\t\t\t\t\tcolor=\"tertiary\"\n\t\t\t\t\t\t\tsize=\"small\"\n\t\t\t\t\t\t\tfill=\"clear\"\n\t\t\t\t\t\t\tclass=\"see-more-button\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\tSee more\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row> -->\n\t\t<ion-row>\n\t\t\t<ion-title class=\"ion-margin-vertical\">Funds Chart</ion-title>\n\t\t\t<ion-col>\n\t\t\t\t<ngx-charts-line-chart\n\t\t\t\t\t[legend]=\"false\"\n\t\t\t\t\t[showXAxisLabel]=\"false\"\n\t\t\t\t\t[showYAxisLabel]=\"false\"\n\t\t\t\t\t[xAxis]=\"true\"\n\t\t\t\t\t[yAxis]=\"true\"\n\t\t\t\t\t[timeline]=\"true\"\n\t\t\t\t\t[results]=\"data\"\n\t\t\t\t>\n\t\t\t\t</ngx-charts-line-chart>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title>Dashboard</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content class=\"ion-padding-top\">\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text> <h5>Hi {{user.username}}</h5> </ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<hr />\n\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\" style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-no-padding ion-padding-bottom\">Funds</ion-title>\n\t\t\t\t<table class=\"balance-overview-table\">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Opening bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user.balance.currency}} {{user?.balance.openBal != null ? user.balance.openBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Available bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user.balance.currency}} {{user?.balance.availableBal != null ? user.balance.availableBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>P/L:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user.balance.currency}} {{user?.balance.pAndL != null ? user.balance.pAndL : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>% gain:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.gain != null ? user.balance.gain * 100 : 0}}%</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<!-- <hr /> -->\n\t\t<!-- <ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-title class=\"ion-no-padding\">Leaderboard</ion-title>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard | slice:0:5 ; let i=index\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{i + 1}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user.name}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user.score | percent:'1.1'}}</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-button\n\t\t\t\t\t\t\t(click)=\"navigateToLeaderboard()\"\n\t\t\t\t\t\t\tcolor=\"tertiary\"\n\t\t\t\t\t\t\tsize=\"small\"\n\t\t\t\t\t\t\tfill=\"clear\"\n\t\t\t\t\t\t\tclass=\"see-more-button\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\tSee more\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row> -->\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Funds Chart</ion-title>\n\t\t\t\t<ngx-charts-line-chart\n\t\t\t\t\t[legend]=\"false\"\n\t\t\t\t\t[showXAxisLabel]=\"false\"\n\t\t\t\t\t[showYAxisLabel]=\"false\"\n\t\t\t\t\t[xAxis]=\"true\"\n\t\t\t\t\t[yAxis]=\"true\"\n\t\t\t\t\t[timeline]=\"true\"\n\t\t\t\t\t[results]=\"data\"\n\t\t\t\t\t[view]=\"view\"\n\t\t\t\t>\n\t\t\t\t</ngx-charts-line-chart>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 

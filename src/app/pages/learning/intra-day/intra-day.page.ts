@@ -10,6 +10,8 @@ import { Post } from 'src/app/models/post.model';
 import { LearningService } from 'src/app/services/learning.service';
 import { ModalUploadPostComponent } from 'src/app/modals/modal-upload-post/modal-upload-post.component';
 import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.component';
+import { MarubozuService } from 'src/app/services/marubozu.service';
+import { Marubozu } from 'src/app/models/marubozu';
 
 const STORAGE_KEY = 'assets';
 
@@ -20,13 +22,19 @@ const STORAGE_KEY = 'assets';
 })
 export class IntraDayPage implements OnInit {
   intraDayPosts: Post[]
- 
+  intraday: Marubozu[]
   // images = [];
  
-  constructor(private modalController: ModalController, private learningService: LearningService) { }
+  constructor(private modalController: ModalController, 
+    private learningService: LearningService, 
+    private marubozuService: MarubozuService) { }
 
   ngOnInit() {
     this.intraDayPosts = this.learningService.intraDay
+    this.marubozuService.get('intraday').subscribe((r: any) => {
+      console.log('intraday',r)
+      this.intraday = r.data
+    })
   }
 
   async openUploadPostModal(id: number) {

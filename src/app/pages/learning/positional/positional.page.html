@@ -6,10 +6,10 @@
 			</ion-col>
 		</ion-row>
 	</ion-grid>
-	<ion-card *ngFor="let positional of positionalPosts" (click)="openPostModal(positional)">
-		<ion-card-header><h5>{{positional.name}}</h5></ion-card-header>
+	<ion-card *ngFor="let positional of positionalPsts" (click)="openPostModal(positional)">
+		<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>
 		<ion-card-content>
-			<ion-img [src]="positional.imgURL" class="ion-margin-bottom"></ion-img>
+			<ion-img [src]="positional.embededurl" class="ion-margin-bottom"></ion-img>
 			<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>
 		</ion-card-content>
 	</ion-card>

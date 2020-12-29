@@ -47,11 +47,9 @@ let AuthGuard = class AuthGuard {
         this.router = router;
     }
     canActivate(next, state) {
-        let user;
         let b;
-        this.userService.user.subscribe(u => {
-            user = u;
-            if (user == null || user == undefined) {
+        this.userService.authenticated.subscribe(a => {
+            if (!a) {
                 this.router.navigate(['home', 'login']);
                 b = false;
             }
@@ -103,15 +101,11 @@ let ModalWatchlistCeComponent = class ModalWatchlistCeComponent {
     constructor(modalCtrl, watchlistService) {
         this.modalCtrl = modalCtrl;
         this.watchlistService = watchlistService;
-        this.companies = [];
+        this.stocks = [];
     }
     ngOnInit() {
-        this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w) => {
-            this.watchlistName = w.name;
-        });
-        this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w) => {
-            this.companies = w.stockIds;
-        });
+        this.stocks = this.selectedWatchlist.stockIds;
+        this.watchlistName = this.selectedWatchlist.name;
     }
     dismissModal() {
         this.modalCtrl.dismiss();
@@ -119,12 +113,21 @@ let ModalWatchlistCeComponent = class ModalWatchlistCeComponent {
     onEditWatchlist() {
         if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
             this.watchlistName = this.watchlistName.trim();
-            this.watchlistService.editWatchlist(this.selectedWatchlist, this.watchlistName);
+            this.watchlistService.editWatchlist(this.selectedWatchlist._id, this.watchlistName);
         }
     }
     drop(event) {
         //needs to happen in backend
-        Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_6__["moveItemInArray"])(this.companies, event.previousIndex, event.currentIndex);
+        Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_6__["moveItemInArray"])(this.stocks, event.previousIndex, event.currentIndex);
+        this.changePosition();
+    }
+    changePosition() {
+        const stocks = [];
+        for (let i = 0; i < this.stocks.length; i++) {
+            const s = this.stocks[i];
+            stocks.push({ stockId: s.id, position: i });
+        }
+        this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id, stocks).subscribe();
     }
 };
 ModalWatchlistCeComponent.ctorParameters = () => [
@@ -387,7 +390,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (".drag-list {\n  width: 90%;\n  border-top: solid 1px #ccc;\n  border-bottom: solid 1px #ccc;\n  min-height: 60px;\n  display: block;\n  background: white;\n  overflow: hidden;\n  margin: 0 auto;\n}\n\n.drag-box {\n  padding: 20px 10px;\n  border-bottom: solid 1px #ccc;\n  color: rgba(0, 0, 0, 0.87);\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: start;\n  box-sizing: border-box;\n  cursor: move;\n  background: white;\n  font-size: 14px;\n}\n\n.cdk-drag-preview {\n  box-sizing: border-box;\n  border-radius: 4px;\n  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);\n}\n\n.cdk-drag-placeholder {\n  opacity: 0;\n}\n\n.cdk-drag-animating {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\n.drag-box:last-child {\n  border: none;\n}\n\n.drag-list.cdk-drop-list-dragging .drag-box:not(.cdk-drag-placeholder) {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\nion-title {\n  color: black;\n}\n\nion-icon {\n  font-size: 20px;\n}\n\n@media screen and (max-width: 360px) {\n  ion-title, h3 {\n    font-size: 15px !important;\n  }\n\n  ion-label, ion-button, span, h5 {\n    font-size: 13px !important;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  ion-title {\n    color: white;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kYWxzL21vZGFsLXdhdGNobGlzdC1jZS9tb2RhbC13YXRjaGxpc3QtY2UuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxVQUFBO0VBQ0EsMEJBQUE7RUFDQSw2QkFBQTtFQUNBLGdCQUFBO0VBQ0EsY0FBQTtFQUNBLGlCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxjQUFBO0FBQ0Y7O0FBRUE7RUFDRSxrQkFBQTtFQUNBLDZCQUFBO0VBQ0EsMEJBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSxtQkFBQTtFQUNBLHNCQUFBO0VBQ0Esc0JBQUE7RUFDQSxZQUFBO0VBQ0EsaUJBQUE7RUFDQSxlQUFBO0FBQ0Y7O0FBRUE7RUFDRSxzQkFBQTtFQUNBLGtCQUFBO0VBQ0EscUhBQUE7QUFDRjs7QUFJQTtFQUNFLFVBQUE7QUFERjs7QUFJQTtFQUNFLHNEQUFBO0FBREY7O0FBSUE7RUFDRSxZQUFBO0FBREY7O0FBSUE7RUFDRSxzREFBQTtBQURGOztBQUdBO0VBQ0UsWUFBQTtBQUFGOztBQUVBO0VBQ0UsZUFBQTtBQUNGOztBQUNBO0VBQ0U7SUFDRSwwQkFBQTtFQUVGOztFQUFBO0lBQ0UsMEJBQUE7RUFHRjtBQUNGOztBQURBO0VBQ0U7SUFDSSxZQUFBO0VBR0o7QUFDRiIsImZpbGUiOiJzcmMvYXBwL21vZGFscy9tb2RhbC13YXRjaGxpc3QtY2UvbW9kYWwtd2F0Y2hsaXN0LWNlLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRyYWctbGlzdCB7XG4gIHdpZHRoOiA5MCU7XG4gIGJvcmRlci10b3A6IHNvbGlkIDFweCAjY2NjO1xuICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2NjYztcbiAgbWluLWhlaWdodDogNjBweDtcbiAgZGlzcGxheTogYmxvY2s7XG4gIGJhY2tncm91bmQ6IHdoaXRlO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBtYXJnaW46IDAgYXV0bztcbn1cblxuLmRyYWctYm94IHtcbiAgcGFkZGluZzogMjBweCAxMHB4O1xuICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2NjYztcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC44Nyk7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogc3RhcnQ7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIGN1cnNvcjogbW92ZTtcbiAgYmFja2dyb3VuZDogd2hpdGU7XG4gIGZvbnQtc2l6ZTogMTRweDtcbn1cblxuLmNkay1kcmFnLXByZXZpZXcge1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xuICBib3JkZXItcmFkaXVzOiA0cHg7XG4gIGJveC1zaGFkb3c6IDAgNXB4IDVweCAtM3B4IHJnYmEoMCwgMCwgMCwgMC4yKSxcbiAgICAgICAgICAgICAgMCA4cHggMTBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjE0KSxcbiAgICAgICAgICAgICAgMCAzcHggMTRweCAycHggcmdiYSgwLCAwLCAwLCAwLjEyKTtcbn1cblxuLmNkay1kcmFnLXBsYWNlaG9sZGVyIHtcbiAgb3BhY2l0eTogMDtcbn1cblxuLmNkay1kcmFnLWFuaW1hdGluZyB7XG4gIHRyYW5zaXRpb246IHRyYW5zZm9ybSAyNTBtcyBjdWJpYy1iZXppZXIoMCwgMCwgMC4yLCAxKTtcbn1cblxuLmRyYWctYm94Omxhc3QtY2hpbGQge1xuICBib3JkZXI6IG5vbmU7XG59XG5cbi5kcmFnLWxpc3QuY2RrLWRyb3AtbGlzdC1kcmFnZ2luZyAuZHJhZy1ib3g6bm90KC5jZGstZHJhZy1wbGFjZWhvbGRlcikge1xuICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMjUwbXMgY3ViaWMtYmV6aWVyKDAsIDAsIDAuMiwgMSk7XG59XG5pb24tdGl0bGV7XG4gIGNvbG9yOmJsYWNrO1xufVxuaW9uLWljb257XG4gIGZvbnQtc2l6ZTogMjBweDtcbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDM2MHB4KSB7XG4gIGlvbi10aXRsZSwgaDN7XG4gICAgZm9udC1zaXplOjE1cHggIWltcG9ydGFudDtcbiAgfVxuICBpb24tbGFiZWwsIGlvbi1idXR0b24sIHNwYW4sIGg1e1xuICAgIGZvbnQtc2l6ZTogMTNweCAhaW1wb3J0YW50O1xuICB9XG59XG5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6IGRhcmspIHtcbiAgaW9uLXRpdGxle1xuICAgICAgY29sb3I6d2hpdGU7XG4gIH1cbn0iXX0= */");
+/* harmony default export */ __webpack_exports__["default"] = (".drag-list {\n  width: 90%;\n  border-top: solid 1px #ccc;\n  min-height: 60px;\n  display: block;\n  background: white;\n  overflow: hidden;\n  margin: 0 auto;\n}\n\n.drag-box {\n  padding: 20px 10px;\n  border-bottom: solid 1px #ccc !important;\n  color: rgba(0, 0, 0, 0.87);\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: start;\n  box-sizing: border-box;\n  cursor: move;\n  background: white;\n  font-size: 14px;\n}\n\n.cdk-drag-preview {\n  box-sizing: border-box;\n  border-radius: 4px;\n  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);\n}\n\n.cdk-drag-placeholder {\n  opacity: 0;\n}\n\n.cdk-drag-animating {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\n.drag-box:last-child {\n  border: none;\n}\n\n.drag-list.cdk-drop-list-dragging .drag-box:not(.cdk-drag-placeholder) {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\nion-title {\n  color: black;\n}\n\nion-icon {\n  font-size: 20px;\n}\n\n@media screen and (max-width: 360px) {\n  ion-title, h3 {\n    font-size: 15px !important;\n  }\n\n  ion-label, ion-button, span, h5 {\n    font-size: 13px !important;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  ion-title {\n    color: white;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kYWxzL21vZGFsLXdhdGNobGlzdC1jZS9tb2RhbC13YXRjaGxpc3QtY2UuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxVQUFBO0VBQ0EsMEJBQUE7RUFDQSxnQkFBQTtFQUNBLGNBQUE7RUFDQSxpQkFBQTtFQUNBLGdCQUFBO0VBQ0EsY0FBQTtBQUNGOztBQUVBO0VBQ0Usa0JBQUE7RUFDQSx3Q0FBQTtFQUNBLDBCQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsbUJBQUE7RUFDQSxzQkFBQTtFQUNBLHNCQUFBO0VBQ0EsWUFBQTtFQUNBLGlCQUFBO0VBQ0EsZUFBQTtBQUNGOztBQUVBO0VBQ0Usc0JBQUE7RUFDQSxrQkFBQTtFQUNBLHFIQUFBO0FBQ0Y7O0FBSUE7RUFDRSxVQUFBO0FBREY7O0FBSUE7RUFDRSxzREFBQTtBQURGOztBQUlBO0VBQ0UsWUFBQTtBQURGOztBQUlBO0VBQ0Usc0RBQUE7QUFERjs7QUFHQTtFQUNFLFlBQUE7QUFBRjs7QUFFQTtFQUNFLGVBQUE7QUFDRjs7QUFDQTtFQUNFO0lBQ0UsMEJBQUE7RUFFRjs7RUFBQTtJQUNFLDBCQUFBO0VBR0Y7QUFDRjs7QUFEQTtFQUNFO0lBQ0ksWUFBQTtFQUdKO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9tb2RhbHMvbW9kYWwtd2F0Y2hsaXN0LWNlL21vZGFsLXdhdGNobGlzdC1jZS5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5kcmFnLWxpc3Qge1xuICB3aWR0aDogOTAlO1xuICBib3JkZXItdG9wOiBzb2xpZCAxcHggI2NjYztcbiAgbWluLWhlaWdodDogNjBweDtcbiAgZGlzcGxheTogYmxvY2s7XG4gIGJhY2tncm91bmQ6IHdoaXRlO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBtYXJnaW46IDAgYXV0bztcbn1cblxuLmRyYWctYm94IHtcbiAgcGFkZGluZzogMjBweCAxMHB4O1xuICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2NjYyAhaW1wb3J0YW50O1xuICBjb2xvcjogcmdiYSgwLCAwLCAwLCAwLjg3KTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBzdGFydDtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgY3Vyc29yOiBtb3ZlO1xuICBiYWNrZ3JvdW5kOiB3aGl0ZTtcbiAgZm9udC1zaXplOiAxNHB4O1xufVxuXG4uY2RrLWRyYWctcHJldmlldyB7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgYm94LXNoYWRvdzogMCA1cHggNXB4IC0zcHggcmdiYSgwLCAwLCAwLCAwLjIpLFxuICAgICAgICAgICAgICAwIDhweCAxMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMTQpLFxuICAgICAgICAgICAgICAwIDNweCAxNHB4IDJweCByZ2JhKDAsIDAsIDAsIDAuMTIpO1xufVxuXG4uY2RrLWRyYWctcGxhY2Vob2xkZXIge1xuICBvcGFjaXR5OiAwO1xufVxuXG4uY2RrLWRyYWctYW5pbWF0aW5nIHtcbiAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDI1MG1zIGN1YmljLWJlemllcigwLCAwLCAwLjIsIDEpO1xufVxuXG4uZHJhZy1ib3g6bGFzdC1jaGlsZCB7XG4gIGJvcmRlcjogbm9uZTtcbn1cblxuLmRyYWctbGlzdC5jZGstZHJvcC1saXN0LWRyYWdnaW5nIC5kcmFnLWJveDpub3QoLmNkay1kcmFnLXBsYWNlaG9sZGVyKSB7XG4gIHRyYW5zaXRpb246IHRyYW5zZm9ybSAyNTBtcyBjdWJpYy1iZXppZXIoMCwgMCwgMC4yLCAxKTtcbn1cbmlvbi10aXRsZXtcbiAgY29sb3I6YmxhY2s7XG59XG5pb24taWNvbntcbiAgZm9udC1zaXplOiAyMHB4O1xufVxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMzYwcHgpIHtcbiAgaW9uLXRpdGxlLCBoM3tcbiAgICBmb250LXNpemU6MTVweCAhaW1wb3J0YW50O1xuICB9XG4gIGlvbi1sYWJlbCwgaW9uLWJ1dHRvbiwgc3BhbiwgaDV7XG4gICAgZm9udC1zaXplOiAxM3B4ICFpbXBvcnRhbnQ7XG4gIH1cbn1cbkBtZWRpYShwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyaykge1xuICBpb24tdGl0bGV7XG4gICAgICBjb2xvcjp3aGl0ZTtcbiAgfVxufSJdfQ== */");
 
 /***/ }),
 
@@ -483,12 +486,12 @@ let ModalEditOrderComponent = class ModalEditOrderComponent {
         this.modalCtrl.dismiss();
     }
     savePosition() {
-        // (this.position != null) && this.orderService.savePosition(this.position)
-        // this.dismissModal()
+        (this.position != null) && this.orderService.savePosition(this.position.id, this.position.target, this.position.stoploss).subscribe(r => console.log(r));
+        this.dismissModal();
     }
     sellPosition() {
-        // (this.position != null) && this.orderService.sellPosition(this.position)
-        // this.dismissModal()
+        (this.position != null) && this.orderService.exitPosition(this.position.id).subscribe(r => console.log(r));
+        this.dismissModal();
     }
     savePending() {
         // (this.pending != null) && this.orderService.savePending(this.pending)
@@ -554,13 +557,13 @@ let ModalWatchlistComponent = class ModalWatchlistComponent {
         });
     }
     dismissModal() {
-        this.modalCtrl.dismiss();
+        this.modalCtrl.dismiss(true);
     }
     onSelect(event, stock) {
         if (event == true)
-            this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(res => console.log(res));
+            this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe();
         else if (event == false)
-            this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock);
+            this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe();
     }
     filter(filterValue) {
         this.filteredData = this.stocks.filter(stock => stock.name.toLowerCase().includes(filterValue.toLowerCase()));
@@ -625,6 +628,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/status-bar/ngx */ "VYYF");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/common */ "ofXK");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/router */ "tyNb");
+/* harmony import */ var _services_user_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./services/user.service */ "qfBg");
+
 
 
 
@@ -637,13 +642,14 @@ __webpack_require__.r(__webpack_exports__);
 
 const { Network, LocalNotifications, App } = _capacitor_core__WEBPACK_IMPORTED_MODULE_4__["Plugins"];
 let AppComponent = class AppComponent {
-    constructor(platform, splashScreen, statusBar, alertController, location, router) {
+    constructor(platform, splashScreen, statusBar, alertController, location, router, userService) {
         this.platform = platform;
         this.splashScreen = splashScreen;
         this.statusBar = statusBar;
         this.alertController = alertController;
         this.location = location;
         this.router = router;
+        this.userService = userService;
     }
     ngOnInit() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -699,6 +705,9 @@ let AppComponent = class AppComponent {
         this.platform.ready().then(() => {
             this.statusBar.styleDefault();
             this.splashScreen.hide();
+            this.userService.authenticated.subscribe(a => {
+                a ? this.router.navigate(['home', 'dashboard']) : this.router.navigate(['home', 'login']);
+            });
         });
     }
 };
@@ -708,7 +717,8 @@ AppComponent.ctorParameters = () => [
     { type: _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_7__["StatusBar"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["AlertController"] },
     { type: _angular_common__WEBPACK_IMPORTED_MODULE_8__["Location"] },
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_9__["Router"] }
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_9__["Router"] },
+    { type: _services_user_service__WEBPACK_IMPORTED_MODULE_10__["UserService"] }
 ];
 AppComponent.propDecorators = {
     routerOutlet: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["ViewChild"], args: [_ionic_angular__WEBPACK_IMPORTED_MODULE_5__["IonRouterOutlet"], { static: false },] }]
@@ -751,239 +761,54 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "qCKp");
-/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/environments/environment */ "AytR");
-
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/environments/environment */ "AytR");
 
 
 
 
 let WatchlistService = class WatchlistService {
-    // companies: Stock[] = [
-    //   {
-    //     id: 1,
-    //     name: 'AAA',
-    //     code: 'AAA',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'BBB',
-    //     code: 'BBB',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'CCC',
-    //     code: 'CCC',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 4,
-    //     name: 'DDD',
-    //     code: 'DDD',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 5,
-    //     name: 'EEE',
-    //     code: 'EEE',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 6,
-    //     name: 'FFF',
-    //     code: 'FFF',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 7,
-    //     name: 'GGG',
-    //     code: 'GGG',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 8,
-    //     name: 'HHH',
-    //     code: 'HHH',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 9,
-    //     name: 'III',
-    //     code: 'III',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 10,
-    //     name: 'JJJ',
-    //     code: 'JJJ',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 11,
-    //     name: 'Infosys',
-    //     code: 'Infy',
-    //     greenNum: 92.90,
-    //     rateRaw: 4.00,
-    //     isRising: true,
-    //     ratePercentage: 4.50
-    //   },
-    //   {
-    //     id: 12,
-    //     name: 'Niftybees',
-    //     code: 'Nifty',
-    //     greenNum: 958.10,
-    //     isRising: true,
-    //     rateRaw: 18.25,
-    //     ratePercentage: 1.94
-    //   },
-    //   {
-    //     id: 13,
-    //     name: 'Tesla Motors',
-    //     code: 'Tsla',
-    //     greenNum: 119.85,
-    //     isRising: false,
-    //     rateRaw: 5.05,
-    //     ratePercentage: 4.40
-    //   },
-    //   {
-    //     id: 14,
-    //     name: 'Apple Inc.',
-    //     code: 'Aapl',
-    //     greenNum: 2102.35,
-    //     isRising: true,
-    //     rateRaw: 42.30,
-    //     ratePercentage: 2.05
-    //   },
-    //   {
-    //     id: 15,
-    //     name: 'McDonalds',
-    //     code: 'MCDS',
-    //     greenNum: 128.25,
-    //     isRising: false,
-    //     rateRaw: 1.55,
-    //     ratePercentage: 1.22
-    // }]
-    // watchlists: Watchlist[] = [
-    //   {
-    //     id: 1,
-    //     name: 'Trending',
-    //     companies: [
-    //       this.companies[0],
-    //       this.companies[1],
-    //       this.companies[2],
-    //       this.companies[3],
-    //       this.companies[4],
-    //       this.companies[5],
-    //       this.companies[6],
-    //       this.companies[7],
-    //       this.companies[8],
-    //       this.companies[9],
-    //     ]
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'W1',
-    //     companies: [
-    //       this.companies[10],
-    //       this.companies[11],
-    //     ]
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'W2',
-    //     companies: [
-    //       this.companies[12],
-    //       this.companies[13],
-    //     ]
-    //   },
-    //   {
-    //     id: 4,
-    //     name: 'W3',
-    //     companies: [
-    //       this.companies[14],
-    //     ]
-    //   }]
     constructor(http) {
         this.http = http;
-        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'watchlist/';
-        this.updatedWatchlist = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
+        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'watchlist/';
     }
     getWatchlist(id) {
         return this.http.get(this.apiUrl + id);
     }
-    getUserWatchlists() {
-        return this.http.get(this.apiUrl);
-    }
     getSimulatedWatchlists() {
         return this.http.get(this.apiUrl + 'filter/simulated');
     }
-    updateWatchlist(newWatchlist) {
-        // this.watchlists = newWatchlist
+    getRealtimeWatchlists() {
+        return this.http.get(this.apiUrl + 'filter/realTime');
     }
     addToWatchlist(watchlistId, stockId) {
-        // needs to be a update watchlist method
-        // this.getWatchlist(id).companies.push(company)
         return this.http.put(this.apiUrl + 'add/stock', { watchlistId, stockId });
     }
     removeFromWatchlist(watchlistId, stockId) {
-        // let watchlist
-        // this.getWatchlist(id).subscribe(res => watchlist = res)
-        // const indexOfStock = watchlist.companies.indexOf(company)
-        // watchlist.companies.splice(indexOfStock,1)
-        //update watchlist
         return this.http.put(this.apiUrl + 'stock/remove', { watchlistId, stockId });
     }
     createWatchlist(name) {
-        // const watchlist: Watchlist = {id: this.generateId(this.watchlists), name, companies:[]}
-        // this.watchlists.push(watchlist)
         return this.http.post(this.apiUrl + 'new', { name });
     }
+    updateWatchlistPositions(list) {
+        return this.http.put(this.apiUrl + 'update/watchlist/positions', { list });
+    }
+    updateWatchlistStocksPositions(watchlistId, stocks) {
+        return this.http.put(this.apiUrl + 'update/watchlist/stocks/positions', { watchlistId, stocks });
+    }
     editWatchlist(id, name) {
-        // this.getWatchlist(id).name = name
     }
     deleteWatchlist(id) {
         return this.http.delete(this.apiUrl + id);
-        // this.watchlists.splice(this.watchlists.indexOf(this.getWatchlist(id)), 1)
     }
-    generateId(array) {
-        const ids = array.map(i => i.id);
-        var id = 0;
-        ids.length != 0
-            ? id = Math.max(...ids) + 1
-            : id = 1;
-        return id;
+    moveInArray(arr, prevIndex, currIndex) {
+        if (currIndex >= arr.length) {
+            var k = currIndex - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(currIndex, 0, arr.splice(prevIndex, 1)[0]);
+        return arr;
     }
 };
 WatchlistService.ctorParameters = () => [
@@ -1069,6 +894,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modals_modal_withdraw_add_funds_modal_withdraw_add_funds_component__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ./modals/modal-withdraw-add-funds/modal-withdraw-add-funds.component */ "whIa");
 /* harmony import */ var _interceptors_jwt_interceptor__WEBPACK_IMPORTED_MODULE_31__ = __webpack_require__(/*! ./interceptors/jwt.interceptor */ "hzlp");
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(/*! src/environments/environment */ "AytR");
+/* harmony import */ var _ionic_native_google_plus_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(/*! @ionic-native/google-plus/ngx */ "up+p");
+/* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "0QAI");
+
+
 
 
 
@@ -1149,6 +978,9 @@ AppModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
             _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_23__["FilePath"],
             _ionic_native_clipboard_ngx__WEBPACK_IMPORTED_MODULE_7__["Clipboard"],
             _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_8__["SocialSharing"],
+            _ionic_native_google_plus_ngx__WEBPACK_IMPORTED_MODULE_33__["GooglePlus"],
+            Storage,
+            _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_34__["ScreenOrientation"],
             { provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"], useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicRouteStrategy"] },
             { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_18__["HTTP_INTERCEPTORS"], useClass: _interceptors_jwt_interceptor__WEBPACK_IMPORTED_MODULE_31__["JwtInterceptor"], multi: true },
         ],
@@ -1182,7 +1014,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Edit watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-item class=\"ion-margin-horizontal\">\n\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t</ion-item>\n\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"editWatchlistForm.invalid && editWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t<ion-button (click)=\"onEditWatchlist()\" class=\"ion-margin\" expand=\"block\">Save watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\">\n\t\t<div class=\"drag-box\" *ngFor=\"let company of companies\" cdkDrag>\n\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t<span>{{ company.name }}</span>\n\t\t</div>\n\t</div>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Edit watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-item class=\"ion-margin-horizontal\">\n\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t</ion-item>\n\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"editWatchlistForm.invalid && editWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t<ion-button (click)=\"onEditWatchlist()\" class=\"ion-margin\" expand=\"block\">Save watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\" *ngIf=\"stocks.length > 0\">\n\t\t<div *ngFor=\"let stock of stocks\" style=\"width: 100%;\" cdkDrag class=\"drag-box\">\n\t\t\t<div *ngIf=\"stock != undefined\">\n\t\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t\t<span>{{ stock.name }}</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</ion-content>\n");
 
 /***/ }),
 
@@ -1210,7 +1042,10 @@ let JwtInterceptor = class JwtInterceptor {
         this.userService = userService;
     }
     intercept(req, next) {
-        let token = this.userService.decodedToken;
+        let token;
+        this.userService.authenticated.subscribe((r) => {
+            token = r.token;
+        });
         req = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`
@@ -1481,25 +1316,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OrderService", function() { return OrderService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _watchlist_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./watchlist.service */ "Tl0h");
-/* harmony import */ var _stock_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./stock.service */ "8hSh");
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
-/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/environments/environment */ "AytR");
-
+/* harmony import */ var _stock_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stock.service */ "8hSh");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/environments/environment */ "AytR");
 
 
 
 
 
 let OrderService = class OrderService {
-    constructor(watchlistService, stockService, http) {
-        this.watchlistService = watchlistService;
+    constructor(stockService, http) {
         this.stockService = stockService;
         this.http = http;
-        this.position = [];
-        this.completed = [];
-        this.pending = [];
-        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + 'stocks/';
+        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'stocks/';
     }
     getAllUserOrders() {
         return this.http.get(this.apiUrl + 'orders/all');
@@ -1512,6 +1341,12 @@ let OrderService = class OrderService {
     }
     updateOrder(id, stoploss, target) {
         return this.http.post(this.apiUrl + 'order/update', { id, stoploss, target });
+    }
+    savePosition(id, target, stoploss) {
+        return this.http.put(this.apiUrl + 'order/update', { id, target, stoploss });
+    }
+    exitPosition(id) {
+        return this.http.post(this.apiUrl + 'order/stop', { id });
     }
     buy(cId, quantity, stopLoss, target, order, price) {
         let company;
@@ -1536,29 +1371,9 @@ let OrderService = class OrderService {
         });
     }
     totalPandL() {
-        const pos = this.position.map(p => p.pAndL);
-        const val = pos.reduce((p, c) => p + c);
-        return val;
-    }
-    savePosition(position) {
-        // var positionToUpdate = this.position.find(p => p.code == position.code)
-        // var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate)
-        // this.position.splice(indexOfPositionToUpdate,1,position)
-    }
-    sellPosition(position) {
-        // var positionToUpdate = this.position.find(p => p.code == position.code)
-        // var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate)
-        // this.position.splice(indexOfPositionToUpdate,1)
-        // const completed: Completed = {
-        //   name: position.name, 
-        //   code: position.code,  
-        //   price: position.price, 
-        //   quantity: -position.quantity,
-        //   status: 'COMPLETE',
-        //   pAndL: position.pAndL,
-        //   exitPrice: position.price
-        // }
-        // this.completed.unshift(completed)
+        // const pos = this.position.map(p => p.pAndL)
+        // const val = pos.reduce((p, c) => p + c)
+        // return val
     }
     savePending(pending) {
         // var pendingToUpdate = this.pending.find(p => p.code == pending.code)
@@ -1567,9 +1382,8 @@ let OrderService = class OrderService {
     }
 };
 OrderService.ctorParameters = () => [
-    { type: _watchlist_service__WEBPACK_IMPORTED_MODULE_2__["WatchlistService"] },
-    { type: _stock_service__WEBPACK_IMPORTED_MODULE_3__["StockService"] },
-    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"] }
+    { type: _stock_service__WEBPACK_IMPORTED_MODULE_2__["StockService"] },
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"] }
 ];
 OrderService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
@@ -1612,9 +1426,6 @@ let BuySellModalPopupComponent = class BuySellModalPopupComponent {
         this.router = router;
     }
     ngOnInit() {
-        this.stockService.getStock(this.selectedStock.id).subscribe((stockData) => {
-            this.selectedStock.ldp = stockData.data.historyData['1month'][stockData.data.historyData['1month'].length - 1].close;
-        });
         this.stockService.listen(this.selectedStock.id).subscribe((res) => {
             this.selectedStock.ltp = res[0].price;
         });
@@ -1628,7 +1439,7 @@ let BuySellModalPopupComponent = class BuySellModalPopupComponent {
     }
     navigateToChart() {
         this.modalCtrl.dismiss();
-        this.router.navigate(['home', 'chart', 'tv-chart']);
+        this.router.navigate(['chart']);
     }
 };
 BuySellModalPopupComponent.ctorParameters = () => [
@@ -1664,11 +1475,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "tyNb");
-/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @capacitor/core */ "gcOT");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ "qCKp");
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @auth0/angular-jwt */ "Nm8O");
-/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/environments/environment */ "AytR");
+/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @capacitor/core */ "gcOT");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "qCKp");
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @auth0/angular-jwt */ "Nm8O");
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/environments/environment */ "AytR");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic/storage */ "e8h1");
 
 
 
@@ -1677,19 +1489,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const { LocalNotifications } = _capacitor_core__WEBPACK_IMPORTED_MODULE_4__["Plugins"];
+
+const { LocalNotifications } = _capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Plugins"];
 let UserService = class UserService {
-    constructor(router, http) {
-        this.router = router;
+    constructor(http, storage, platform) {
         this.http = http;
-        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + "auth/";
-        this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + "settings";
-        this.user = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
-        this.isSimulated = true;
-        this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+        this.storage = storage;
+        this.platform = platform;
+        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "auth/";
+        this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "settings";
+        this.user = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
+        this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](false);
+        this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+        this.platform.ready().then(() => {
+            this.checkToken();
+        });
     }
     decodeToken(token) {
-        const helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__["JwtHelperService"]();
+        const helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__["JwtHelperService"]();
         this.decodedToken = helper.decodeToken(token);
         console.log(this.decodedToken);
     }
@@ -1720,9 +1537,21 @@ let UserService = class UserService {
     updateSettings(id, datatype, risk, leverage) {
         return this.http.put(this.apiSettingsUrl, { id, datatype, risk, leverage: +leverage });
     }
+    authenticate(user, token) {
+        return this.storage.set('token', { user, token }).then(r => this.authenticated.next({ user, token }));
+    }
+    checkToken() {
+        return this.storage.get('token').then(r => {
+            if (r) {
+                this.authenticated.next(r);
+                this.user.next(r.user);
+            }
+        });
+    }
     logout() {
         this.user.next(null);
         localStorage.removeItem('token');
+        return this.storage.remove('token').then(r => this.authenticated.next(false));
     }
     add(amount) {
         this.user.subscribe(u => {
@@ -1745,8 +1574,9 @@ let UserService = class UserService {
     }
 };
 UserService.ctorParameters = () => [
-    { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"] },
-    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"] }
+    { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"] },
+    { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"] }
 ];
 UserService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
@@ -1792,7 +1622,18 @@ let ModalEditWatchlistsComponent = class ModalEditWatchlistsComponent {
         this.watchlists = [];
     }
     ngOnInit() {
-        this.watchlistService.getUserWatchlists().subscribe((w) => this.watchlists = w.data);
+        this.userService.getSettings().subscribe((r) => {
+            const datatype = r.data.datatype;
+            if (datatype == 'simulated')
+                this.watchlistService.getSimulatedWatchlists().subscribe(r => {
+                    console.log('simulated', r);
+                });
+            if (datatype == 'realtime')
+                this.watchlistService.getRealtimeWatchlists().subscribe((r) => {
+                    console.log('realtime', r);
+                    this.watchlists = r.data;
+                });
+        });
     }
     dismissModal() {
         this.modalCtrl.dismiss();
@@ -1800,14 +1641,23 @@ let ModalEditWatchlistsComponent = class ModalEditWatchlistsComponent {
     onCreateWatchlist(createWatchlistForm) {
         if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
             this.watchlistName = this.watchlistName.trim();
-            this.watchlistService.createWatchlist(this.watchlistName).subscribe();
+            this.watchlistService.createWatchlist(this.watchlistName).subscribe(r => console.log('w created', r));
             this.watchlistName = '';
         }
     }
     drop(event) {
         //needs to happen in backend
         Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_3__["moveItemInArray"])(this.watchlists, event.previousIndex, event.currentIndex);
-        this.watchlistService.updatedWatchlist.next(true);
+        this.changePosition();
+    }
+    changePosition() {
+        // this.watchlists = this.watchlistService.moveInArray(this.watchlists, event.previousIndex, event.currentIndex)
+        const positions = [];
+        for (let i = 0; i < this.watchlists.length; i++) {
+            const w = this.watchlists[i];
+            positions.push({ watchlistId: w._id, position: i });
+        }
+        this.watchlistService.updateWatchlistPositions(positions).subscribe();
     }
 };
 ModalEditWatchlistsComponent.ctorParameters = () => [

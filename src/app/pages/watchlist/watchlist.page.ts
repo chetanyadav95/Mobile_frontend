@@ -32,7 +32,6 @@ export class WatchlistPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.selectedWatchlist = 0
     this.dataLoaded = false
-    this.isSimualted = this.userService.isSimulated
   }
 
   ionViewDidEnter(){
@@ -41,26 +40,36 @@ export class WatchlistPage implements OnInit, OnDestroy {
   }
 
   getWatchlists(){
+    this.watchlists = []
+    this.dataLoaded = false
     this.userService.getSettings().subscribe((r:any) => {
       const datatype = r.data.datatype
       if(datatype == 'simulated') this.watchlistService.getSimulatedWatchlists().subscribe((r:any) => {
-        this.watchlists = r.data
+        r.data.forEach(w => {
+          if(w != null) this.watchlists.push(w)
+        });
         this.moveInArray()
         this.updateLtp()
-      },()=>{},()=>{
+      }
+      ,()=>{},()=>{
         setTimeout(() => {
           this.dataLoaded = true
         }, 500);
-      })
+      }
+      )
       if(datatype == 'realtime') this.watchlistService.getRealtimeWatchlists().subscribe((r:any) => {
-        this.watchlists = r.data
+        r.data.forEach(w => {
+          if(w != null) this.watchlists.push(w)
+        });
         this.moveInArray()
         this.updateLtp()
-      },()=>{},()=>{
+      }
+      ,()=>{},()=>{
         setTimeout(() => {
           this.dataLoaded = true
         }, 500);
-      })
+      }
+      )
     })
   }
 
@@ -68,12 +77,12 @@ export class WatchlistPage implements OnInit, OnDestroy {
     this.unsubscribeFromSockets()
     this.watchlists.forEach(w => {
       w.stockIds.forEach(s => {
-        if(s != undefined || s != null){
           const socketSub: Subscription = this.stockService.listen(s.id).subscribe((res:any) => {
-            s.ltp = res[0].price
-          })
-          this.subscribedSockets.push(socketSub)
-        }
+          // console.log(res)
+          s.ltp = res[0].price
+          // this.dataLoaded = true
+        })
+        this.subscribedSockets.push(socketSub)
       });
     })
   }

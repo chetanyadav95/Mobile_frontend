@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+  <form #loginForm="ngForm">
     <!-- <ion-title class="ion-text-center ion-margin-vertical" color="warning"><h1>Welcome to Empuraan</h1></ion-title> -->
     <ion-title class="ion-text-center ion-margin-vertical"><h2>Login</h2></ion-title>
     <ion-grid>
@@ -27,12 +27,12 @@
       </ion-row>
       <ion-row>
         <ion-col class="button-col">
-          <button class="button login-button" type="submit">Login</button>
+          <button class="button login-button" type="submit" (click)="login(loginForm)">Login</button>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <button class="button google-button" color="danger" (click)="login()">
+          <button class="button google-button" color="danger" (click)="google()">
             <ion-icon name="logo-google"></ion-icon>
             <span>Login with Google</span> 
           </button>
@@ -51,9 +51,10 @@
           <button color="tertiary" size="small" fill="clear" class="button new-user-button" routerLink="/home/sign-up">
             Create new account
           </button>
-          <button color="tertiary" size="small" fill="clear" class="link-button ion-float-right">
+          <button color="tertiary" size="small" fill="clear" class="link-button ion-float-right" (click)="forgotPassword(loginForm)">
             Forgot password?
           </button>
+          <!-- {{ userInfo | json}} -->
         </ion-col>
       </ion-row>
     </ion-grid>

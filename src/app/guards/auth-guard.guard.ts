@@ -12,11 +12,9 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    let user:User
     let b: boolean
-    this.userService.user.subscribe(u => {
-      user = u
-      if(user == null || user == undefined) {
+    this.userService.authenticated.subscribe(a => {
+      if(!a) {
         this.router.navigate(['home','login'])
         b = false
       } else b = true

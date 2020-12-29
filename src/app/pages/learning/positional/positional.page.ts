@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { Post } from 'src/app/models/post.model';
 import { ModalController } from '@ionic/angular';
 import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.component';
+import { MarubozuService } from 'src/app/services/marubozu.service';
+import { Marubozu } from 'src/app/models/marubozu';
 
 @Component({
   selector: 'app-positional',
@@ -12,10 +14,17 @@ import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.compone
 })
 export class PositionalPage implements OnInit {
   positionalPosts: Post[]
-  constructor(private modalController: ModalController,private learningService: LearningService) { }
+  positionalPsts: Marubozu[]
+  constructor(private modalController: ModalController,
+    private learningService: LearningService, 
+    private marubozuService: MarubozuService) { }
 
   ngOnInit() {
     this.positionalPosts = this.learningService.positional
+    this.marubozuService.get('positional').subscribe((r: any) => {
+      console.log('positional',r)
+      this.positionalPsts = r.data
+    })
   }
 
   async openUploadPostModal(id: number) {

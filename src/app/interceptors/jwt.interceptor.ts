@@ -9,7 +9,10 @@ import { User } from '../models/user.model';
 export class JwtInterceptor implements HttpInterceptor {
     constructor(private stockService: StockService, private userService: UserService) {}
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        let token = this.userService.decodedToken
+        let token
+        this.userService.authenticated.subscribe((r:any) => {
+            token = r.token
+        })
         req = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${token}`

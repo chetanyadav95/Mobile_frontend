@@ -368,6 +368,137 @@
     },
 
     /***/
+    "BCkd":
+    /*!**********************************************!*\
+      !*** ./src/app/services/marubozu.service.ts ***!
+      \**********************************************/
+
+    /*! exports provided: MarubozuService */
+
+    /***/
+    function BCkd(module, __webpack_exports__, __webpack_require__) {
+      "use strict";
+
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "MarubozuService", function () {
+        return MarubozuService;
+      });
+      /* harmony import */
+
+
+      var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! tslib */
+      "mrSG");
+      /* harmony import */
+
+
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! @angular/common/http */
+      "tk/3");
+      /* harmony import */
+
+
+      var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! @angular/core */
+      "fXoL");
+      /* harmony import */
+
+
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! src/environments/environment */
+      "AytR");
+
+      var MarubozuService = /*#__PURE__*/function () {
+        function MarubozuService(http) {
+          _classCallCheck(this, MarubozuService);
+
+          this.http = http;
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'marbozzu/';
+        }
+
+        _createClass(MarubozuService, [{
+          key: "getAll",
+          value: function getAll() {
+            return this.http.get(this.apiUrl);
+          }
+        }, {
+          key: "getBlogs",
+          value: function getBlogs() {
+            return this.http.get(this.apiUrl + 'blog');
+          }
+        }, {
+          key: "delete",
+          value: function _delete(id) {
+            return this.http["delete"](this.apiUrl + "del/".concat(id));
+          }
+        }, {
+          key: "createNewBlog",
+          value: function createNewBlog(title, content, image) {
+            return this.http.post(this.apiUrl + 'blog', {
+              title: title,
+              content: content,
+              image: image
+            });
+          }
+        }, {
+          key: "createTutorial",
+          value: function createTutorial(title, embededurl) {
+            return this.http.post(this.apiUrl + 'tutorial', {
+              title: title,
+              embededurl: embededurl
+            });
+          }
+        }, {
+          key: "createIntraday",
+          value: function createIntraday(title, content, stockname, image) {
+            return this.http.post(this.apiUrl + 'intraday', {
+              title: title,
+              content: content,
+              stockname: stockname,
+              image: image
+            });
+          }
+        }, {
+          key: "createPositional",
+          value: function createPositional(title, content, stockname, image) {
+            return this.http.post(this.apiUrl + 'positional', {
+              title: title,
+              content: content,
+              stockname: stockname,
+              image: image
+            });
+          }
+        }, {
+          key: "createDemotrading",
+          value: function createDemotrading(title, content, stockname, image) {
+            return this.http.post(this.apiUrl + 'demotrading', {
+              title: title,
+              content: content,
+              stockname: stockname,
+              image: image
+            });
+          }
+        }]);
+
+        return MarubozuService;
+      }();
+
+      MarubozuService.ctorParameters = function () {
+        return [{
+          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]
+        }];
+      };
+
+      MarubozuService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
+        providedIn: 'root'
+      })], MarubozuService);
+      /***/
+    },
+
+    /***/
     "BNB8":
     /*!**********************************************************************************************************!*\
       !*** ./node_modules/raw-loader/dist/cjs.js!./src/app/pages/learning/demo-trading/demo-trading.page.html ***!
@@ -944,7 +1075,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\"> \n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon> \n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\"> \n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon> \n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\" (click)=\"uploadImageData()\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 
@@ -1003,19 +1134,32 @@
       var src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! src/app/services/learning.service */
       "uetY");
+      /* harmony import */
+
+
+      var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! src/app/services/marubozu.service */
+      "BCkd");
 
       var TutorialsPage = /*#__PURE__*/function () {
-        function TutorialsPage(sanitizer, learningService) {
+        function TutorialsPage(sanitizer, learningService, marubozuService) {
           _classCallCheck(this, TutorialsPage);
 
           this.sanitizer = sanitizer;
           this.learningService = learningService;
+          this.marubozuService = marubozuService;
         }
 
         _createClass(TutorialsPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
             this.videos = this.learningService.videos;
+            this.marubozuService.getAll().subscribe(function (r) {
+              return console.log(r);
+            });
+            this.marubozuService.getBlogs().subscribe(function (r) {
+              return console.log(r);
+            });
           }
         }, {
           key: "sanitizeUrl",
@@ -1032,6 +1176,8 @@
           type: _angular_platform_browser__WEBPACK_IMPORTED_MODULE_4__["DomSanitizer"]
         }, {
           type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_5__["LearningService"]
+        }, {
+          type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_6__["MarubozuService"]
         }];
       };
 
@@ -1440,16 +1586,23 @@
       var src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! src/app/modals/modal-post/modal-post.component */
       "N+8n");
+      /* harmony import */
+
+
+      var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      /*! src/app/services/marubozu.service */
+      "BCkd");
 
       var STORAGE_KEY = 'assets';
 
       var IntraDayPage = /*#__PURE__*/function () {
         // images = [];
-        function IntraDayPage(modalController, learningService) {
+        function IntraDayPage(modalController, learningService, marubozuService) {
           _classCallCheck(this, IntraDayPage);
 
           this.modalController = modalController;
           this.learningService = learningService;
+          this.marubozuService = marubozuService;
         }
 
         _createClass(IntraDayPage, [{
@@ -1533,6 +1686,8 @@
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"]
         }, {
           type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_5__["LearningService"]
+        }, {
+          type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_8__["MarubozuService"]
         }];
       };
 
@@ -2092,13 +2247,13 @@
             var reader = new FileReader();
 
             reader.onload = function () {
-              var formData = new FormData();
+              // const formData = new FormData();
               var imgBlob = new Blob([reader.result], {
                 type: file.type
               });
-              formData.append('file', imgBlob, file.name);
 
-              _this9.uploadImageData(formData);
+              _this9.formData.append('file', imgBlob, file.name); // this.uploadImageData(formData);
+
             };
 
             reader.readAsArrayBuffer(file);
@@ -2123,6 +2278,22 @@
                       return loading.present();
 
                     case 5:
+                      console.log(formData); //   this.http.post("http://localhost:8888/upload.php", formData)
+                      //       .pipe(
+                      //           finalize(() => {
+                      //               loading.dismiss();
+                      //           })
+                      //       )
+                      //       .subscribe(res => {
+                      //           if (res['success']) {
+                      //               this.presentToast('File upload complete.')
+                      //           } else {
+                      //               this.presentToast('File upload failed.')
+                      //           }
+                      //       });
+                      //   }  
+
+                    case 6:
                     case "end":
                       return _context10.stop();
                   }

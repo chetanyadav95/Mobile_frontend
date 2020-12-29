@@ -1,16 +1,4 @@
 (function () {
-  function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-  function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-  function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-  function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -106,12 +94,9 @@
           value: function canActivate(next, state) {
             var _this = this;
 
-            var user;
             var b;
-            this.userService.user.subscribe(function (u) {
-              user = u;
-
-              if (user == null || user == undefined) {
+            this.userService.authenticated.subscribe(function (a) {
+              if (!a) {
                 _this.router.navigate(['home', 'login']);
 
                 b = false;
@@ -206,20 +191,14 @@
 
           this.modalCtrl = modalCtrl;
           this.watchlistService = watchlistService;
-          this.companies = [];
+          this.stocks = [];
         }
 
         _createClass(ModalWatchlistCeComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this2 = this;
-
-            this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
-              _this2.watchlistName = w.name;
-            });
-            this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
-              _this2.companies = w.stockIds;
-            });
+            this.stocks = this.selectedWatchlist.stockIds;
+            this.watchlistName = this.selectedWatchlist.name;
           }
         }, {
           key: "dismissModal",
@@ -231,14 +210,30 @@
           value: function onEditWatchlist() {
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
-              this.watchlistService.editWatchlist(this.selectedWatchlist, this.watchlistName);
+              this.watchlistService.editWatchlist(this.selectedWatchlist._id, this.watchlistName);
             }
           }
         }, {
           key: "drop",
           value: function drop(event) {
             //needs to happen in backend
-            Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_6__["moveItemInArray"])(this.companies, event.previousIndex, event.currentIndex);
+            Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_6__["moveItemInArray"])(this.stocks, event.previousIndex, event.currentIndex);
+            this.changePosition();
+          }
+        }, {
+          key: "changePosition",
+          value: function changePosition() {
+            var stocks = [];
+
+            for (var i = 0; i < this.stocks.length; i++) {
+              var s = this.stocks[i];
+              stocks.push({
+                stockId: s.id,
+                position: i
+              });
+            }
+
+            this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id, stocks).subscribe();
           }
         }]);
 
@@ -401,10 +396,10 @@
         _createClass(StockService, [{
           key: "listen",
           value: function listen(eventName) {
-            var _this3 = this;
+            var _this2 = this;
 
             return new rxjs__WEBPACK_IMPORTED_MODULE_5__["Observable"](function (subscriber) {
-              _this3.socket.on(eventName, function (data) {
+              _this2.socket.on(eventName, function (data) {
                 subscriber.next(data);
               });
             });
@@ -627,7 +622,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = ".drag-list {\n  width: 90%;\n  border-top: solid 1px #ccc;\n  border-bottom: solid 1px #ccc;\n  min-height: 60px;\n  display: block;\n  background: white;\n  overflow: hidden;\n  margin: 0 auto;\n}\n\n.drag-box {\n  padding: 20px 10px;\n  border-bottom: solid 1px #ccc;\n  color: rgba(0, 0, 0, 0.87);\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: start;\n  box-sizing: border-box;\n  cursor: move;\n  background: white;\n  font-size: 14px;\n}\n\n.cdk-drag-preview {\n  box-sizing: border-box;\n  border-radius: 4px;\n  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);\n}\n\n.cdk-drag-placeholder {\n  opacity: 0;\n}\n\n.cdk-drag-animating {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\n.drag-box:last-child {\n  border: none;\n}\n\n.drag-list.cdk-drop-list-dragging .drag-box:not(.cdk-drag-placeholder) {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\nion-title {\n  color: black;\n}\n\nion-icon {\n  font-size: 20px;\n}\n\n@media screen and (max-width: 360px) {\n  ion-title, h3 {\n    font-size: 15px !important;\n  }\n\n  ion-label, ion-button, span, h5 {\n    font-size: 13px !important;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  ion-title {\n    color: white;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kYWxzL21vZGFsLXdhdGNobGlzdC1jZS9tb2RhbC13YXRjaGxpc3QtY2UuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxVQUFBO0VBQ0EsMEJBQUE7RUFDQSw2QkFBQTtFQUNBLGdCQUFBO0VBQ0EsY0FBQTtFQUNBLGlCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxjQUFBO0FBQ0Y7O0FBRUE7RUFDRSxrQkFBQTtFQUNBLDZCQUFBO0VBQ0EsMEJBQUE7RUFDQSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSxtQkFBQTtFQUNBLHNCQUFBO0VBQ0Esc0JBQUE7RUFDQSxZQUFBO0VBQ0EsaUJBQUE7RUFDQSxlQUFBO0FBQ0Y7O0FBRUE7RUFDRSxzQkFBQTtFQUNBLGtCQUFBO0VBQ0EscUhBQUE7QUFDRjs7QUFJQTtFQUNFLFVBQUE7QUFERjs7QUFJQTtFQUNFLHNEQUFBO0FBREY7O0FBSUE7RUFDRSxZQUFBO0FBREY7O0FBSUE7RUFDRSxzREFBQTtBQURGOztBQUdBO0VBQ0UsWUFBQTtBQUFGOztBQUVBO0VBQ0UsZUFBQTtBQUNGOztBQUNBO0VBQ0U7SUFDRSwwQkFBQTtFQUVGOztFQUFBO0lBQ0UsMEJBQUE7RUFHRjtBQUNGOztBQURBO0VBQ0U7SUFDSSxZQUFBO0VBR0o7QUFDRiIsImZpbGUiOiJzcmMvYXBwL21vZGFscy9tb2RhbC13YXRjaGxpc3QtY2UvbW9kYWwtd2F0Y2hsaXN0LWNlLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmRyYWctbGlzdCB7XG4gIHdpZHRoOiA5MCU7XG4gIGJvcmRlci10b3A6IHNvbGlkIDFweCAjY2NjO1xuICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2NjYztcbiAgbWluLWhlaWdodDogNjBweDtcbiAgZGlzcGxheTogYmxvY2s7XG4gIGJhY2tncm91bmQ6IHdoaXRlO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBtYXJnaW46IDAgYXV0bztcbn1cblxuLmRyYWctYm94IHtcbiAgcGFkZGluZzogMjBweCAxMHB4O1xuICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2NjYztcbiAgY29sb3I6IHJnYmEoMCwgMCwgMCwgMC44Nyk7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogc3RhcnQ7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIGN1cnNvcjogbW92ZTtcbiAgYmFja2dyb3VuZDogd2hpdGU7XG4gIGZvbnQtc2l6ZTogMTRweDtcbn1cblxuLmNkay1kcmFnLXByZXZpZXcge1xuICBib3gtc2l6aW5nOiBib3JkZXItYm94O1xuICBib3JkZXItcmFkaXVzOiA0cHg7XG4gIGJveC1zaGFkb3c6IDAgNXB4IDVweCAtM3B4IHJnYmEoMCwgMCwgMCwgMC4yKSxcbiAgICAgICAgICAgICAgMCA4cHggMTBweCAxcHggcmdiYSgwLCAwLCAwLCAwLjE0KSxcbiAgICAgICAgICAgICAgMCAzcHggMTRweCAycHggcmdiYSgwLCAwLCAwLCAwLjEyKTtcbn1cblxuLmNkay1kcmFnLXBsYWNlaG9sZGVyIHtcbiAgb3BhY2l0eTogMDtcbn1cblxuLmNkay1kcmFnLWFuaW1hdGluZyB7XG4gIHRyYW5zaXRpb246IHRyYW5zZm9ybSAyNTBtcyBjdWJpYy1iZXppZXIoMCwgMCwgMC4yLCAxKTtcbn1cblxuLmRyYWctYm94Omxhc3QtY2hpbGQge1xuICBib3JkZXI6IG5vbmU7XG59XG5cbi5kcmFnLWxpc3QuY2RrLWRyb3AtbGlzdC1kcmFnZ2luZyAuZHJhZy1ib3g6bm90KC5jZGstZHJhZy1wbGFjZWhvbGRlcikge1xuICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMjUwbXMgY3ViaWMtYmV6aWVyKDAsIDAsIDAuMiwgMSk7XG59XG5pb24tdGl0bGV7XG4gIGNvbG9yOmJsYWNrO1xufVxuaW9uLWljb257XG4gIGZvbnQtc2l6ZTogMjBweDtcbn1cbkBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6IDM2MHB4KSB7XG4gIGlvbi10aXRsZSwgaDN7XG4gICAgZm9udC1zaXplOjE1cHggIWltcG9ydGFudDtcbiAgfVxuICBpb24tbGFiZWwsIGlvbi1idXR0b24sIHNwYW4sIGg1e1xuICAgIGZvbnQtc2l6ZTogMTNweCAhaW1wb3J0YW50O1xuICB9XG59XG5AbWVkaWEocHJlZmVycy1jb2xvci1zY2hlbWU6IGRhcmspIHtcbiAgaW9uLXRpdGxle1xuICAgICAgY29sb3I6d2hpdGU7XG4gIH1cbn0iXX0= */";
+      __webpack_exports__["default"] = ".drag-list {\n  width: 90%;\n  border-top: solid 1px #ccc;\n  min-height: 60px;\n  display: block;\n  background: white;\n  overflow: hidden;\n  margin: 0 auto;\n}\n\n.drag-box {\n  padding: 20px 10px;\n  border-bottom: solid 1px #ccc !important;\n  color: rgba(0, 0, 0, 0.87);\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  justify-content: start;\n  box-sizing: border-box;\n  cursor: move;\n  background: white;\n  font-size: 14px;\n}\n\n.cdk-drag-preview {\n  box-sizing: border-box;\n  border-radius: 4px;\n  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);\n}\n\n.cdk-drag-placeholder {\n  opacity: 0;\n}\n\n.cdk-drag-animating {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\n.drag-box:last-child {\n  border: none;\n}\n\n.drag-list.cdk-drop-list-dragging .drag-box:not(.cdk-drag-placeholder) {\n  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);\n}\n\nion-title {\n  color: black;\n}\n\nion-icon {\n  font-size: 20px;\n}\n\n@media screen and (max-width: 360px) {\n  ion-title, h3 {\n    font-size: 15px !important;\n  }\n\n  ion-label, ion-button, span, h5 {\n    font-size: 13px !important;\n  }\n}\n\n@media (prefers-color-scheme: dark) {\n  ion-title {\n    color: white;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvbW9kYWxzL21vZGFsLXdhdGNobGlzdC1jZS9tb2RhbC13YXRjaGxpc3QtY2UuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxVQUFBO0VBQ0EsMEJBQUE7RUFDQSxnQkFBQTtFQUNBLGNBQUE7RUFDQSxpQkFBQTtFQUNBLGdCQUFBO0VBQ0EsY0FBQTtBQUNGOztBQUVBO0VBQ0Usa0JBQUE7RUFDQSx3Q0FBQTtFQUNBLDBCQUFBO0VBQ0EsYUFBQTtFQUNBLG1CQUFBO0VBQ0EsbUJBQUE7RUFDQSxzQkFBQTtFQUNBLHNCQUFBO0VBQ0EsWUFBQTtFQUNBLGlCQUFBO0VBQ0EsZUFBQTtBQUNGOztBQUVBO0VBQ0Usc0JBQUE7RUFDQSxrQkFBQTtFQUNBLHFIQUFBO0FBQ0Y7O0FBSUE7RUFDRSxVQUFBO0FBREY7O0FBSUE7RUFDRSxzREFBQTtBQURGOztBQUlBO0VBQ0UsWUFBQTtBQURGOztBQUlBO0VBQ0Usc0RBQUE7QUFERjs7QUFHQTtFQUNFLFlBQUE7QUFBRjs7QUFFQTtFQUNFLGVBQUE7QUFDRjs7QUFDQTtFQUNFO0lBQ0UsMEJBQUE7RUFFRjs7RUFBQTtJQUNFLDBCQUFBO0VBR0Y7QUFDRjs7QUFEQTtFQUNFO0lBQ0ksWUFBQTtFQUdKO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9tb2RhbHMvbW9kYWwtd2F0Y2hsaXN0LWNlL21vZGFsLXdhdGNobGlzdC1jZS5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5kcmFnLWxpc3Qge1xuICB3aWR0aDogOTAlO1xuICBib3JkZXItdG9wOiBzb2xpZCAxcHggI2NjYztcbiAgbWluLWhlaWdodDogNjBweDtcbiAgZGlzcGxheTogYmxvY2s7XG4gIGJhY2tncm91bmQ6IHdoaXRlO1xuICBvdmVyZmxvdzogaGlkZGVuO1xuICBtYXJnaW46IDAgYXV0bztcbn1cblxuLmRyYWctYm94IHtcbiAgcGFkZGluZzogMjBweCAxMHB4O1xuICBib3JkZXItYm90dG9tOiBzb2xpZCAxcHggI2NjYyAhaW1wb3J0YW50O1xuICBjb2xvcjogcmdiYSgwLCAwLCAwLCAwLjg3KTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBzdGFydDtcbiAgYm94LXNpemluZzogYm9yZGVyLWJveDtcbiAgY3Vyc29yOiBtb3ZlO1xuICBiYWNrZ3JvdW5kOiB3aGl0ZTtcbiAgZm9udC1zaXplOiAxNHB4O1xufVxuXG4uY2RrLWRyYWctcHJldmlldyB7XG4gIGJveC1zaXppbmc6IGJvcmRlci1ib3g7XG4gIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgYm94LXNoYWRvdzogMCA1cHggNXB4IC0zcHggcmdiYSgwLCAwLCAwLCAwLjIpLFxuICAgICAgICAgICAgICAwIDhweCAxMHB4IDFweCByZ2JhKDAsIDAsIDAsIDAuMTQpLFxuICAgICAgICAgICAgICAwIDNweCAxNHB4IDJweCByZ2JhKDAsIDAsIDAsIDAuMTIpO1xufVxuXG4uY2RrLWRyYWctcGxhY2Vob2xkZXIge1xuICBvcGFjaXR5OiAwO1xufVxuXG4uY2RrLWRyYWctYW5pbWF0aW5nIHtcbiAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDI1MG1zIGN1YmljLWJlemllcigwLCAwLCAwLjIsIDEpO1xufVxuXG4uZHJhZy1ib3g6bGFzdC1jaGlsZCB7XG4gIGJvcmRlcjogbm9uZTtcbn1cblxuLmRyYWctbGlzdC5jZGstZHJvcC1saXN0LWRyYWdnaW5nIC5kcmFnLWJveDpub3QoLmNkay1kcmFnLXBsYWNlaG9sZGVyKSB7XG4gIHRyYW5zaXRpb246IHRyYW5zZm9ybSAyNTBtcyBjdWJpYy1iZXppZXIoMCwgMCwgMC4yLCAxKTtcbn1cbmlvbi10aXRsZXtcbiAgY29sb3I6YmxhY2s7XG59XG5pb24taWNvbntcbiAgZm9udC1zaXplOiAyMHB4O1xufVxuQG1lZGlhIHNjcmVlbiBhbmQgKG1heC13aWR0aDogMzYwcHgpIHtcbiAgaW9uLXRpdGxlLCBoM3tcbiAgICBmb250LXNpemU6MTVweCAhaW1wb3J0YW50O1xuICB9XG4gIGlvbi1sYWJlbCwgaW9uLWJ1dHRvbiwgc3BhbiwgaDV7XG4gICAgZm9udC1zaXplOiAxM3B4ICFpbXBvcnRhbnQ7XG4gIH1cbn1cbkBtZWRpYShwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyaykge1xuICBpb24tdGl0bGV7XG4gICAgICBjb2xvcjp3aGl0ZTtcbiAgfVxufSJdfQ== */";
       /***/
     },
 
@@ -698,10 +693,10 @@
         _createClass(ModalChangePasswordComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this4 = this;
+            var _this3 = this;
 
             this.userService.user.subscribe(function (u) {
-              return _this4.user = u;
+              return _this3.user = u;
             });
           }
         }, {
@@ -815,13 +810,19 @@
           }
         }, {
           key: "savePosition",
-          value: function savePosition() {// (this.position != null) && this.orderService.savePosition(this.position)
-            // this.dismissModal()
+          value: function savePosition() {
+            this.position != null && this.orderService.savePosition(this.position.id, this.position.target, this.position.stoploss).subscribe(function (r) {
+              return console.log(r);
+            });
+            this.dismissModal();
           }
         }, {
           key: "sellPosition",
-          value: function sellPosition() {// (this.position != null) && this.orderService.sellPosition(this.position)
-            // this.dismissModal()
+          value: function sellPosition() {
+            this.position != null && this.orderService.exitPosition(this.position.id).subscribe(function (r) {
+              return console.log(r);
+            });
+            this.dismissModal();
           }
         }, {
           key: "savePending",
@@ -931,26 +932,24 @@
         _createClass(ModalWatchlistComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this5 = this;
+            var _this4 = this;
 
             this.stockService.getStocks().subscribe(function (s) {
-              _this5.stocks = s.data;
+              _this4.stocks = s.data;
             });
             this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
-              _this5.sWatchlist = w.data;
+              _this4.sWatchlist = w.data;
             });
           }
         }, {
           key: "dismissModal",
           value: function dismissModal() {
-            this.modalCtrl.dismiss();
+            this.modalCtrl.dismiss(true);
           }
         }, {
           key: "onSelect",
           value: function onSelect(event, stock) {
-            if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(function (res) {
-              return console.log(res);
-            });else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock);
+            if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe();else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe();
           }
         }, {
           key: "filter",
@@ -1093,6 +1092,12 @@
       var _angular_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
       /*! @angular/router */
       "tyNb");
+      /* harmony import */
+
+
+      var _services_user_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
+      /*! ./services/user.service */
+      "qfBg");
 
       var _capacitor_core__WEBP = _capacitor_core__WEBPACK_IMPORTED_MODULE_4__["Plugins"],
           Network = _capacitor_core__WEBP.Network,
@@ -1100,7 +1105,7 @@
           App = _capacitor_core__WEBP.App;
 
       var AppComponent = /*#__PURE__*/function () {
-        function AppComponent(platform, splashScreen, statusBar, alertController, location, router) {
+        function AppComponent(platform, splashScreen, statusBar, alertController, location, router, userService) {
           _classCallCheck(this, AppComponent);
 
           this.platform = platform;
@@ -1109,6 +1114,7 @@
           this.alertController = alertController;
           this.location = location;
           this.router = router;
+          this.userService = userService;
         }
 
         _createClass(AppComponent, [{
@@ -1134,10 +1140,10 @@
         }, {
           key: "connectionLostEvent",
           value: function connectionLostEvent() {
-            var _this6 = this;
+            var _this5 = this;
 
             this.networkListener = Network.addListener('networkStatusChange', function (status) {
-              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this6, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this5, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -1164,10 +1170,10 @@
         }, {
           key: "backButtonEvent",
           value: function backButtonEvent() {
-            var _this7 = this;
+            var _this6 = this;
 
             this.platform.backButton.subscribeWithPriority(10, function () {
-              if (_this7.router.url == "/home/dashboard") _this7.backButtonAlert();else _this7.location.back();
+              if (_this6.router.url == "/home/dashboard") _this6.backButtonAlert();else _this6.location.back();
             });
           }
         }, {
@@ -1234,12 +1240,16 @@
         }, {
           key: "initializeApp",
           value: function initializeApp() {
-            var _this8 = this;
+            var _this7 = this;
 
             this.platform.ready().then(function () {
-              _this8.statusBar.styleDefault();
+              _this7.statusBar.styleDefault();
 
-              _this8.splashScreen.hide();
+              _this7.splashScreen.hide();
+
+              _this7.userService.authenticated.subscribe(function (a) {
+                a ? _this7.router.navigate(['home', 'dashboard']) : _this7.router.navigate(['home', 'login']);
+              });
             });
           }
         }]);
@@ -1260,6 +1270,8 @@
           type: _angular_common__WEBPACK_IMPORTED_MODULE_8__["Location"]
         }, {
           type: _angular_router__WEBPACK_IMPORTED_MODULE_9__["Router"]
+        }, {
+          type: _services_user_service__WEBPACK_IMPORTED_MODULE_10__["UserService"]
         }];
       };
 
@@ -1339,199 +1351,16 @@
       /* harmony import */
 
 
-      var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-      /*! rxjs */
-      "qCKp");
-      /* harmony import */
-
-
-      var src_environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! src/environments/environment */
       "AytR");
 
       var WatchlistService = /*#__PURE__*/function () {
-        // companies: Stock[] = [
-        //   {
-        //     id: 1,
-        //     name: 'AAA',
-        //     code: 'AAA',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 2,
-        //     name: 'BBB',
-        //     code: 'BBB',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 3,
-        //     name: 'CCC',
-        //     code: 'CCC',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 4,
-        //     name: 'DDD',
-        //     code: 'DDD',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 5,
-        //     name: 'EEE',
-        //     code: 'EEE',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 6,
-        //     name: 'FFF',
-        //     code: 'FFF',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 7,
-        //     name: 'GGG',
-        //     code: 'GGG',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 8,
-        //     name: 'HHH',
-        //     code: 'HHH',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 9,
-        //     name: 'III',
-        //     code: 'III',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 10,
-        //     name: 'JJJ',
-        //     code: 'JJJ',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 11,
-        //     name: 'Infosys',
-        //     code: 'Infy',
-        //     greenNum: 92.90,
-        //     rateRaw: 4.00,
-        //     isRising: true,
-        //     ratePercentage: 4.50
-        //   },
-        //   {
-        //     id: 12,
-        //     name: 'Niftybees',
-        //     code: 'Nifty',
-        //     greenNum: 958.10,
-        //     isRising: true,
-        //     rateRaw: 18.25,
-        //     ratePercentage: 1.94
-        //   },
-        //   {
-        //     id: 13,
-        //     name: 'Tesla Motors',
-        //     code: 'Tsla',
-        //     greenNum: 119.85,
-        //     isRising: false,
-        //     rateRaw: 5.05,
-        //     ratePercentage: 4.40
-        //   },
-        //   {
-        //     id: 14,
-        //     name: 'Apple Inc.',
-        //     code: 'Aapl',
-        //     greenNum: 2102.35,
-        //     isRising: true,
-        //     rateRaw: 42.30,
-        //     ratePercentage: 2.05
-        //   },
-        //   {
-        //     id: 15,
-        //     name: 'McDonalds',
-        //     code: 'MCDS',
-        //     greenNum: 128.25,
-        //     isRising: false,
-        //     rateRaw: 1.55,
-        //     ratePercentage: 1.22
-        // }]
-        // watchlists: Watchlist[] = [
-        //   {
-        //     id: 1,
-        //     name: 'Trending',
-        //     companies: [
-        //       this.companies[0],
-        //       this.companies[1],
-        //       this.companies[2],
-        //       this.companies[3],
-        //       this.companies[4],
-        //       this.companies[5],
-        //       this.companies[6],
-        //       this.companies[7],
-        //       this.companies[8],
-        //       this.companies[9],
-        //     ]
-        //   },
-        //   {
-        //     id: 2,
-        //     name: 'W1',
-        //     companies: [
-        //       this.companies[10],
-        //       this.companies[11],
-        //     ]
-        //   },
-        //   {
-        //     id: 3,
-        //     name: 'W2',
-        //     companies: [
-        //       this.companies[12],
-        //       this.companies[13],
-        //     ]
-        //   },
-        //   {
-        //     id: 4,
-        //     name: 'W3',
-        //     companies: [
-        //       this.companies[14],
-        //     ]
-        //   }]
         function WatchlistService(http) {
           _classCallCheck(this, WatchlistService);
 
           this.http = http;
-          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'watchlist/';
-          this.updatedWatchlist = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + 'watchlist/';
         }
 
         _createClass(WatchlistService, [{
@@ -1540,24 +1369,18 @@
             return this.http.get(this.apiUrl + id);
           }
         }, {
-          key: "getUserWatchlists",
-          value: function getUserWatchlists() {
-            return this.http.get(this.apiUrl);
-          }
-        }, {
           key: "getSimulatedWatchlists",
           value: function getSimulatedWatchlists() {
             return this.http.get(this.apiUrl + 'filter/simulated');
           }
         }, {
-          key: "updateWatchlist",
-          value: function updateWatchlist(newWatchlist) {// this.watchlists = newWatchlist
+          key: "getRealtimeWatchlists",
+          value: function getRealtimeWatchlists() {
+            return this.http.get(this.apiUrl + 'filter/realTime');
           }
         }, {
           key: "addToWatchlist",
           value: function addToWatchlist(watchlistId, stockId) {
-            // needs to be a update watchlist method
-            // this.getWatchlist(id).companies.push(company)
             return this.http.put(this.apiUrl + 'add/stock', {
               watchlistId: watchlistId,
               stockId: stockId
@@ -1566,11 +1389,6 @@
         }, {
           key: "removeFromWatchlist",
           value: function removeFromWatchlist(watchlistId, stockId) {
-            // let watchlist
-            // this.getWatchlist(id).subscribe(res => watchlist = res)
-            // const indexOfStock = watchlist.companies.indexOf(company)
-            // watchlist.companies.splice(indexOfStock,1)
-            //update watchlist
             return this.http.put(this.apiUrl + 'stock/remove', {
               watchlistId: watchlistId,
               stockId: stockId
@@ -1579,30 +1397,46 @@
         }, {
           key: "createWatchlist",
           value: function createWatchlist(name) {
-            // const watchlist: Watchlist = {id: this.generateId(this.watchlists), name, companies:[]}
-            // this.watchlists.push(watchlist)
             return this.http.post(this.apiUrl + 'new', {
               name: name
             });
           }
         }, {
-          key: "editWatchlist",
-          value: function editWatchlist(id, name) {// this.getWatchlist(id).name = name
+          key: "updateWatchlistPositions",
+          value: function updateWatchlistPositions(list) {
+            return this.http.put(this.apiUrl + 'update/watchlist/positions', {
+              list: list
+            });
           }
+        }, {
+          key: "updateWatchlistStocksPositions",
+          value: function updateWatchlistStocksPositions(watchlistId, stocks) {
+            return this.http.put(this.apiUrl + 'update/watchlist/stocks/positions', {
+              watchlistId: watchlistId,
+              stocks: stocks
+            });
+          }
+        }, {
+          key: "editWatchlist",
+          value: function editWatchlist(id, name) {}
         }, {
           key: "deleteWatchlist",
           value: function deleteWatchlist(id) {
-            return this.http["delete"](this.apiUrl + id); // this.watchlists.splice(this.watchlists.indexOf(this.getWatchlist(id)), 1)
+            return this.http["delete"](this.apiUrl + id);
           }
         }, {
-          key: "generateId",
-          value: function generateId(array) {
-            var ids = array.map(function (i) {
-              return i.id;
-            });
-            var id = 0;
-            ids.length != 0 ? id = Math.max.apply(Math, _toConsumableArray(ids)) + 1 : id = 1;
-            return id;
+          key: "moveInArray",
+          value: function moveInArray(arr, prevIndex, currIndex) {
+            if (currIndex >= arr.length) {
+              var k = currIndex - arr.length + 1;
+
+              while (k--) {
+                arr.push(undefined);
+              }
+            }
+
+            arr.splice(currIndex, 0, arr.splice(prevIndex, 1)[0]);
+            return arr;
           }
         }]);
 
@@ -1884,6 +1718,18 @@
       var src_environments_environment__WEBPACK_IMPORTED_MODULE_32__ = __webpack_require__(
       /*! src/environments/environment */
       "AytR");
+      /* harmony import */
+
+
+      var _ionic_native_google_plus_ngx__WEBPACK_IMPORTED_MODULE_33__ = __webpack_require__(
+      /*! @ionic-native/google-plus/ngx */
+      "up+p");
+      /* harmony import */
+
+
+      var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_34__ = __webpack_require__(
+      /*! @ionic-native/screen-orientation/ngx */
+      "0QAI");
 
       function tokenGetter() {
         return localStorage.getItem("token");
@@ -1903,7 +1749,7 @@
           }
         }), _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_25__["BrowserAnimationsModule"]],
         exports: [],
-        providers: [_ionic_native_Camera_ngx__WEBPACK_IMPORTED_MODULE_20__["Camera"], _ionic_native_File_ngx__WEBPACK_IMPORTED_MODULE_21__["File"], _ionic_native_ionic_webview_ngx__WEBPACK_IMPORTED_MODULE_22__["WebView"], _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_6__["StatusBar"], _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_5__["SplashScreen"], _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_23__["FilePath"], _ionic_native_clipboard_ngx__WEBPACK_IMPORTED_MODULE_7__["Clipboard"], _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_8__["SocialSharing"], {
+        providers: [_ionic_native_Camera_ngx__WEBPACK_IMPORTED_MODULE_20__["Camera"], _ionic_native_File_ngx__WEBPACK_IMPORTED_MODULE_21__["File"], _ionic_native_ionic_webview_ngx__WEBPACK_IMPORTED_MODULE_22__["WebView"], _ionic_native_status_bar_ngx__WEBPACK_IMPORTED_MODULE_6__["StatusBar"], _ionic_native_splash_screen_ngx__WEBPACK_IMPORTED_MODULE_5__["SplashScreen"], _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_23__["FilePath"], _ionic_native_clipboard_ngx__WEBPACK_IMPORTED_MODULE_7__["Clipboard"], _ionic_native_social_sharing_ngx__WEBPACK_IMPORTED_MODULE_8__["SocialSharing"], _ionic_native_google_plus_ngx__WEBPACK_IMPORTED_MODULE_33__["GooglePlus"], Storage, _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_34__["ScreenOrientation"], {
           provide: _angular_router__WEBPACK_IMPORTED_MODULE_3__["RouteReuseStrategy"],
           useClass: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicRouteStrategy"]
         }, {
@@ -1952,7 +1798,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Edit watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-item class=\"ion-margin-horizontal\">\n\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t</ion-item>\n\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"editWatchlistForm.invalid && editWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t<ion-button (click)=\"onEditWatchlist()\" class=\"ion-margin\" expand=\"block\">Save watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\">\n\t\t<div class=\"drag-box\" *ngFor=\"let company of companies\" cdkDrag>\n\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t<span>{{ company.name }}</span>\n\t\t</div>\n\t</div>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Edit watchlist</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-item class=\"ion-margin-horizontal\">\n\t\t<ion-label position=\"floating\">Name of watchlist</ion-label>\n\t\t<ion-input [(ngModel)]=\"watchlistName\"></ion-input>\n\t</ion-item>\n\t<!-- <ion-label position=\"floating\" color=\"danger\" class=\"ion-padding\"\n\t\t\t*ngIf=\"editWatchlistForm.invalid && editWatchlistForm.touched\">\n\t\t\tPlease enter the name of watchlist\n\t\t</ion-label> -->\n\t<ion-button (click)=\"onEditWatchlist()\" class=\"ion-margin\" expand=\"block\">Save watchlist</ion-button>\n\t<div cdkDropList class=\"drag-list\" (cdkDropListDropped)=\"drop($event)\" *ngIf=\"stocks.length > 0\">\n\t\t<div *ngFor=\"let stock of stocks\" style=\"width: 100%;\" cdkDrag class=\"drag-box\">\n\t\t\t<div *ngIf=\"stock != undefined\">\n\t\t\t\t<ion-icon name=\"reorder-three-outline\" class=\"ion-margin-end\"></ion-icon>\n\t\t\t\t<span>{{ stock.name }}</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</ion-content>\n";
       /***/
     },
 
@@ -2011,7 +1857,10 @@
         _createClass(JwtInterceptor, [{
           key: "intercept",
           value: function intercept(req, next) {
-            var token = this.userService.decodedToken;
+            var token;
+            this.userService.authenticated.subscribe(function (r) {
+              token = r.token;
+            });
             req = req.clone({
               setHeaders: {
                 Authorization: "Bearer ".concat(token)
@@ -2151,39 +2000,29 @@
       /* harmony import */
 
 
-      var _watchlist_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
-      /*! ./watchlist.service */
-      "Tl0h");
-      /* harmony import */
-
-
-      var _stock_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      var _stock_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
       /*! ./stock.service */
       "8hSh");
       /* harmony import */
 
 
-      var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! @angular/common/http */
       "tk/3");
       /* harmony import */
 
 
-      var src_environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! src/environments/environment */
       "AytR");
 
       var OrderService = /*#__PURE__*/function () {
-        function OrderService(watchlistService, stockService, http) {
+        function OrderService(stockService, http) {
           _classCallCheck(this, OrderService);
 
-          this.watchlistService = watchlistService;
           this.stockService = stockService;
           this.http = http;
-          this.position = [];
-          this.completed = [];
-          this.pending = [];
-          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + 'stocks/';
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'stocks/';
         }
 
         _createClass(OrderService, [{
@@ -2213,8 +2052,47 @@
             });
           }
         }, {
+          key: "savePosition",
+          value: function savePosition(id, target, stoploss) {
+            return this.http.put(this.apiUrl + 'order/update', {
+              id: id,
+              target: target,
+              stoploss: stoploss
+            });
+          }
+        }, {
+          key: "exitPosition",
+          value: function exitPosition(id) {
+            return this.http.post(this.apiUrl + 'order/stop', {
+              id: id
+            });
+          }
+        }, {
           key: "buy",
           value: function buy(cId, quantity, stopLoss, target, order, price) {
+            var _this8 = this;
+
+            var company;
+            this.stockService.getStock(cId).subscribe(function (c) {
+              company = c.data;
+              var pending;
+              pending = {
+                stockId: cId,
+                volume: quantity,
+                stoploss: stopLoss,
+                target: target,
+                price: price
+              };
+              order == 'limit' ? _this8.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
+                return console.log('buy', r);
+              }) : _this8.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
+                return console.log('buy', r);
+              });
+            });
+          }
+        }, {
+          key: "sell",
+          value: function sell(cId, quantity, stopLoss, target, order, price) {
             var _this9 = this;
 
             var company;
@@ -2228,68 +2106,18 @@
                 target: target,
                 price: price
               };
-              order == 'limit' ? _this9.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
-                return console.log('buy', r);
-              }) : _this9.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
-                return console.log('buy', r);
-              });
-            });
-          }
-        }, {
-          key: "sell",
-          value: function sell(cId, quantity, stopLoss, target, order, price) {
-            var _this10 = this;
-
-            var company;
-            this.stockService.getStock(cId).subscribe(function (c) {
-              company = c.data;
-              var pending;
-              pending = {
-                stockId: cId,
-                volume: quantity,
-                stoploss: stopLoss,
-                target: target,
-                price: price
-              };
-              order == 'limit' ? _this10.stockService.orderStockLimitSell(pending).subscribe(function (r) {
+              order == 'limit' ? _this9.stockService.orderStockLimitSell(pending).subscribe(function (r) {
                 return console.log('sell', r);
-              }) : _this10.stockService.orderStockMarketSell(pending).subscribe(function (r) {
+              }) : _this9.stockService.orderStockMarketSell(pending).subscribe(function (r) {
                 return console.log('sell', r);
               });
             });
           }
         }, {
           key: "totalPandL",
-          value: function totalPandL() {
-            var pos = this.position.map(function (p) {
-              return p.pAndL;
-            });
-            var val = pos.reduce(function (p, c) {
-              return p + c;
-            });
-            return val;
-          }
-        }, {
-          key: "savePosition",
-          value: function savePosition(position) {// var positionToUpdate = this.position.find(p => p.code == position.code)
-            // var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate)
-            // this.position.splice(indexOfPositionToUpdate,1,position)
-          }
-        }, {
-          key: "sellPosition",
-          value: function sellPosition(position) {// var positionToUpdate = this.position.find(p => p.code == position.code)
-            // var indexOfPositionToUpdate = this.position.indexOf(positionToUpdate)
-            // this.position.splice(indexOfPositionToUpdate,1)
-            // const completed: Completed = {
-            //   name: position.name, 
-            //   code: position.code,  
-            //   price: position.price, 
-            //   quantity: -position.quantity,
-            //   status: 'COMPLETE',
-            //   pAndL: position.pAndL,
-            //   exitPrice: position.price
-            // }
-            // this.completed.unshift(completed)
+          value: function totalPandL() {// const pos = this.position.map(p => p.pAndL)
+            // const val = pos.reduce((p, c) => p + c)
+            // return val
           }
         }, {
           key: "savePending",
@@ -2304,11 +2132,9 @@
 
       OrderService.ctorParameters = function () {
         return [{
-          type: _watchlist_service__WEBPACK_IMPORTED_MODULE_2__["WatchlistService"]
+          type: _stock_service__WEBPACK_IMPORTED_MODULE_2__["StockService"]
         }, {
-          type: _stock_service__WEBPACK_IMPORTED_MODULE_3__["StockService"]
-        }, {
-          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__["HttpClient"]
+          type: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]
         }];
       };
 
@@ -2392,13 +2218,10 @@
         _createClass(BuySellModalPopupComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this11 = this;
+            var _this10 = this;
 
-            this.stockService.getStock(this.selectedStock.id).subscribe(function (stockData) {
-              _this11.selectedStock.ldp = stockData.data.historyData['1month'][stockData.data.historyData['1month'].length - 1].close;
-            });
             this.stockService.listen(this.selectedStock.id).subscribe(function (res) {
-              _this11.selectedStock.ltp = res[0].price;
+              _this10.selectedStock.ltp = res[0].price;
             });
           }
         }, {
@@ -2420,7 +2243,7 @@
           key: "navigateToChart",
           value: function navigateToChart() {
             this.modalCtrl.dismiss();
-            this.router.navigate(['home', 'chart', 'tv-chart']);
+            this.router.navigate(['chart']);
           }
         }]);
 
@@ -2491,53 +2314,65 @@
       /* harmony import */
 
 
-      var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-      /*! @angular/router */
-      "tyNb");
-      /* harmony import */
-
-
-      var _capacitor_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! @capacitor/core */
       "gcOT");
       /* harmony import */
 
 
-      var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! rxjs */
       "qCKp");
       /* harmony import */
 
 
-      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! @auth0/angular-jwt */
       "Nm8O");
       /* harmony import */
 
 
-      var src_environments_environment__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! src/environments/environment */
       "AytR");
+      /* harmony import */
 
-      var LocalNotifications = _capacitor_core__WEBPACK_IMPORTED_MODULE_4__["Plugins"].LocalNotifications;
+
+      var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! @ionic/angular */
+      "TEn/");
+      /* harmony import */
+
+
+      var _ionic_storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      /*! @ionic/storage */
+      "e8h1");
+
+      var LocalNotifications = _capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Plugins"].LocalNotifications;
 
       var UserService = /*#__PURE__*/function () {
-        function UserService(router, http) {
+        function UserService(http, storage, platform) {
+          var _this11 = this;
+
           _classCallCheck(this, UserService);
 
-          this.router = router;
           this.http = http;
-          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + "auth/";
-          this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_7__["environment"].apiUrl + "settings";
-          this.user = new rxjs__WEBPACK_IMPORTED_MODULE_5__["BehaviorSubject"](null);
-          this.isSimulated = true;
-          this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_5__["Subject"]();
+          this.storage = storage;
+          this.platform = platform;
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "auth/";
+          this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "settings";
+          this.user = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
+          this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](false);
+          this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+          this.platform.ready().then(function () {
+            _this11.checkToken();
+          });
         }
 
         _createClass(UserService, [{
           key: "decodeToken",
           value: function decodeToken(token) {
-            var helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_6__["JwtHelperService"]();
+            var helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__["JwtHelperService"]();
             this.decodedToken = helper.decodeToken(token);
             console.log(this.decodedToken);
           }
@@ -2598,10 +2433,43 @@
             });
           }
         }, {
+          key: "authenticate",
+          value: function authenticate(user, token) {
+            var _this12 = this;
+
+            return this.storage.set('token', {
+              user: user,
+              token: token
+            }).then(function (r) {
+              return _this12.authenticated.next({
+                user: user,
+                token: token
+              });
+            });
+          }
+        }, {
+          key: "checkToken",
+          value: function checkToken() {
+            var _this13 = this;
+
+            return this.storage.get('token').then(function (r) {
+              if (r) {
+                _this13.authenticated.next(r);
+
+                _this13.user.next(r.user);
+              }
+            });
+          }
+        }, {
           key: "logout",
           value: function logout() {
+            var _this14 = this;
+
             this.user.next(null);
             localStorage.removeItem('token');
+            return this.storage.remove('token').then(function (r) {
+              return _this14.authenticated.next(false);
+            });
           }
         }, {
           key: "add",
@@ -2631,9 +2499,11 @@
 
       UserService.ctorParameters = function () {
         return [{
-          type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]
-        }, {
           type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]
+        }, {
+          type: _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"]
+        }, {
+          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"]
         }];
       };
 
@@ -2724,10 +2594,17 @@
         _createClass(ModalEditWatchlistsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this12 = this;
+            var _this15 = this;
 
-            this.watchlistService.getUserWatchlists().subscribe(function (w) {
-              return _this12.watchlists = w.data;
+            this.userService.getSettings().subscribe(function (r) {
+              var datatype = r.data.datatype;
+              if (datatype == 'simulated') _this15.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
+                console.log('simulated', r);
+              });
+              if (datatype == 'realtime') _this15.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
+                console.log('realtime', r);
+                _this15.watchlists = r.data;
+              });
             });
           }
         }, {
@@ -2740,7 +2617,9 @@
           value: function onCreateWatchlist(createWatchlistForm) {
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
-              this.watchlistService.createWatchlist(this.watchlistName).subscribe();
+              this.watchlistService.createWatchlist(this.watchlistName).subscribe(function (r) {
+                return console.log('w created', r);
+              });
               this.watchlistName = '';
             }
           }
@@ -2749,7 +2628,23 @@
           value: function drop(event) {
             //needs to happen in backend
             Object(_angular_cdk_drag_drop__WEBPACK_IMPORTED_MODULE_3__["moveItemInArray"])(this.watchlists, event.previousIndex, event.currentIndex);
-            this.watchlistService.updatedWatchlist.next(true);
+            this.changePosition();
+          }
+        }, {
+          key: "changePosition",
+          value: function changePosition() {
+            // this.watchlists = this.watchlistService.moveInArray(this.watchlists, event.previousIndex, event.currentIndex)
+            var positions = [];
+
+            for (var i = 0; i < this.watchlists.length; i++) {
+              var w = this.watchlists[i];
+              positions.push({
+                watchlistId: w._id,
+                position: i
+              });
+            }
+
+            this.watchlistService.updateWatchlistPositions(positions).subscribe();
           }
         }]);
 
@@ -2928,10 +2823,10 @@
         _createClass(ModalWithdrawAddFundsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this13 = this;
+            var _this16 = this;
 
             this.userService.user.subscribe(function (u) {
-              return _this13.user = u;
+              return _this16.user = u;
             });
           }
         }, {

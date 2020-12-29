@@ -1,12 +1,11 @@
-import { NavController } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { LeaderboardService } from 'src/app/services/leaderboard.service';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user.model';
-import { StockService } from 'src/app/services/stock.service';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -74,20 +73,31 @@ export class DashboardPage implements OnInit {
       ]
     },
   ];
-  view: any[] = [700, 300];
+
   leaderboard
   user: User
+  view = []
   
   constructor(private router: Router, 
     private leaderboardService: LeaderboardService,
     private userService: UserService,
-    private stockService: StockService){
+    private platform: Platform,
+    private screenOrientation: ScreenOrientation){
   }
 
   ngOnInit() {
     this.leaderboard = this.leaderboardService.leaderboard
-    this.userService.user.subscribe(u => this.user = u)
+    this.userService.user.subscribe(u => {
+      this.user = u
+      this.userService.accountDetails().subscribe((r:any) => {
+        this.user.balance.availableBal = r.account.initialAmount
+        this.user.balance.openBal = parseFloat(r.account.currentBalance)
+        this.user.balance.currency = r.account.currency
+      })
+    })
     this.checkIfItIsDashboard()
+    this.view = [this.platform.width(),this.platform.height() * 0.6]
+    this.screenOrientation.onChange().subscribe(() => this.view = [this.platform.width(),this.platform.height() * 0.5])
   }
 
   navigateToLeaderboard(){

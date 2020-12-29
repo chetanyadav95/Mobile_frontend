@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { UserService } from './services/user.service';
 
 const { Network, LocalNotifications, App } = Plugins;
 
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit{
     private statusBar: StatusBar,
     private alertController: AlertController,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {}
 
   async ngOnInit(){
@@ -81,6 +83,9 @@ export class AppComponent implements OnInit{
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.userService.authenticated.subscribe(a => {
+        a ? this.router.navigate(['home', 'dashboard']) : this.router.navigate(['home','login'])
+      })
     });
   }
 }

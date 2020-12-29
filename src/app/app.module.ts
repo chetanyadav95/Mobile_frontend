@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
-import { IonicModule, IonicRouteStrategy, IonRouterOutlet } from '@ionic/angular';
+import { IonicModule, IonicRouteStrategy, IonRouterOutlet, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Clipboard } from '@ionic-native/clipboard/ngx';
@@ -35,6 +35,8 @@ import { ModalChangePasswordComponent } from './modals/modal-change-password/mod
 import { ModalWithdrawAddFundsComponent } from './modals/modal-withdraw-add-funds/modal-withdraw-add-funds.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { environment } from 'src/environments/environment';
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -82,6 +84,9 @@ export function tokenGetter() {
     FilePath,
     Clipboard,
     SocialSharing,
+    GooglePlus,
+    Storage,
+    ScreenOrientation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],

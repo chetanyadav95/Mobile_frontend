@@ -20,6 +20,7 @@ export class ModalUploadPostComponent implements OnInit {
   @Input() intraDay: boolean = false
   @Input() positional: boolean = false
   @Input() demoTrading: boolean = false
+  formData
   images = [];
   constructor(private modalCtrl: ModalController,
     private camera: Camera, private file: File, private http: HttpClient, private webview: WebView,
@@ -210,12 +211,12 @@ startUpload(imgEntry) {
 readFile(file: any) {
   const reader = new FileReader();
   reader.onload = () => {
-      const formData = new FormData();
+      // const formData = new FormData();
       const imgBlob = new Blob([reader.result], {
           type: file.type
       });
-      formData.append('file', imgBlob, file.name);
-      this.uploadImageData(formData);
+      this.formData.append('file', imgBlob, file.name);
+      // this.uploadImageData(formData);
   };
   reader.readAsArrayBuffer(file);
 }
@@ -225,7 +226,8 @@ async uploadImageData(formData: FormData) {
       message: 'Uploading image...',
   });
   await loading.present();
-
+  
+  console.log(formData)
 //   this.http.post("http://localhost:8888/upload.php", formData)
 //       .pipe(
 //           finalize(() => {

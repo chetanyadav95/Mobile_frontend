@@ -108,6 +108,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "tyNb");
 /* harmony import */ var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/services/user.service */ "qfBg");
+/* harmony import */ var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/services/watchlist.service */ "Tl0h");
+
 
 
 
@@ -115,29 +117,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let SettingsPage = class SettingsPage {
-    constructor(router, userService) {
+    constructor(router, userService, watchlistService) {
         this.router = router;
         this.userService = userService;
+        this.watchlistService = watchlistService;
     }
     ngOnInit() {
-        this.userService.user.subscribe(u => this.user = u);
         this.userService.getSettings().subscribe((r) => {
-            console.log(r);
             this.datatype = r.data.datatype;
             this.risk = r.data.risk;
             this.leverage = r.data.leverage.toString();
+            this._id = r.data._id;
         });
     }
     navigateToAccount() {
         this.router.navigate(['home', 'account']);
     }
     dataChange() {
-        this.userService.updateSettings(this.user.id, this.datatype, this.risk, this.leverage).subscribe(r => console.log(r));
+        this.userService.updateSettings(this._id, this.datatype, this.risk, this.leverage).subscribe();
     }
 };
 SettingsPage.ctorParameters = () => [
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"] },
-    { type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"] }
+    { type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"] },
+    { type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__["WatchlistService"] }
 ];
 SettingsPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({

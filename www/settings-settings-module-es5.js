@@ -214,13 +214,20 @@
       var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! src/app/services/user.service */
       "qfBg");
+      /* harmony import */
+
+
+      var src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! src/app/services/watchlist.service */
+      "Tl0h");
 
       var SettingsPage = /*#__PURE__*/function () {
-        function SettingsPage(router, userService) {
+        function SettingsPage(router, userService, watchlistService) {
           _classCallCheck(this, SettingsPage);
 
           this.router = router;
           this.userService = userService;
+          this.watchlistService = watchlistService;
         }
 
         _createClass(SettingsPage, [{
@@ -228,14 +235,11 @@
           value: function ngOnInit() {
             var _this = this;
 
-            this.userService.user.subscribe(function (u) {
-              return _this.user = u;
-            });
             this.userService.getSettings().subscribe(function (r) {
-              console.log(r);
               _this.datatype = r.data.datatype;
               _this.risk = r.data.risk;
               _this.leverage = r.data.leverage.toString();
+              _this._id = r.data._id;
             });
           }
         }, {
@@ -246,9 +250,7 @@
         }, {
           key: "dataChange",
           value: function dataChange() {
-            this.userService.updateSettings(this.user.id, this.datatype, this.risk, this.leverage).subscribe(function (r) {
-              return console.log(r);
-            });
+            this.userService.updateSettings(this._id, this.datatype, this.risk, this.leverage).subscribe();
           }
         }]);
 
@@ -260,6 +262,8 @@
           type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
         }, {
           type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"]
+        }, {
+          type: src_app_services_watchlist_service__WEBPACK_IMPORTED_MODULE_6__["WatchlistService"]
         }];
       };
 

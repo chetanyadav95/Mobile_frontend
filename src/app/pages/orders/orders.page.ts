@@ -8,6 +8,7 @@ import { StockService } from 'src/app/services/stock.service';
 import { Stock } from 'src/app/models/stock.model';
 import { Subscription } from 'rxjs';
 import { data } from 'jquery';
+import { OrderMin } from 'src/app/models/order-min';
 
 @Component({
   selector: 'app-orders',
@@ -15,9 +16,9 @@ import { data } from 'jquery';
   styleUrls: ['./orders.page.scss'],
 })
 export class OrdersPage implements OnInit, OnDestroy {
-  position: [] = []
-  completed: [] = []
-  pending: [] = []
+  position: OrderMin[] = []
+  completed: OrderMin[] = []
+  pending: OrderMin[] = []
   dataLoaded: boolean
   totalPandL: number
   pageIndex: number
@@ -44,7 +45,7 @@ export class OrdersPage implements OnInit, OnDestroy {
     this.completed = []
     this.orderService.getAllUserOrders().subscribe((res:any) => {
       res.data.forEach((o: Order) => {
-        const order: any = {
+        const order: OrderMin = {
           id: o._id,
           stockId: o.stockId,
           orderCategory: o.orderCategory,
@@ -52,9 +53,9 @@ export class OrdersPage implements OnInit, OnDestroy {
           price: o.price,
           quantity: o.volume
         }
-        this.orderPlacement(o.transactionOne.status, order, o.transactionOne.price) // completed
-        this.orderPlacement(o.transactionTwo.stoplossStatus, order, o.stoploss, o.orderCategory, 'stoploss') // pending
-        this.orderPlacement(o.transactionTwo.targetStatus, order, o.target, o.orderCategory, 'target') // pending
+        this.orderPlacement(o.transactionOne.status, order, o.transactionOne.price)
+        this.orderPlacement(o.transactionTwo.stoplossStatus, order, o.stoploss, 'stoploss', o.orderCategory)
+        this.orderPlacement(o.transactionTwo.targetStatus, order, o.target, 'target', o.orderCategory)
         if(o.status == 'positioned' && o.transactionOne.status == 'completed'){
           order.stoploss = o.stoploss
           order.target = o.target
@@ -92,7 +93,7 @@ export class OrdersPage implements OnInit, OnDestroy {
   //     }
   //   }
   // }
-  orderPlacement(status, order, price, orderCategory?, key?){
+  orderPlacement(status, order, price, key = 'price', orderCategory?){
     const o = Object.assign({},order)
     switch (status) {
       case 'completed':
@@ -102,13 +103,12 @@ export class OrdersPage implements OnInit, OnDestroy {
         o.price = price
         o['status'] = status
         this.completed.push(o)
-        console.log(o,order)
         break;
       case 'pending':
         if(orderCategory != null)
           o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy'
         else o.orderCategory = order.orderCategory
-        o.key = key ? key : 'price'
+        key != null ? o.key = key : o.key = 'price'
         this.pending.push(o)
         break;
       case 'notFilled':

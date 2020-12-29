@@ -3,6 +3,19 @@
   "appName": "Empuraan Trading App",
   "webDir": "www",
   "npmClient": "npm",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    },
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "946184960632-f8auts9jv84qr05sijh3tki2608u5sef.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  },
   "cordova": {
     "preferences": {
       "ScrollEnabled": "true",

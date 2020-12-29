@@ -21,27 +21,28 @@ export class SignUpPage implements OnInit {
     if(this.checkIfPasswordsMatch(form.value.password, form.value.confirmPassword)){
       delete form.value.confirmPassword
       this.userService.signUp(form.value).subscribe((res: any) =>{
-        localStorage.setItem('token', res.jwt)
-        this.userService.decodedToken = res.jwt
-        let user: User = {
-          id: res.user._id,
-          email: res.user.email,
-          username: res.user.username,
-          balance: {
-            availableBal: 0,
-            openBal: 0,
-          }
-        }
-        this.userService.accountDetails().subscribe((res: any) => {
-          user.balance.availableBal = res.account.initialValue
-          user.balance.openBal = parseFloat(res.account.currentBalance)
-          user.balance.currency = res.account.currency
-        }, () => {}, () => this.userService.user.next(user))
+        this.generateUser(res)
         form.resetForm()
         this.router.navigate(['home','login'])
         this.userService.checkIfIsOnLoginOrSignUpPage('/home/login')
       })
     }
+  }
+
+  generateUser(res){
+    let user: User = {
+      email: res.user.email,
+      username: res.user.username,
+      balance: {
+        availableBal: 0,
+        openBal: 0,
+      }
+    }
+    this.userService.accountDetails().subscribe((res: any) => {
+      user.balance.availableBal = res.account.initialValue
+      user.balance.openBal = parseFloat(res.account.currentBalance)
+      user.balance.currency = res.account.currency
+    }, () => {}, () => this.userService.user.next(user))
   }
 
   checkIfPasswordsMatch(password, confirmPassword){

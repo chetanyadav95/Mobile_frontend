@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "338019703642",
+    "project_id": "empuraan-trading-app-5ea68",
+    "storage_bucket": "empuraan-trading-app-5ea68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338019703642:android:ef1959a0ee0c0a7dc5b163",
+        "android_client_info": {
+          "package_name": "com.empuraanTradingApp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338019703642-l1l71ushaljgu2niqukufeipj8ponqei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.empuraanTradingApp.app",
+            "certificate_hash": "675777ce3548897f66c57a1ad0a24b91c72be026"
+          }
+        },
+        {
+          "client_id": "338019703642-qq6kg6ul7npn21q2o4ucq61uqq79ua7m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1ootRvaUx9v9WGjbXFoK_5WvP1di2Qf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338019703642-qq6kg6ul7npn21q2o4ucq61uqq79ua7m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

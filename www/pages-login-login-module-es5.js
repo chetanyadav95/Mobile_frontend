@@ -1,4 +1,18 @@
 (function () {
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+  function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+  function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+  function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+  function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+  function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+  function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
   function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
   function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -6,6 +20,20 @@
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["pages-login-login-module"], {
+    /***/
+    "Como":
+    /*!*******************************!*\
+      !*** ./capacitor.config.json ***!
+      \*******************************/
+
+    /*! exports provided: appId, appName, webDir, npmClient, plugins, cordova, default */
+
+    /***/
+    function Como(module) {
+      module.exports = JSON.parse("{\"appId\":\"com.empuraanTradingApp.app\",\"appName\":\"Empuraan Trading App\",\"webDir\":\"www\",\"npmClient\":\"npm\",\"plugins\":{\"SplashScreen\":{\"launchShowDuration\":0},\"GoogleAuth\":{\"scopes\":[\"profile\",\"email\"],\"serverClientId\":\"946184960632-f8auts9jv84qr05sijh3tki2608u5sef.apps.googleusercontent.com\",\"forceCodeForRefreshToken\":true}},\"cordova\":{\"preferences\":{\"ScrollEnabled\":\"true\",\"BackupWebStorage\":\"none\",\"SplashMaintainAspectRatio\":\"true\",\"FadeSplashScreenDuration\":\"300\",\"SplashShowOnlyFirstTime\":\"false\",\"SplashScreen\":\"screen\",\"SplashScreenDelay\":\"3000\"}}}");
+      /***/
+    },
+
     /***/
     "F4UR":
     /*!*********************************************!*\
@@ -100,6 +128,42 @@
     },
 
     /***/
+    "OTqH":
+    /*!*******************************************************************************!*\
+      !*** ./node_modules/@codetrix-studio/capacitor-google-auth/dist/esm/index.js ***!
+      \*******************************************************************************/
+
+    /*! exports provided: GoogleAuthWeb, GoogleAuth */
+
+    /***/
+    function OTqH(module, __webpack_exports__, __webpack_require__) {
+      "use strict";
+
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony import */
+
+
+      var _web__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! ./web */
+      "npad");
+      /* harmony reexport (safe) */
+
+
+      __webpack_require__.d(__webpack_exports__, "GoogleAuthWeb", function () {
+        return _web__WEBPACK_IMPORTED_MODULE_0__["GoogleAuthWeb"];
+      });
+      /* harmony reexport (safe) */
+
+
+      __webpack_require__.d(__webpack_exports__, "GoogleAuth", function () {
+        return _web__WEBPACK_IMPORTED_MODULE_0__["GoogleAuth"];
+      }); //# sourceMappingURL=index.js.map
+
+      /***/
+
+    },
+
+    /***/
     "TuYN":
     /*!***********************************************************************************!*\
       !*** ./node_modules/raw-loader/dist/cjs.js!./src/app/pages/login/login.page.html ***!
@@ -115,7 +179,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-img src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form #loginForm=\"ngForm\" (ngSubmit)=\"login(loginForm)\">\n    <!-- <ion-title class=\"ion-text-center ion-margin-vertical\" color=\"warning\"><h1>Welcome to Empuraan</h1></ion-title> -->\n    <ion-title class=\"ion-text-center ion-margin-vertical\"><h2>Login</h2></ion-title>\n    <ion-grid>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">E-mail</ion-label>\n            <ion-input type=\"email\" required [ngModel]=\"'test@gmail.com'\" name=\"email\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">Password</ion-label>\n            <ion-input type=\"password\" required [ngModel]=\"'1234'\" name=\"password\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"button-col\">\n          <button class=\"button login-button\" type=\"submit\">Login</button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <button class=\"button google-button\" color=\"danger\" (click)=\"login()\">\n            <ion-icon name=\"logo-google\"></ion-icon>\n            <span>Login with Google</span> \n          </button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <div class=\"or-line\">\n            <hr>\n            <span>OR</span>\n          </div>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"links-block\" size=12>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"button new-user-button\" routerLink=\"/home/sign-up\">\n            Create new account\n          </button>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"link-button ion-float-right\">\n            Forgot password?\n          </button>\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-img src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form #loginForm=\"ngForm\" (ngSubmit)=\"login(loginForm)\">\n    <!-- <ion-title class=\"ion-text-center ion-margin-vertical\" color=\"warning\"><h1>Welcome to Empuraan</h1></ion-title> -->\n    <ion-title class=\"ion-text-center ion-margin-vertical\"><h2>Login</h2></ion-title>\n    <ion-grid>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">E-mail</ion-label>\n            <ion-input type=\"email\" required [ngModel]=\"'test@gmail.com'\" name=\"email\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">Password</ion-label>\n            <ion-input type=\"password\" required [ngModel]=\"'1234'\" name=\"password\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"button-col\">\n          <button class=\"button login-button\" type=\"submit\">Login</button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <button class=\"button google-button\" color=\"danger\" (click)=\"google()\">\n            <ion-icon name=\"logo-google\"></ion-icon>\n            <span>Login with Google</span> \n          </button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <div class=\"or-line\">\n            <hr>\n            <span>OR</span>\n          </div>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"links-block\" size=12>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"button new-user-button\" routerLink=\"/home/sign-up\">\n            Create new account\n          </button>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"link-button ion-float-right\">\n            Forgot password?\n          </button>\n          <!-- {{ userInfo | json}} -->\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n";
       /***/
     },
 
@@ -234,13 +298,32 @@
       var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! src/app/services/user.service */
       "qfBg");
+      /* harmony import */
+
+
+      var _ionic_native_google_plus_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! @ionic-native/google-plus/ngx */
+      "up+p");
+      /* harmony import */
+
+
+      var _codetrix_studio_capacitor_google_auth__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! @codetrix-studio/capacitor-google-auth */
+      "OTqH");
+      /* harmony import */
+
+
+      var _capacitor_core__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      /*! @capacitor/core */
+      "gcOT");
 
       var LoginPage = /*#__PURE__*/function () {
-        function LoginPage(router, userService) {
+        function LoginPage(router, userService, googlePlus) {
           _classCallCheck(this, LoginPage);
 
           this.router = router;
           this.userService = userService;
+          this.googlePlus = googlePlus;
         }
 
         _createClass(LoginPage, [{
@@ -254,32 +337,64 @@
             var _this = this;
 
             this.userService.logIn(form.value).subscribe(function (res) {
+              var user = _this.generateUser(res);
+
               localStorage.setItem('token', res.jwt);
-              _this.userService.decodedToken = res.jwt;
-              var user = {
-                id: res.user._id,
-                email: res.user.email,
-                username: res.user.username,
-                balance: {
-                  availableBal: 0,
-                  openBal: 0
-                }
-              };
 
-              _this.userService.accountDetails().subscribe(function (res) {
-                user.balance.availableBal = res.account.initialAmount;
-                user.balance.openBal = parseFloat(res.account.currentBalance);
-                user.balance.currency = res.account.currency;
-              });
+              _this.userService.authenticate(user, res.jwt);
 
-              _this.userService.user.next(user);
-
+              _this.userService.decodedToken = _this.userService.decodeToken(res.jwt);
               form.resetForm();
 
               _this.router.navigate(['home', 'dashboard']);
 
               _this.userService.checkIfIsOnLoginOrSignUpPage('/home/dashboard');
             });
+          }
+        }, {
+          key: "generateUser",
+          value: function generateUser(res) {
+            var _this2 = this;
+
+            var user = {
+              email: res.user.email,
+              username: res.user.username,
+              balance: {
+                availableBal: 0,
+                openBal: 0
+              }
+            };
+            this.userService.accountDetails().subscribe(function (r) {
+              user.balance.availableBal = r.account.initialAmount;
+              user.balance.openBal = parseFloat(r.account.currentBalance);
+              user.balance.currency = r.account.currency;
+            }, function () {}, function () {
+              return _this2.userService.user.next(user);
+            });
+            return user;
+          }
+        }, {
+          key: "google",
+          value: function google() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+              var googleUser;
+              return regeneratorRuntime.wrap(function _callee$(_context) {
+                while (1) {
+                  switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.next = 2;
+                      return _capacitor_core__WEBPACK_IMPORTED_MODULE_8__["Plugins"].GoogleAuth.signIn();
+
+                    case 2:
+                      googleUser = _context.sent;
+
+                    case 3:
+                    case "end":
+                      return _context.stop();
+                  }
+                }
+              }, _callee);
+            }));
           }
         }]);
 
@@ -291,6 +406,8 @@
           type: _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]
         }, {
           type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_5__["UserService"]
+        }, {
+          type: _ionic_native_google_plus_ngx__WEBPACK_IMPORTED_MODULE_6__["GooglePlus"]
         }];
       };
 
@@ -299,6 +416,321 @@
         template: _raw_loader_login_page_html__WEBPACK_IMPORTED_MODULE_1__["default"],
         styles: [_login_page_scss__WEBPACK_IMPORTED_MODULE_2__["default"]]
       })], LoginPage);
+      /***/
+    },
+
+    /***/
+    "npad":
+    /*!*****************************************************************************!*\
+      !*** ./node_modules/@codetrix-studio/capacitor-google-auth/dist/esm/web.js ***!
+      \*****************************************************************************/
+
+    /*! exports provided: GoogleAuthWeb, GoogleAuth */
+
+    /***/
+    function npad(module, __webpack_exports__, __webpack_require__) {
+      "use strict";
+
+      __webpack_require__.r(__webpack_exports__);
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "GoogleAuthWeb", function () {
+        return GoogleAuthWeb;
+      });
+      /* harmony export (binding) */
+
+
+      __webpack_require__.d(__webpack_exports__, "GoogleAuth", function () {
+        return GoogleAuth;
+      });
+      /* harmony import */
+
+
+      var _capacitor_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! @capacitor/core */
+      "gcOT");
+      /* harmony import */
+
+
+      var _capacitor_config_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! ../../../../../capacitor.config.json */
+      "Como");
+
+      var _capacitor_config_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/__webpack_require__.t(
+      /*! ../../../../../capacitor.config.json */
+      "Como", 1);
+
+      var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+          function fulfilled(value) {
+            try {
+              step(generator.next(value));
+            } catch (e) {
+              reject(e);
+            }
+          }
+
+          function rejected(value) {
+            try {
+              step(generator["throw"](value));
+            } catch (e) {
+              reject(e);
+            }
+          }
+
+          function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+              resolve(result.value);
+            }).then(fulfilled, rejected);
+          }
+
+          step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+      }; // @ts-ignore
+
+
+      var GoogleAuthWeb = /*#__PURE__*/function (_capacitor_core__WEBP) {
+        _inherits(GoogleAuthWeb, _capacitor_core__WEBP);
+
+        var _super = _createSuper(GoogleAuthWeb);
+
+        _createClass(GoogleAuthWeb, [{
+          key: "webConfigured",
+          get: function get() {
+            return document.getElementsByName('google-signin-client_id').length > 0;
+          }
+        }]);
+
+        function GoogleAuthWeb() {
+          var _this3;
+
+          _classCallCheck(this, GoogleAuthWeb);
+
+          _this3 = _super.call(this, {
+            name: 'GoogleAuth',
+            platforms: ['web']
+          });
+          if (!_this3.webConfigured) return _possibleConstructorReturn(_this3);
+          _this3.gapiLoaded = new Promise(function (resolve) {
+            // HACK: Relying on window object, can't get property in gapi.load callback
+            window.gapiResolve = resolve;
+
+            _this3.initialize();
+          });
+
+          _this3.addUserChangeListener();
+
+          return _this3;
+        }
+
+        _createClass(GoogleAuthWeb, [{
+          key: "initialize",
+          value: function initialize() {
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.defer = true;
+            script.async = true;
+            script.onload = this.platformJsLoaded;
+            script.src = 'https://apis.google.com/js/platform.js';
+            head.appendChild(script);
+          }
+        }, {
+          key: "platformJsLoaded",
+          value: function platformJsLoaded() {
+            gapi.load('auth2', function () {
+              var clientConfig = {
+                client_id: document.getElementsByName('google-signin-client_id')[0].content
+              };
+
+              if (_capacitor_config_json__WEBPACK_IMPORTED_MODULE_1__.plugins.GoogleAuth != null && _capacitor_config_json__WEBPACK_IMPORTED_MODULE_1__.plugins.GoogleAuth.scopes != null) {
+                clientConfig.scope = _capacitor_config_json__WEBPACK_IMPORTED_MODULE_1__.plugins.GoogleAuth.scopes.join(' ');
+              }
+
+              gapi.auth2.init(clientConfig);
+              window.gapiResolve();
+            });
+          }
+        }, {
+          key: "signIn",
+          value: function signIn() {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+              var _this4 = this;
+
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                  switch (_context3.prev = _context3.next) {
+                    case 0:
+                      return _context3.abrupt("return", new Promise(function (resolve, reject) {
+                        return __awaiter(_this4, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+                          var serverAuthCode, needsOfflineAccess, offlineAccessResponse, googleUser, user;
+                          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                            while (1) {
+                              switch (_context2.prev = _context2.next) {
+                                case 0:
+                                  _context2.prev = 0;
+                                  needsOfflineAccess = false;
+
+                                  try {
+                                    needsOfflineAccess = _capacitor_config_json__WEBPACK_IMPORTED_MODULE_1__.plugins.GoogleAuth.serverClientId != null;
+                                  } catch (_a) {}
+
+                                  if (!needsOfflineAccess) {
+                                    _context2.next = 10;
+                                    break;
+                                  }
+
+                                  _context2.next = 6;
+                                  return gapi.auth2.getAuthInstance().grantOfflineAccess();
+
+                                case 6:
+                                  offlineAccessResponse = _context2.sent;
+                                  serverAuthCode = offlineAccessResponse.code;
+                                  _context2.next = 12;
+                                  break;
+
+                                case 10:
+                                  _context2.next = 12;
+                                  return gapi.auth2.getAuthInstance().signIn();
+
+                                case 12:
+                                  googleUser = gapi.auth2.getAuthInstance().currentUser.get();
+
+                                  if (!needsOfflineAccess) {
+                                    _context2.next = 16;
+                                    break;
+                                  }
+
+                                  _context2.next = 16;
+                                  return googleUser.reloadAuthResponse();
+
+                                case 16:
+                                  user = this.getUserFrom(googleUser);
+                                  user.serverAuthCode = serverAuthCode;
+                                  resolve(user);
+                                  _context2.next = 24;
+                                  break;
+
+                                case 21:
+                                  _context2.prev = 21;
+                                  _context2.t0 = _context2["catch"](0);
+                                  reject(_context2.t0);
+
+                                case 24:
+                                case "end":
+                                  return _context2.stop();
+                              }
+                            }
+                          }, _callee2, this, [[0, 21]]);
+                        }));
+                      }));
+
+                    case 1:
+                    case "end":
+                      return _context3.stop();
+                  }
+                }
+              }, _callee3);
+            }));
+          }
+        }, {
+          key: "refresh",
+          value: function refresh() {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+              var authResponse;
+              return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                  switch (_context4.prev = _context4.next) {
+                    case 0:
+                      _context4.next = 2;
+                      return gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse();
+
+                    case 2:
+                      authResponse = _context4.sent;
+                      return _context4.abrupt("return", {
+                        accessToken: authResponse.access_token,
+                        idToken: authResponse.id_token
+                      });
+
+                    case 4:
+                    case "end":
+                      return _context4.stop();
+                  }
+                }
+              }, _callee4);
+            }));
+          }
+        }, {
+          key: "signOut",
+          value: function signOut() {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+              return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                  switch (_context5.prev = _context5.next) {
+                    case 0:
+                      return _context5.abrupt("return", gapi.auth2.getAuthInstance().signOut());
+
+                    case 1:
+                    case "end":
+                      return _context5.stop();
+                  }
+                }
+              }, _callee5);
+            }));
+          }
+        }, {
+          key: "addUserChangeListener",
+          value: function addUserChangeListener() {
+            return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+              var _this5 = this;
+
+              return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                  switch (_context6.prev = _context6.next) {
+                    case 0:
+                      _context6.next = 2;
+                      return this.gapiLoaded;
+
+                    case 2:
+                      gapi.auth2.getAuthInstance().currentUser.listen(function (googleUser) {
+                        _this5.notifyListeners("userChange", googleUser.isSignedIn() ? _this5.getUserFrom(googleUser) : null);
+                      });
+
+                    case 3:
+                    case "end":
+                      return _context6.stop();
+                  }
+                }
+              }, _callee6, this);
+            }));
+          }
+        }, {
+          key: "getUserFrom",
+          value: function getUserFrom(googleUser) {
+            var user = {};
+            var profile = googleUser.getBasicProfile();
+            user.email = profile.getEmail();
+            user.familyName = profile.getFamilyName();
+            user.givenName = profile.getGivenName();
+            user.id = profile.getId();
+            user.imageUrl = profile.getImageUrl();
+            user.name = profile.getName();
+            var authResponse = googleUser.getAuthResponse(true);
+            user.authentication = {
+              accessToken: authResponse.access_token,
+              idToken: authResponse.id_token
+            };
+            return user;
+          }
+        }]);
+
+        return GoogleAuthWeb;
+      }(_capacitor_core__WEBPACK_IMPORTED_MODULE_0__["WebPlugin"]);
+
+      var GoogleAuth = new GoogleAuthWeb();
+      Object(_capacitor_core__WEBPACK_IMPORTED_MODULE_0__["registerWebPlugin"])(GoogleAuth); //# sourceMappingURL=web.js.map
+
       /***/
     }
   }]);

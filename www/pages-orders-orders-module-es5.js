@@ -152,72 +152,109 @@
         _createClass(OrdersPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
+            this.dataLoaded = false;
+            this.pageIndex = 0;
+          }
+        }, {
+          key: "ionViewDidEnter",
+          value: function ionViewDidEnter() {
+            this.getOrders();
+          }
+        }, {
+          key: "getOrders",
+          value: function getOrders() {
             var _this = this;
 
             this.dataLoaded = false;
-            this.pageIndex = 0;
+            this.pending = [];
+            this.position = [];
+            this.completed = [];
             this.orderService.getAllUserOrders().subscribe(function (res) {
               res.data.forEach(function (o) {
-                _this.stockService.getStock(o.stockId).subscribe(function (s) {
-                  o.stockName = s.data.companyName;
-                });
+                var order = {
+                  id: o._id,
+                  stockId: o.stockId,
+                  orderCategory: o.orderCategory,
+                  name: o.companyName,
+                  price: o.price,
+                  quantity: o.volume
+                };
 
-                switch (o.status) {
-                  case 'positioned':
-                    _this.position.push(o);
+                _this.orderPlacement(o.transactionOne.status, order, o.transactionOne.price);
 
-                    _this.checkIfOrderIsCompleted(o);
+                _this.orderPlacement(o.transactionTwo.stoplossStatus, order, o.stoploss, 'stoploss', o.orderCategory);
 
-                    break;
+                _this.orderPlacement(o.transactionTwo.targetStatus, order, o.target, 'target', o.orderCategory);
 
-                  case 'completed':
-                    _this.completed.push(o);
+                if (o.status == 'positioned' && o.transactionOne.status == 'completed') {
+                  order.stoploss = o.stoploss;
+                  order.target = o.target;
 
-                    break;
+                  _this.position.push(Object.assign({}, order));
+                } else if (o.status == 'completed' && o.transactionTwo.stoplossStatus == 'notFilled' && o.transactionTwo.targetStatus == 'notFilled') {
+                  var _o = Object.assign({}, order);
 
-                  case 'pending':
-                    _this.pending.push(o);
+                  _o['status'] = 'completed';
+                  _o.orderCategory = order.orderCategory == 'buy' ? 'sell' : 'buy';
 
-                    break;
-
-                  default:
-                    break;
+                  _this.completed.push(_o);
                 }
-
-                console.log(o);
               });
 
               _this.updateLtp(); // this.totalPandL = this.orderService.totalPandL()
 
             });
-          }
+          } // checkIfOrderIsCompleted(complete: Order){
+          //   if(complete.transactionOne.status == "completed"){
+          //     this.completed.push(complete)
+          //   }
+          //   else if(complete.transactionOne.status == "pending"){
+          //     this.pending.push(complete)
+          //   }
+          //   if(complete.transactionTwo.status == "pending"){
+          //     if(complete.stoploss){
+          //       let order = Object.assign({},complete)
+          //       order['isStopLoss'] = true
+          //       this.pending.push(order)
+          //     }
+          //     if(complete.target){
+          //       let order = Object.assign({},complete)
+          //       order['isStopLoss'] = false
+          //       this.pending.push(order)
+          //     }
+          //   }
+          // }
+
         }, {
-          key: "ionViewDidEnter",
-          value: function ionViewDidEnter() {
-            this.updateLtp();
-          }
-        }, {
-          key: "checkIfOrderIsCompleted",
-          value: function checkIfOrderIsCompleted(complete) {
-            if (complete.transactionOne.status == "completed") {
-              this.completed.push(complete);
-            } else if (complete.transactionOne.status == "pending") {
-              this.pending.push(complete);
-            }
+          key: "orderPlacement",
+          value: function orderPlacement(status, order, price) {
+            var key = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'price';
+            var orderCategory = arguments.length > 4 ? arguments[4] : undefined;
+            var o = Object.assign({}, order);
 
-            if (complete.transactionTwo.status == "pending") {
-              if (complete.stoploss) {
-                var order = Object.assign({}, complete);
-                order['isStopLoss'] = true;
-                this.pending.push(order);
-              }
+            switch (status) {
+              case 'completed':
+                if (orderCategory != null) o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy';else o.orderCategory = order.orderCategory;
+                o.price = price;
+                o['status'] = status;
+                this.completed.push(o);
+                break;
 
-              if (complete.target) {
-                var _order = Object.assign({}, complete);
+              case 'pending':
+                if (orderCategory != null) o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy';else o.orderCategory = order.orderCategory;
+                key != null ? o.key = key : o.key = 'price';
+                this.pending.push(o);
+                break;
 
-                _order['isStopLoss'] = false;
-                this.pending.push(_order);
-              }
+              case 'notFilled':
+                if (orderCategory != null) o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy';else o.orderCategory = order.orderCategory;
+                o.price = price;
+                o['status'] = 'cancelled';
+                this.completed.push(o);
+                break;
+
+              default:
+                break;
             }
           }
         }, {
@@ -518,7 +555,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header #header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Orders</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<super-tabs *ngIf=\"!dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label\n\t\t\t\t\tstyle=\"width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center\"\n\t\t\t\t>\n\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label\n\t\t\t\t\tstyle=\"width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center\"\n\t\t\t\t>\n\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label\n\t\t\t\t\tstyle=\"width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center\"\n\t\t\t\t>\n\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container>\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<ion-card>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-card-subtitle class=\"skeleton-row\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-card-subtitle>\n\t\t\t\t\t\t<ion-card-title class=\"skeleton-row\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 40%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-card-title>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-card>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let item of [].constructor(6)\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-start;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-start;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 25%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 30%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-start;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 25%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-end\">\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-end;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-end;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-end;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<super-tabs (tabChange)=\"tabIndex($event)\" *ngIf=\"dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button (click)=\"tabIndex(0)\">\n\t\t\t\t<ion-label>Position</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button (click)=\"tabIndex(1)\">\n\t\t\t\t<ion-label>Completed</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button (click)=\"tabIndex(2)\">\n\t\t\t\t<ion-label>Pending</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container (activeTabIndexChange)=\"tabIndex($event)\">\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<!-- <ion-card>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-card-subtitle>Total P&L</ion-card-subtitle>\n\t\t\t\t\t\t<ion-card-title [ngClass]=\"{'success': totalPandL > 0, 'failure': totalPandL < 0}\">\n\t\t\t\t\t\t\t{{totalPandL > 0 ? '+' : ''}}{{totalPandL}}\n\t\t\t\t\t\t</ion-card-title>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-card> -->\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let p of position\" (click)=\"ordersActionSheet(p)\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}\"> {{p.stockName}} </span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>Price: {{p.price}}</p>\n\t\t\t\t\t\t\t\t\t<p>Quantity: {{p.volume}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-text-right ion-no-padding\">\n\t\t\t\t\t\t\t\t\t<table class=\"ion-float-right\">\n\t\t\t\t\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p><strong>P&L</strong></p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<ion-text [color]=\"+p.ltp - p.price >= 0 ? 'success' : 'danger'\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{{+p.ltp - p.price > 0 ? ' +' : ' '}}{{+p.ltp - p.price | number:'1.2'}}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</ion-text>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p><strong>LTP</strong></p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p>{{p.ltp}}</p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p><strong>SL</strong></p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p>{{p.stoploss}}</p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let c of completed\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'buy': c.orderCategory == 'buy', 'sell': c.orderCategory == 'sell'}\"> {{c.stockName}} </span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>Price: {{c.price}}</p>\n\t\t\t\t\t\t\t\t\t<p>Quantity: {{c.volume}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-text-right\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'cancelled': c.status == 'cancelled', 'complete': c.status == 'completed'}\">\n\t\t\t\t\t\t\t\t\t\t\t{{c.status | uppercase}}\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<strong>P&L</strong>\n\t\t\t\t\t\t\t\t\t\t<!-- <span [ngClass]=\"{'success': c.pAndL > 0, 'failure':c.pAndL < 0}\">\n\t\t\t\t\t\t\t\t\t\t\t{{c.pAndL > 0 ? ' +' : ' '}}{{c.pAndL}}\n\t\t\t\t\t\t\t\t\t\t</span> -->\n\t\t\t\t\t\t\t\t\t\t0\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<strong>Exit Price</strong>\n\t\t\t\t\t\t\t\t\t\t<!-- {{c.exitPrice}} -->\n\t\t\t\t\t\t\t\t\t\t0\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let p of pending\" (click)=\"ordersActionSheet(p)\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}\"> {{p.stockName}} </span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>Price: {{p.isStopLoss == true ? p.stoploss : p.target}}</p>\n\t\t\t\t\t\t\t\t\t<p>Quantity: {{p.volume}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-text-right column-centralise-text\">\n\t\t\t\t\t\t\t\t\t<p><strong>LTP</strong> {{p.ltp}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header #header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Orders</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<super-tabs *ngIf=\"!dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label>Position</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label>Completed</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label>Pending</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container>\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<ion-card>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-card-subtitle class=\"skeleton-row\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-card-subtitle>\n\t\t\t\t\t\t<ion-card-title class=\"skeleton-row\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 40%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-card-title>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-card>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let item of [].constructor(6)\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-start;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-start;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 25%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 30%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-start;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 25%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-end\">\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-end;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-end;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t<span style=\"display: flex; flex-direction: row; justify-content: flex-end;\">\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 15%;margin-right: 10px;\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<super-tabs (tabChange)=\"tabIndex($event)\" *ngIf=\"dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button (click)=\"tabIndex(0)\">\n\t\t\t\t<ion-label>Position</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button (click)=\"tabIndex(1)\">\n\t\t\t\t<ion-label>Completed</ion-label>\n\t\t\t</super-tab-button>\n\t\t\t<super-tab-button (click)=\"tabIndex(2)\">\n\t\t\t\t<ion-label>Pending</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container (activeTabIndexChange)=\"tabIndex($event)\">\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<!-- <ion-card>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-card-subtitle>Total P&L</ion-card-subtitle>\n\t\t\t\t\t\t<ion-card-title [ngClass]=\"{'success': totalPandL > 0, 'failure': totalPandL < 0}\">\n\t\t\t\t\t\t\t{{totalPandL > 0 ? '+' : ''}}{{totalPandL}}\n\t\t\t\t\t\t</ion-card-title>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-card> -->\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let p of position\" (click)=\"ordersActionSheet(p)\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}\"> {{p.name}} </span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>Price: {{p.price}}</p>\n\t\t\t\t\t\t\t\t\t<p>Quantity: {{p?.orderCategory == 'sell' ? '-' : '+'}}{{p.quantity}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-text-right ion-no-padding\">\n\t\t\t\t\t\t\t\t\t<!-- todo : CENTRALIZE -->\n\t\t\t\t\t\t\t\t\t<table class=\"ion-float-right\">\n\t\t\t\t\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p><strong>P&L</strong></p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<ion-text [color]=\"+p.ltp - p.price >= 0 ? 'success' : 'danger'\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t{{+p.ltp - p.price > 0 ? ' +' : ' '}}{{+p.ltp - p.price | number:'1.2'}}\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</ion-text>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p><strong>LTP</strong></p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p>{{p.ltp}}</p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t\t\t\t\t\t<!-- <tr>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p><strong>SL</strong></p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p>{{p.stoploss}}</p>\n\t\t\t\t\t\t\t\t\t\t\t\t</td>\n\t\t\t\t\t\t\t\t\t\t\t</tr> -->\n\t\t\t\t\t\t\t\t\t\t</tbody>\n\t\t\t\t\t\t\t\t\t</table>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let c of completed\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'buy': c.orderCategory == 'buy', 'sell': c.orderCategory == 'sell'}\"> {{c.name}} </span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<!-- <p>Price: {{c.price}}</p> -->\n\t\t\t\t\t\t\t\t\t<p>Quantity: {{c?.orderCategory == 'sell' ? '-' : '+'}}{{c.quantity}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-text-right\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'cancelled': c.status == 'cancelled', 'complete': c.status == 'completed'}\">\n\t\t\t\t\t\t\t\t\t\t\t{{c.status | uppercase}}\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<strong>Price</strong>\n\t\t\t\t\t\t\t\t\t\t{{c.price}}\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<!-- <p>\n\t\t\t\t\t\t\t\t\t\t<strong>P&L</strong>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'success': c.pAndL > 0, 'failure':c.pAndL < 0}\">\n\t\t\t\t\t\t\t\t\t\t\t{{c.pAndL > 0 ? ' +' : ' '}}{{c.pAndL}}\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t0\n\t\t\t\t\t\t\t\t\t</p> -->\n\t\t\t\t\t\t\t\t\t<!-- <p>\n\t\t\t\t\t\t\t\t\t\t<strong>Exit Price</strong>\n\t\t\t\t\t\t\t\t\t\t{{c.exitPrice}}\n\t\t\t\t\t\t\t\t\t\t0\n\t\t\t\t\t\t\t\t\t</p> -->\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t\t<super-tab>\n\t\t\t\t<ion-searchbar showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\" *ngFor=\"let p of pending\" (click)=\"ordersActionSheet(p)\">\n\t\t\t\t\t\t<ion-grid class=\"ion-no-padding ion-padding-vertical\">\n\t\t\t\t\t\t\t<ion-row>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t\t<p>\n\t\t\t\t\t\t\t\t\t\t<span [ngClass]=\"{'buy': p.orderCategory == 'buy', 'sell': p.orderCategory == 'sell'}\"> {{p.name}} </span>\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<p>Quantity: {{p?.orderCategory == 'sell' ? '-' : '+'}}{{p.quantity}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t\t<ion-col col=\"6\" class=\"ion-text-right column-centralise-text\">\n\t\t\t\t\t\t\t\t\t<p style=\"margin-bottom:0px\"><strong>LTP</strong> {{p.ltp}}</p>\n\t\t\t\t\t\t\t\t\t<p><strong>{{p.key | titlecase}}</strong> {{p.price}}</p>\n\t\t\t\t\t\t\t\t</ion-col>\n\t\t\t\t\t\t\t</ion-row>\n\t\t\t\t\t\t</ion-grid>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n</ion-content>\n";
       /***/
     }
   }]);

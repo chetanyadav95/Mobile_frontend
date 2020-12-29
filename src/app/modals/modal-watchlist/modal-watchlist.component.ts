@@ -33,9 +33,9 @@ export class ModalWatchlistComponent implements OnInit{
 
   onSelect(event: boolean, stock){
     if(event == true)
-      this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(r => console.log(r))
+      this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe()
     else if(event == false) 
-      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe(r => console.log('removed from w',r))
+      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe()
   }
 
   filter(filterValue: any){
