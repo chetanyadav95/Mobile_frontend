@@ -94,7 +94,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-img src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form #loginForm=\"ngForm\" (ngSubmit)=\"login(loginForm)\">\n    <!-- <ion-title class=\"ion-text-center ion-margin-vertical\" color=\"warning\"><h1>Welcome to Empuraan</h1></ion-title> -->\n    <ion-title class=\"ion-text-center ion-margin-vertical\"><h2>Login</h2></ion-title>\n    <ion-grid>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">E-mail</ion-label>\n            <ion-input type=\"email\" required [ngModel]=\"'test@gmail.com'\" name=\"email\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">Password</ion-label>\n            <ion-input type=\"password\" required [ngModel]=\"'1234'\" name=\"password\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"button-col\">\n          <button class=\"button login-button\" type=\"submit\">Login</button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <button class=\"button google-button\" color=\"danger\" (click)=\"google()\">\n            <ion-icon name=\"logo-google\"></ion-icon>\n            <span>Login with Google</span> \n          </button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <div class=\"or-line\">\n            <hr>\n            <span>OR</span>\n          </div>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"links-block\" size=12>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"button new-user-button\" routerLink=\"/home/sign-up\">\n            Create new account\n          </button>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"link-button ion-float-right\">\n            Forgot password?\n          </button>\n          <!-- {{ userInfo | json}} -->\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-img src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form #loginForm=\"ngForm\">\n    <!-- <ion-title class=\"ion-text-center ion-margin-vertical\" color=\"warning\"><h1>Welcome to Empuraan</h1></ion-title> -->\n    <ion-title class=\"ion-text-center ion-margin-vertical\"><h2>Login</h2></ion-title>\n    <ion-grid>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">E-mail</ion-label>\n            <ion-input type=\"email\" required [ngModel]=\"'test@gmail.com'\" name=\"email\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">Password</ion-label>\n            <ion-input type=\"password\" required [ngModel]=\"'1234'\" name=\"password\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"button-col\">\n          <button class=\"button login-button\" type=\"submit\" (click)=\"login(loginForm)\">Login</button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <button class=\"button google-button\" color=\"danger\" (click)=\"google()\">\n            <ion-icon name=\"logo-google\"></ion-icon>\n            <span>Login with Google</span> \n          </button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <div class=\"or-line\">\n            <hr>\n            <span>OR</span>\n          </div>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"links-block\" size=12>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"button new-user-button\" routerLink=\"/home/sign-up\">\n            Create new account\n          </button>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"link-button ion-float-right\" (click)=\"forgotPassword(loginForm)\">\n            Forgot password?\n          </button>\n          <!-- {{ userInfo | json}} -->\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n");
 
 /***/ }),
 
@@ -173,37 +173,21 @@ let LoginPage = class LoginPage {
         this.userService.checkIfIsOnLoginOrSignUpPage(this.router.url);
     }
     login(form) {
-        this.userService.logIn(form.value).subscribe((res) => {
-            const user = this.generateUser(res);
-            localStorage.setItem('token', res.jwt);
-            this.userService.authenticate(user, res.jwt);
-            this.userService.decodedToken = this.userService.decodeToken(res.jwt);
+        this.userService.logIn(form.value).subscribe(() => { }, () => { }, () => {
             form.resetForm();
             this.router.navigate(['home', 'dashboard']);
             this.userService.checkIfIsOnLoginOrSignUpPage('/home/dashboard');
         });
-    }
-    generateUser(res) {
-        let user = {
-            email: res.user.email,
-            username: res.user.username,
-            balance: {
-                availableBal: 0,
-                openBal: 0,
-            }
-        };
-        this.userService.accountDetails().subscribe((r) => {
-            user.balance.availableBal = r.account.initialAmount;
-            user.balance.openBal = parseFloat(r.account.currentBalance);
-            user.balance.currency = r.account.currency;
-        }, () => { }, () => this.userService.user.next(user));
-        return user;
     }
     google() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             const googleUser = yield _capacitor_core__WEBPACK_IMPORTED_MODULE_8__["Plugins"].GoogleAuth.signIn();
             // this.userService.googleAuth().subscribe()
         });
+    }
+    forgotPassword(form) {
+        const email = form.value.email;
+        this.userService.emailExists(email).subscribe(r => console.log(r));
     }
 };
 LoginPage.ctorParameters = () => [

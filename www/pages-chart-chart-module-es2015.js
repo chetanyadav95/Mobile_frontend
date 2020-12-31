@@ -9,7 +9,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"home/watchlist\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Chart</ion-title>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<div class=\"app-chart-container\" id=\"tv_chart_container\"></div>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"home/watchlist\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Chart</ion-title>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<div class=\"app-tv-chart-container\" id=\"tv_chart_container\"></div>\n</ion-content>\n");
 
 /***/ }),
 
@@ -132,6 +132,7 @@ let ChartPage = class ChartPage {
                     title: 'Notification',
                     body: 'TradingView Charting Library API works correctly',
                     callback: () => {
+                        console.log('Noticed!');
                     },
                 }));
                 button.innerHTML = 'Check API';

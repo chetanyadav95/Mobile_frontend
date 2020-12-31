@@ -22,32 +22,11 @@ export class LoginPage implements OnInit {
   }
 
   login(form: NgForm){
-    this.userService.logIn(form.value).subscribe((res:any) => {
-      const user: User = this.generateUser(res)
-      localStorage.setItem('token', res.jwt);
-      this.userService.authenticate(user, res.jwt)
-      this.userService.decodedToken = this.userService.decodeToken(res.jwt)
+    this.userService.logIn(form.value).subscribe(() => {}, () => {}, ()=> {
       form.resetForm()
       this.router.navigate(['home','dashboard'])
       this.userService.checkIfIsOnLoginOrSignUpPage('/home/dashboard')
     })
-  }
-
-  generateUser(res){
-    let user: User = {
-      email: res.user.email,
-      username: res.user.username,
-      balance: {
-        availableBal: 0,
-        openBal: 0,
-      }
-    }
-    this.userService.accountDetails().subscribe((r: any) => {
-      user.balance.availableBal = r.account.initialAmount
-      user.balance.openBal = parseFloat(r.account.currentBalance)
-      user.balance.currency = r.account.currency
-    }, () => {}, () => this.userService.user.next(user))
-    return user
   }
 
   async google(){

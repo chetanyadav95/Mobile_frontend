@@ -102,6 +102,11 @@ ion-item{
     }
 }
 @media(prefers-color-scheme: dark) {
+    .logo{
+        height: 40px;
+        width: 40px;
+        padding-right: 10px;
+    }
     ion-item{
         span{
             color:#949494;
@@ -126,18 +131,18 @@ ion-item{
 }
 @media screen and (max-width: 360px) {
     ion-title{
-      font-size:14px !important;
+      font-size:15px !important;
     }
     ion-label, h3, p{
-      font-size: 12px !important;
+      font-size: 13px !important;
     }
     ion-card-subtitle{
-        font-size: 12px !important;
-    }
-    ion-card-title{
         font-size: 13px !important;
     }
+    ion-card-title{
+        font-size: 14px !important;
+    }
     ion-searchbar{
-        font-size: 12px !important;
+        font-size: 13px !important;
     }
 }

@@ -6,10 +6,10 @@
 			</ion-col>
 		</ion-row>
 	</ion-grid>
-	<ion-card *ngFor="let intraDay of intraday" (click)="openPostModal(intraDay)">
-		<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>
+	<ion-card *ngFor="let intraDay of intraDayPosts" (click)="openPostModal(intraDay)">
+		<ion-card-header><h5>{{intraDay.name}}</h5></ion-card-header>
 		<ion-card-content>
-			<ion-img [src]="intraDay.embededurl" class="ion-margin-bottom"></ion-img>
+			<ion-img [src]="intraDay.imgURL" class="ion-margin-bottom"></ion-img>
 			<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>
 		</ion-card-content>
 	</ion-card>

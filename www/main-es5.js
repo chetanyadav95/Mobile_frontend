@@ -2314,41 +2314,39 @@
       /* harmony import */
 
 
-      var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
-      /*! @capacitor/core */
-      "gcOT");
-      /* harmony import */
-
-
-      var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
       /*! rxjs */
       "qCKp");
       /* harmony import */
 
 
-      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! @auth0/angular-jwt */
       "Nm8O");
       /* harmony import */
 
 
-      var src_environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      var src_environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! src/environments/environment */
       "AytR");
       /* harmony import */
 
 
-      var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      var _ionic_angular__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! @ionic/angular */
       "TEn/");
       /* harmony import */
 
 
-      var _ionic_storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! @ionic/storage */
       "e8h1");
+      /* harmony import */
 
-      var LocalNotifications = _capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Plugins"].LocalNotifications;
+
+      var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      /*! rxjs/operators */
+      "kU1M");
 
       var UserService = /*#__PURE__*/function () {
         function UserService(http, storage, platform) {
@@ -2359,11 +2357,11 @@
           this.http = http;
           this.storage = storage;
           this.platform = platform;
-          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "auth/";
-          this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "settings";
-          this.user = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
-          this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](false);
-          this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+          this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + "auth/";
+          this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + "settings";
+          this.user = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
+          this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
+          this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
           this.platform.ready().then(function () {
             _this11.checkToken();
           });
@@ -2372,14 +2370,30 @@
         _createClass(UserService, [{
           key: "decodeToken",
           value: function decodeToken(token) {
-            var helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__["JwtHelperService"]();
+            var helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__["JwtHelperService"]();
             this.decodedToken = helper.decodeToken(token);
-            console.log(this.decodedToken);
           }
         }, {
           key: "logIn",
           value: function logIn(input) {
-            return this.http.post(this.apiUrl + "login", input);
+            var _this12 = this;
+
+            return this.http.post(this.apiUrl + "login", input).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (res) {
+              var user = {
+                email: res.user.email,
+                username: res.user.username,
+                balance: {
+                  availableBal: 0,
+                  openBal: 0
+                }
+              };
+
+              _this12.authenticate(user, res.jwt);
+
+              _this12.decodedToken = _this12.decodeToken(res.jwt);
+
+              _this12.checkToken();
+            }));
           }
         }, {
           key: "signUp",
@@ -2435,40 +2449,51 @@
         }, {
           key: "authenticate",
           value: function authenticate(user, token) {
-            var _this12 = this;
+            var _this13 = this;
 
             return this.storage.set('token', {
               user: user,
               token: token
             }).then(function (r) {
-              return _this12.authenticated.next({
+              localStorage.setItem('token', token);
+
+              _this13.authenticated.next({
                 user: user,
                 token: token
               });
             });
           }
         }, {
+          key: "getUserFromToken",
+          value: function getUserFromToken() {
+            var user;
+            this.storage.get('token').then(function (r) {
+              if (r) user = r.user;
+            });
+            return user;
+          }
+        }, {
           key: "checkToken",
           value: function checkToken() {
-            var _this13 = this;
+            var _this14 = this;
 
             return this.storage.get('token').then(function (r) {
               if (r) {
-                _this13.authenticated.next(r);
+                _this14.authenticated.next(r);
 
-                _this13.user.next(r.user);
+                _this14.user.next(r.user);
               }
             });
           }
         }, {
           key: "logout",
           value: function logout() {
-            var _this14 = this;
+            var _this15 = this;
 
             this.user.next(null);
             localStorage.removeItem('token');
             return this.storage.remove('token').then(function (r) {
-              return _this14.authenticated.next(false);
+              return _this15.authenticated.next(false);
             });
           }
         }, {
@@ -2501,9 +2526,9 @@
         return [{
           type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]
         }, {
-          type: _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"]
+          type: _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"]
         }, {
-          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"]
+          type: _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["Platform"]
         }];
       };
 
@@ -2594,16 +2619,16 @@
         _createClass(ModalEditWatchlistsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this15 = this;
+            var _this16 = this;
 
             this.userService.getSettings().subscribe(function (r) {
               var datatype = r.data.datatype;
-              if (datatype == 'simulated') _this15.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
+              if (datatype == 'simulated') _this16.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
                 console.log('simulated', r);
               });
-              if (datatype == 'realtime') _this15.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
+              if (datatype == 'realtime') _this16.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
                 console.log('realtime', r);
-                _this15.watchlists = r.data;
+                _this16.watchlists = r.data;
               });
             });
           }
@@ -2823,10 +2848,10 @@
         _createClass(ModalWithdrawAddFundsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this16 = this;
+            var _this17 = this;
 
             this.userService.user.subscribe(function (u) {
-              return _this16.user = u;
+              return _this17.user = u;
             });
           }
         }, {

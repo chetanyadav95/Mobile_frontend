@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 import { Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { map } from 'rxjs/operators';
-const { LocalNotifications } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -30,11 +29,22 @@ export class UserService {
   decodeToken(token){
     const helper = new JwtHelperService();
     this.decodedToken = helper.decodeToken(token);
-    console.log(this.decodedToken)
   }
 
   logIn(input){
-    return this.http.post(this.apiUrl + "login", input)
+    return this.http.post(this.apiUrl + "login", input).pipe(map((res: any) => {
+      const user: User = {
+        email: res.user.email,
+        username: res.user.username,
+        balance: {
+          availableBal: 0,
+          openBal: 0,
+        }
+      }
+      this.authenticate(user, res.jwt)
+      this.decodedToken = this.decodeToken(res.jwt)
+      this.checkToken()
+    }))
   }
 
   signUp(input){
@@ -70,7 +80,18 @@ export class UserService {
   }
 
   authenticate(user, token){
-    return this.storage.set('token',{user, token}).then(r => this.authenticated.next({user, token}))
+    return this.storage.set('token',{user, token}).then(r => {
+      localStorage.setItem('token', token);
+      this.authenticated.next({user, token})
+    })
+  }
+
+  getUserFromToken(){
+    let user: User
+    this.storage.get('token').then(r => {
+      if(r) user = r.user
+    })
+    return user
   }
 
   checkToken(){

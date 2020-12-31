@@ -56,6 +56,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
 /* harmony import */ var src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/modals/modal-post/modal-post.component */ "N+8n");
 /* harmony import */ var src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/services/learning.service */ "uetY");
+/* harmony import */ var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/services/marubozu.service */ "BCkd");
+
 
 
 
@@ -64,12 +66,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let BlogsPage = class BlogsPage {
-    constructor(learningService, modalController) {
+    constructor(learningService, modalController, marubozuService) {
         this.learningService = learningService;
         this.modalController = modalController;
+        this.marubozuService = marubozuService;
     }
     ngOnInit() {
         this.blogs = this.learningService.blogs;
+        this.marubozuService.get('blog').subscribe((r) => {
+            console.log('blog', r);
+            this.blgs = r.data;
+        });
     }
     openPostModal(blog) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -83,7 +90,8 @@ let BlogsPage = class BlogsPage {
 };
 BlogsPage.ctorParameters = () => [
     { type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_6__["LearningService"] },
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"] }
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"] },
+    { type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_7__["MarubozuService"] }
 ];
 BlogsPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
@@ -113,6 +121,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/modals/modal-upload-post/modal-upload-post.component */ "x7KT");
+/* harmony import */ var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/services/marubozu.service */ "BCkd");
+/* harmony import */ var src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/modals/modal-post/modal-post.component */ "N+8n");
+
+
 
 
 
@@ -120,23 +132,38 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let DemoTradingPage = class DemoTradingPage {
-    constructor(modalController) {
+    constructor(modalController, marubozuService) {
         this.modalController = modalController;
+        this.marubozuService = marubozuService;
     }
     ngOnInit() {
+        this.marubozuService.get('demotrading').subscribe((r) => {
+            console.log('demotrading', r);
+            this.demotrading = r.data;
+        });
     }
     openUploadPostModal(id) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
             const modal = yield this.modalController.create({
                 component: src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_5__["ModalUploadPostComponent"],
-                componentProps: { demoTrading: true }
+                componentProps: { demotrading: true }
+            });
+            return yield modal.present();
+        });
+    }
+    openPostModal(demotrading) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
+            const modal = yield this.modalController.create({
+                component: src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__["ModalPostComponent"],
+                componentProps: { blog: demotrading }
             });
             return yield modal.present();
         });
     }
 };
 DemoTradingPage.ctorParameters = () => [
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"] }
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"] },
+    { type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_6__["MarubozuService"] }
 ];
 DemoTradingPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["Component"])({
@@ -172,7 +199,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of positionalPosts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.name}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.imgURL\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of positionalPsts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
 
 /***/ }),
 
@@ -202,26 +229,20 @@ let MarubozuService = class MarubozuService {
     getAll() {
         return this.http.get(this.apiUrl);
     }
-    getBlogs() {
-        return this.http.get(this.apiUrl + 'blog');
+    get(key) {
+        return this.http.get(this.apiUrl + key);
     }
     delete(id) {
         return this.http.delete(this.apiUrl + `del/${id}`);
     }
-    createNewBlog(title, content, image) {
+    createBlog(title, content, image) {
         return this.http.post(this.apiUrl + 'blog', { title, content, image });
     }
     createTutorial(title, embededurl) {
         return this.http.post(this.apiUrl + 'tutorial', { title, embededurl });
     }
-    createIntraday(title, content, stockname, image) {
-        return this.http.post(this.apiUrl + 'intraday', { title, content, stockname, image });
-    }
-    createPositional(title, content, stockname, image) {
-        return this.http.post(this.apiUrl + 'positional', { title, content, stockname, image });
-    }
-    createDemotrading(title, content, stockname, image) {
-        return this.http.post(this.apiUrl + 'demotrading', { title, content, stockname, image });
+    create(title, content, stockname, image, key) {
+        return this.http.post(this.apiUrl + key, { title, content, stockname, image });
     }
 };
 MarubozuService.ctorParameters = () => [
@@ -246,7 +267,7 @@ MarubozuService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let demo of demotrading\" (click)=\"openPostModal(demo)\">\n\t\t<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"demo.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
 
 /***/ }),
 
@@ -443,7 +464,7 @@ LearningPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of videos; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.name}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.url)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of vids; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.title}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.embededurl)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n");
 
 /***/ }),
 
@@ -478,6 +499,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
 /* harmony import */ var src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/modals/modal-post/modal-post.component */ "N+8n");
+/* harmony import */ var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/app/services/marubozu.service */ "BCkd");
+
 
 
 
@@ -487,12 +510,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let PositionalPage = class PositionalPage {
-    constructor(modalController, learningService) {
+    constructor(modalController, learningService, marubozuService) {
         this.modalController = modalController;
         this.learningService = learningService;
+        this.marubozuService = marubozuService;
     }
     ngOnInit() {
         this.positionalPosts = this.learningService.positional;
+        this.marubozuService.get('positional').subscribe((r) => {
+            console.log('positional', r);
+            this.positionalPsts = r.data;
+        });
     }
     openUploadPostModal(id) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
@@ -515,7 +543,8 @@ let PositionalPage = class PositionalPage {
 };
 PositionalPage.ctorParameters = () => [
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["ModalController"] },
-    { type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_4__["LearningService"] }
+    { type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_4__["LearningService"] },
+    { type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_8__["MarubozuService"] }
 ];
 PositionalPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_5__["Component"])({
@@ -574,8 +603,9 @@ let TutorialsPage = class TutorialsPage {
     }
     ngOnInit() {
         this.videos = this.learningService.videos;
-        this.marubozuService.getAll().subscribe(r => console.log(r));
-        this.marubozuService.getBlogs().subscribe(r => console.log(r));
+        this.marubozuService.get('tutorial').subscribe((r) => {
+            this.vids = r.data;
+        });
     }
     sanitizeUrl(url) {
         return this.sanitizer.bypassSecurityTrustResourceUrl(url);
@@ -685,7 +715,7 @@ LearningPageModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n  <ion-list>\n    <ion-item class=\"ion-no-padding\" *ngFor=\"let blog of blogs\">\n      <h5 class=\"blog-link\" (click)=\"openPostModal(blog)\">- {{blog.name}}</h5>\n    </ion-item>\n  </ion-list>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n  <ion-list>\n    <ion-item class=\"ion-no-padding\" *ngFor=\"let blog of blgs\">\n      <h5 class=\"blog-link\" (click)=\"openPostModal(blog)\">- {{blog.title}}</h5>\n    </ion-item>\n  </ion-list>\n</ion-content>\n");
 
 /***/ }),
 
@@ -768,7 +798,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of intraDayPosts\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.name}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.imgURL\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of intraday\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
 
 /***/ }),
 
@@ -823,6 +853,10 @@ let IntraDayPage = class IntraDayPage {
     }
     ngOnInit() {
         this.intraDayPosts = this.learningService.intraDay;
+        this.marubozuService.get('intraday').subscribe((r) => {
+            console.log('intraday', r);
+            this.intraday = r.data;
+        });
     }
     openUploadPostModal(id) {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {

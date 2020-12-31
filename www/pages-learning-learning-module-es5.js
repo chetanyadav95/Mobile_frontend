@@ -141,19 +141,32 @@
       var src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! src/app/services/learning.service */
       "uetY");
+      /* harmony import */
+
+
+      var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! src/app/services/marubozu.service */
+      "BCkd");
 
       var BlogsPage = /*#__PURE__*/function () {
-        function BlogsPage(learningService, modalController) {
+        function BlogsPage(learningService, modalController, marubozuService) {
           _classCallCheck(this, BlogsPage);
 
           this.learningService = learningService;
           this.modalController = modalController;
+          this.marubozuService = marubozuService;
         }
 
         _createClass(BlogsPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
+            var _this = this;
+
             this.blogs = this.learningService.blogs;
+            this.marubozuService.get('blog').subscribe(function (r) {
+              console.log('blog', r);
+              _this.blgs = r.data;
+            });
           }
         }, {
           key: "openPostModal",
@@ -198,6 +211,8 @@
           type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_6__["LearningService"]
         }, {
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"]
+        }, {
+          type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_7__["MarubozuService"]
         }];
       };
 
@@ -264,17 +279,37 @@
       var src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
       /*! src/app/modals/modal-upload-post/modal-upload-post.component */
       "x7KT");
+      /* harmony import */
+
+
+      var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+      /*! src/app/services/marubozu.service */
+      "BCkd");
+      /* harmony import */
+
+
+      var src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      /*! src/app/modals/modal-post/modal-post.component */
+      "N+8n");
 
       var DemoTradingPage = /*#__PURE__*/function () {
-        function DemoTradingPage(modalController) {
+        function DemoTradingPage(modalController, marubozuService) {
           _classCallCheck(this, DemoTradingPage);
 
           this.modalController = modalController;
+          this.marubozuService = marubozuService;
         }
 
         _createClass(DemoTradingPage, [{
           key: "ngOnInit",
-          value: function ngOnInit() {}
+          value: function ngOnInit() {
+            var _this2 = this;
+
+            this.marubozuService.get('demotrading').subscribe(function (r) {
+              console.log('demotrading', r);
+              _this2.demotrading = r.data;
+            });
+          }
         }, {
           key: "openUploadPostModal",
           value: function openUploadPostModal(id) {
@@ -288,7 +323,7 @@
                       return this.modalController.create({
                         component: src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_5__["ModalUploadPostComponent"],
                         componentProps: {
-                          demoTrading: true
+                          demotrading: true
                         }
                       });
 
@@ -308,6 +343,39 @@
               }, _callee2, this);
             }));
           }
+        }, {
+          key: "openPostModal",
+          value: function openPostModal(demotrading) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+              var modal;
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                  switch (_context3.prev = _context3.next) {
+                    case 0:
+                      _context3.next = 2;
+                      return this.modalController.create({
+                        component: src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__["ModalPostComponent"],
+                        componentProps: {
+                          blog: demotrading
+                        }
+                      });
+
+                    case 2:
+                      modal = _context3.sent;
+                      _context3.next = 5;
+                      return modal.present();
+
+                    case 5:
+                      return _context3.abrupt("return", _context3.sent);
+
+                    case 6:
+                    case "end":
+                      return _context3.stop();
+                  }
+                }
+              }, _callee3, this);
+            }));
+          }
         }]);
 
         return DemoTradingPage;
@@ -316,6 +384,8 @@
       DemoTradingPage.ctorParameters = function () {
         return [{
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"]
+        }, {
+          type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_6__["MarubozuService"]
         }];
       };
 
@@ -363,7 +433,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of positionalPosts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.name}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.imgURL\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of positionalPsts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
       /***/
     },
 
@@ -425,9 +495,9 @@
             return this.http.get(this.apiUrl);
           }
         }, {
-          key: "getBlogs",
-          value: function getBlogs() {
-            return this.http.get(this.apiUrl + 'blog');
+          key: "get",
+          value: function get(key) {
+            return this.http.get(this.apiUrl + key);
           }
         }, {
           key: "delete",
@@ -435,8 +505,8 @@
             return this.http["delete"](this.apiUrl + "del/".concat(id));
           }
         }, {
-          key: "createNewBlog",
-          value: function createNewBlog(title, content, image) {
+          key: "createBlog",
+          value: function createBlog(title, content, image) {
             return this.http.post(this.apiUrl + 'blog', {
               title: title,
               content: content,
@@ -452,29 +522,9 @@
             });
           }
         }, {
-          key: "createIntraday",
-          value: function createIntraday(title, content, stockname, image) {
-            return this.http.post(this.apiUrl + 'intraday', {
-              title: title,
-              content: content,
-              stockname: stockname,
-              image: image
-            });
-          }
-        }, {
-          key: "createPositional",
-          value: function createPositional(title, content, stockname, image) {
-            return this.http.post(this.apiUrl + 'positional', {
-              title: title,
-              content: content,
-              stockname: stockname,
-              image: image
-            });
-          }
-        }, {
-          key: "createDemotrading",
-          value: function createDemotrading(title, content, stockname, image) {
-            return this.http.post(this.apiUrl + 'demotrading', {
+          key: "create",
+          value: function create(title, content, stockname, image, key) {
+            return this.http.post(this.apiUrl + key, {
               title: title,
               content: content,
               stockname: stockname,
@@ -514,7 +564,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let demo of demotrading\" (click)=\"openPostModal(demo)\">\n\t\t<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"demo.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
       /***/
     },
 
@@ -568,22 +618,22 @@
         _createClass(VideoSwiperDirective, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this = this;
+            var _this3 = this;
 
             var gesture = this.gestureCtrl.create({
               gestureName: 'video-swiper',
               el: this.el.nativeElement,
               canStart: function canStart() {
-                _this.onStart();
+                _this3.onStart();
               },
               onStart: function onStart() {
-                _this.onStart();
+                _this3.onStart();
               },
               onMove: function onMove() {
-                _this.onMove();
+                _this3.onMove();
               },
               onEnd: function onEnd() {
-                _this.onUp();
+                _this3.onUp();
               }
             });
             gesture.enable();
@@ -867,7 +917,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of videos; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.name}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.url)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of vids; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.title}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.embededurl)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n";
       /***/
     },
 
@@ -958,56 +1008,36 @@
       var src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! src/app/modals/modal-post/modal-post.component */
       "N+8n");
+      /* harmony import */
+
+
+      var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      /*! src/app/services/marubozu.service */
+      "BCkd");
 
       var PositionalPage = /*#__PURE__*/function () {
-        function PositionalPage(modalController, learningService) {
+        function PositionalPage(modalController, learningService, marubozuService) {
           _classCallCheck(this, PositionalPage);
 
           this.modalController = modalController;
           this.learningService = learningService;
+          this.marubozuService = marubozuService;
         }
 
         _createClass(PositionalPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
+            var _this4 = this;
+
             this.positionalPosts = this.learningService.positional;
+            this.marubozuService.get('positional').subscribe(function (r) {
+              console.log('positional', r);
+              _this4.positionalPsts = r.data;
+            });
           }
         }, {
           key: "openUploadPostModal",
           value: function openUploadPostModal(id) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-              var modal;
-              return regeneratorRuntime.wrap(function _callee3$(_context3) {
-                while (1) {
-                  switch (_context3.prev = _context3.next) {
-                    case 0:
-                      _context3.next = 2;
-                      return this.modalController.create({
-                        component: src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_3__["ModalUploadPostComponent"],
-                        componentProps: {
-                          positional: true
-                        }
-                      });
-
-                    case 2:
-                      modal = _context3.sent;
-                      _context3.next = 5;
-                      return modal.present();
-
-                    case 5:
-                      return _context3.abrupt("return", _context3.sent);
-
-                    case 6:
-                    case "end":
-                      return _context3.stop();
-                  }
-                }
-              }, _callee3, this);
-            }));
-          }
-        }, {
-          key: "openPostModal",
-          value: function openPostModal(positional) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
               var modal;
               return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -1016,9 +1046,9 @@
                     case 0:
                       _context4.next = 2;
                       return this.modalController.create({
-                        component: src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__["ModalPostComponent"],
+                        component: src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_3__["ModalUploadPostComponent"],
                         componentProps: {
-                          blog: positional
+                          positional: true
                         }
                       });
 
@@ -1038,6 +1068,39 @@
               }, _callee4, this);
             }));
           }
+        }, {
+          key: "openPostModal",
+          value: function openPostModal(positional) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+              var modal;
+              return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                  switch (_context5.prev = _context5.next) {
+                    case 0:
+                      _context5.next = 2;
+                      return this.modalController.create({
+                        component: src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__["ModalPostComponent"],
+                        componentProps: {
+                          blog: positional
+                        }
+                      });
+
+                    case 2:
+                      modal = _context5.sent;
+                      _context5.next = 5;
+                      return modal.present();
+
+                    case 5:
+                      return _context5.abrupt("return", _context5.sent);
+
+                    case 6:
+                    case "end":
+                      return _context5.stop();
+                  }
+                }
+              }, _callee5, this);
+            }));
+          }
         }]);
 
         return PositionalPage;
@@ -1048,6 +1111,8 @@
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["ModalController"]
         }, {
           type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_4__["LearningService"]
+        }, {
+          type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_8__["MarubozuService"]
         }];
       };
 
@@ -1153,12 +1218,11 @@
         _createClass(TutorialsPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
+            var _this5 = this;
+
             this.videos = this.learningService.videos;
-            this.marubozuService.getAll().subscribe(function (r) {
-              return console.log(r);
-            });
-            this.marubozuService.getBlogs().subscribe(function (r) {
-              return console.log(r);
+            this.marubozuService.get('tutorial').subscribe(function (r) {
+              _this5.vids = r.data;
             });
           }
         }, {
@@ -1340,7 +1404,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n  <ion-list>\n    <ion-item class=\"ion-no-padding\" *ngFor=\"let blog of blogs\">\n      <h5 class=\"blog-link\" (click)=\"openPostModal(blog)\">- {{blog.name}}</h5>\n    </ion-item>\n  </ion-list>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n  <ion-list>\n    <ion-item class=\"ion-no-padding\" *ngFor=\"let blog of blgs\">\n      <h5 class=\"blog-link\" (click)=\"openPostModal(blog)\">- {{blog.title}}</h5>\n    </ion-item>\n  </ion-list>\n</ion-content>\n";
       /***/
     },
 
@@ -1495,7 +1559,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of intraDayPosts\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.name}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.imgURL\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of intraday\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
       /***/
     },
 
@@ -1608,44 +1672,17 @@
         _createClass(IntraDayPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
+            var _this6 = this;
+
             this.intraDayPosts = this.learningService.intraDay;
+            this.marubozuService.get('intraday').subscribe(function (r) {
+              console.log('intraday', r);
+              _this6.intraday = r.data;
+            });
           }
         }, {
           key: "openUploadPostModal",
           value: function openUploadPostModal(id) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-              var modal;
-              return regeneratorRuntime.wrap(function _callee5$(_context5) {
-                while (1) {
-                  switch (_context5.prev = _context5.next) {
-                    case 0:
-                      _context5.next = 2;
-                      return this.modalController.create({
-                        component: src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_6__["ModalUploadPostComponent"],
-                        componentProps: {
-                          intraDay: true
-                        }
-                      });
-
-                    case 2:
-                      modal = _context5.sent;
-                      _context5.next = 5;
-                      return modal.present();
-
-                    case 5:
-                      return _context5.abrupt("return", _context5.sent);
-
-                    case 6:
-                    case "end":
-                      return _context5.stop();
-                  }
-                }
-              }, _callee5, this);
-            }));
-          }
-        }, {
-          key: "openPostModal",
-          value: function openPostModal(intraDay) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
               var modal;
               return regeneratorRuntime.wrap(function _callee6$(_context6) {
@@ -1654,9 +1691,9 @@
                     case 0:
                       _context6.next = 2;
                       return this.modalController.create({
-                        component: src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__["ModalPostComponent"],
+                        component: src_app_modals_modal_upload_post_modal_upload_post_component__WEBPACK_IMPORTED_MODULE_6__["ModalUploadPostComponent"],
                         componentProps: {
-                          blog: intraDay
+                          intraDay: true
                         }
                       });
 
@@ -1674,6 +1711,39 @@
                   }
                 }
               }, _callee6, this);
+            }));
+          }
+        }, {
+          key: "openPostModal",
+          value: function openPostModal(intraDay) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+              var modal;
+              return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                while (1) {
+                  switch (_context7.prev = _context7.next) {
+                    case 0:
+                      _context7.next = 2;
+                      return this.modalController.create({
+                        component: src_app_modals_modal_post_modal_post_component__WEBPACK_IMPORTED_MODULE_7__["ModalPostComponent"],
+                        componentProps: {
+                          blog: intraDay
+                        }
+                      });
+
+                    case 2:
+                      modal = _context7.sent;
+                      _context7.next = 5;
+                      return modal.present();
+
+                    case 5:
+                      return _context7.abrupt("return", _context7.sent);
+
+                    case 6:
+                    case "end":
+                      return _context7.stop();
+                  }
+                }
+              }, _callee7, this);
             }));
           }
         }]);
@@ -1967,7 +2037,7 @@
         }, {
           key: "takePicture",
           value: function takePicture(sourceType) {
-            var _this2 = this;
+            var _this7 = this;
 
             var options = {
               quality: 100,
@@ -1976,18 +2046,18 @@
               correctOrientation: true
             };
             this.camera.getPicture(options).then(function (imagePath) {
-              if (_this2.plt.is('android') && sourceType === _this2.camera.PictureSourceType.PHOTOLIBRARY) {
-                _this2.filePath.resolveNativePath(imagePath).then(function (filePath) {
+              if (_this7.plt.is('android') && sourceType === _this7.camera.PictureSourceType.PHOTOLIBRARY) {
+                _this7.filePath.resolveNativePath(imagePath).then(function (filePath) {
                   var correctPath = filePath.substr(0, filePath.lastIndexOf('/') + 1);
                   var currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.lastIndexOf('?'));
 
-                  _this2.copyFileToLocalDir(correctPath, currentName, _this2.createFileName());
+                  _this7.copyFileToLocalDir(correctPath, currentName, _this7.createFileName());
                 });
               } else {
                 var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
                 var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
 
-                _this2.copyFileToLocalDir(correctPath, currentName, _this2.createFileName());
+                _this7.copyFileToLocalDir(correctPath, currentName, _this7.createFileName());
               }
             });
           }
@@ -2002,18 +2072,18 @@
         }, {
           key: "copyFileToLocalDir",
           value: function copyFileToLocalDir(namePath, currentName, newFileName) {
-            var _this3 = this;
+            var _this8 = this;
 
             this.file.copyFile(namePath, currentName, this.file.dataDirectory, newFileName).then(function (success) {
-              _this3.updateStoredImages(newFileName);
+              _this8.updateStoredImages(newFileName);
             }, function (error) {
-              _this3.presentToast('Error while storing file.');
+              _this8.presentToast('Error while storing file.');
             });
           }
         }, {
           key: "updateStoredImages",
           value: function updateStoredImages(name) {
-            var _this4 = this;
+            var _this9 = this;
 
             this.storage.get(STORAGE_KEY).then(function (images) {
               var arr = JSON.parse(images);
@@ -2021,37 +2091,37 @@
               if (!arr) {
                 var newImages = [name];
 
-                _this4.storage.set(STORAGE_KEY, JSON.stringify(newImages));
+                _this9.storage.set(STORAGE_KEY, JSON.stringify(newImages));
               } else {
                 arr.push(name);
 
-                _this4.storage.set(STORAGE_KEY, JSON.stringify(arr));
+                _this9.storage.set(STORAGE_KEY, JSON.stringify(arr));
               }
 
-              var filePath = _this4.file.dataDirectory + name;
+              var filePath = _this9.file.dataDirectory + name;
 
-              var resPath = _this4.pathForImage(filePath);
+              var resPath = _this9.pathForImage(filePath);
 
               var newEntry = {
                 name: name,
                 path: resPath,
                 filePath: filePath
               };
-              _this4.images = [newEntry].concat(_toConsumableArray(_this4.images));
+              _this9.images = [newEntry].concat(_toConsumableArray(_this9.images));
 
-              _this4.ref.detectChanges(); // trigger change detection cycle
+              _this9.ref.detectChanges(); // trigger change detection cycle
 
             });
           }
         }, {
           key: "loadStoredImages",
           value: function loadStoredImages() {
-            var _this5 = this;
+            var _this10 = this;
 
             this.storage.get(STORAGE_KEY).then(function (images) {
               if (images) {
                 var arr = JSON.parse(images);
-                _this5.images = [];
+                _this10.images = [];
 
                 var _iterator = _createForOfIteratorHelper(arr),
                     _step;
@@ -2059,11 +2129,11 @@
                 try {
                   for (_iterator.s(); !(_step = _iterator.n()).done;) {
                     var img = _step.value;
-                    var filePath = _this5.file.dataDirectory + img;
+                    var filePath = _this10.file.dataDirectory + img;
 
-                    var resPath = _this5.pathForImage(filePath);
+                    var resPath = _this10.pathForImage(filePath);
 
-                    _this5.images.push({
+                    _this10.images.push({
                       name: img,
                       path: resPath,
                       filePath: filePath
@@ -2090,13 +2160,13 @@
         }, {
           key: "presentToast",
           value: function presentToast(text) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
               var toast;
-              return regeneratorRuntime.wrap(function _callee7$(_context7) {
+              return regeneratorRuntime.wrap(function _callee8$(_context8) {
                 while (1) {
-                  switch (_context7.prev = _context7.next) {
+                  switch (_context8.prev = _context8.next) {
                     case 0:
-                      _context7.next = 2;
+                      _context8.next = 2;
                       return this.toastController.create({
                         message: text,
                         position: 'bottom',
@@ -2104,36 +2174,36 @@
                       });
 
                     case 2:
-                      toast = _context7.sent;
+                      toast = _context8.sent;
                       toast.present();
 
                     case 4:
                     case "end":
-                      return _context7.stop();
+                      return _context8.stop();
                   }
                 }
-              }, _callee7, this);
+              }, _callee8, this);
             }));
           }
         }, {
           key: "selectImage",
           value: function selectImage() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
-              var _this6 = this;
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee9() {
+              var _this11 = this;
 
               var actionSheet;
-              return regeneratorRuntime.wrap(function _callee8$(_context8) {
+              return regeneratorRuntime.wrap(function _callee9$(_context9) {
                 while (1) {
-                  switch (_context8.prev = _context8.next) {
+                  switch (_context9.prev = _context9.next) {
                     case 0:
-                      _context8.next = 2;
+                      _context9.next = 2;
                       return this.actionSheetController.create({
                         header: "Select Image Source",
                         buttons: [{
                           text: 'Load from Library',
                           icon: 'image',
                           handler: function handler() {
-                            _this6.takePicture(_this6.camera.PictureSourceType.PHOTOLIBRARY);
+                            _this11.takePicture(_this11.camera.PictureSourceType.PHOTOLIBRARY);
                           }
                         }, // {
                         //   text: 'Use Camera',
@@ -2149,28 +2219,28 @@
                       });
 
                     case 2:
-                      actionSheet = _context8.sent;
-                      _context8.next = 5;
+                      actionSheet = _context9.sent;
+                      _context9.next = 5;
                       return actionSheet.present();
 
                     case 5:
                     case "end":
-                      return _context8.stop();
+                      return _context9.stop();
                   }
                 }
-              }, _callee8, this);
+              }, _callee9, this);
             }));
           }
         }, {
           key: "presentActionSheet",
           value: function presentActionSheet() {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee9() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
               var actionSheet;
-              return regeneratorRuntime.wrap(function _callee9$(_context9) {
+              return regeneratorRuntime.wrap(function _callee10$(_context10) {
                 while (1) {
-                  switch (_context9.prev = _context9.next) {
+                  switch (_context10.prev = _context10.next) {
                     case 0:
-                      _context9.next = 2;
+                      _context10.next = 2;
                       return this.actionSheetController.create({
                         // header: 'Albums',
                         cssClass: 'my-custom-class',
@@ -2193,22 +2263,22 @@
                       });
 
                     case 2:
-                      actionSheet = _context9.sent;
-                      _context9.next = 5;
+                      actionSheet = _context10.sent;
+                      _context10.next = 5;
                       return actionSheet.present();
 
                     case 5:
                     case "end":
-                      return _context9.stop();
+                      return _context10.stop();
                   }
                 }
-              }, _callee9, this);
+              }, _callee10, this);
             }));
           }
         }, {
           key: "deleteImage",
           value: function deleteImage(imgEntry, position) {
-            var _this7 = this;
+            var _this12 = this;
 
             this.images.splice(position, 1);
             this.storage.get(STORAGE_KEY).then(function (images) {
@@ -2217,32 +2287,32 @@
                 return name != imgEntry.name;
               });
 
-              _this7.storage.set(STORAGE_KEY, JSON.stringify(filtered));
+              _this12.storage.set(STORAGE_KEY, JSON.stringify(filtered));
 
               var correctPath = imgEntry.filePath.substr(0, imgEntry.filePath.lastIndexOf('/') + 1);
 
-              _this7.file.removeFile(correctPath, imgEntry.name).then(function (res) {
-                _this7.presentToast('File removed.');
+              _this12.file.removeFile(correctPath, imgEntry.name).then(function (res) {
+                _this12.presentToast('File removed.');
               });
             });
           }
         }, {
           key: "startUpload",
           value: function startUpload(imgEntry) {
-            var _this8 = this;
+            var _this13 = this;
 
             this.file.resolveLocalFilesystemUrl(imgEntry.filePath).then(function (entry) {
               entry.file(function (file) {
-                return _this8.readFile(file);
+                return _this13.readFile(file);
               });
             })["catch"](function (err) {
-              _this8.presentToast('Error while reading file.');
+              _this13.presentToast('Error while reading file.');
             });
           }
         }, {
           key: "readFile",
           value: function readFile(file) {
-            var _this9 = this;
+            var _this14 = this;
 
             var reader = new FileReader();
 
@@ -2252,7 +2322,7 @@
                 type: file.type
               });
 
-              _this9.formData.append('file', imgBlob, file.name); // this.uploadImageData(formData);
+              _this14.formData.append('file', imgBlob, file.name); // this.uploadImageData(formData);
 
             };
 
@@ -2261,20 +2331,20 @@
         }, {
           key: "uploadImageData",
           value: function uploadImageData(formData) {
-            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
               var loading;
-              return regeneratorRuntime.wrap(function _callee10$(_context10) {
+              return regeneratorRuntime.wrap(function _callee11$(_context11) {
                 while (1) {
-                  switch (_context10.prev = _context10.next) {
+                  switch (_context11.prev = _context11.next) {
                     case 0:
-                      _context10.next = 2;
+                      _context11.next = 2;
                       return this.loadingController.create({
                         message: 'Uploading image...'
                       });
 
                     case 2:
-                      loading = _context10.sent;
-                      _context10.next = 5;
+                      loading = _context11.sent;
+                      _context11.next = 5;
                       return loading.present();
 
                     case 5:
@@ -2295,10 +2365,10 @@
 
                     case 6:
                     case "end":
-                      return _context10.stop();
+                      return _context11.stop();
                   }
                 }
-              }, _callee10, this);
+              }, _callee11, this);
             }));
           }
         }]);

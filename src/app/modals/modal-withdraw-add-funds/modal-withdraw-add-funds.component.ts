@@ -14,7 +14,7 @@ export class ModalWithdrawAddFundsComponent implements OnInit {
   constructor(private modalCtrl: ModalController, private userService: UserService) { }
 
   ngOnInit() {
-    this.userService.user.subscribe(u => this.user = u)
+    this.userService.authenticated.subscribe(u => this.user = u.user)
   }
 
   dismissModal(){

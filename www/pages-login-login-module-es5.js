@@ -179,7 +179,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-img src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form #loginForm=\"ngForm\" (ngSubmit)=\"login(loginForm)\">\n    <!-- <ion-title class=\"ion-text-center ion-margin-vertical\" color=\"warning\"><h1>Welcome to Empuraan</h1></ion-title> -->\n    <ion-title class=\"ion-text-center ion-margin-vertical\"><h2>Login</h2></ion-title>\n    <ion-grid>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">E-mail</ion-label>\n            <ion-input type=\"email\" required [ngModel]=\"'test@gmail.com'\" name=\"email\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">Password</ion-label>\n            <ion-input type=\"password\" required [ngModel]=\"'1234'\" name=\"password\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"button-col\">\n          <button class=\"button login-button\" type=\"submit\">Login</button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <button class=\"button google-button\" color=\"danger\" (click)=\"google()\">\n            <ion-icon name=\"logo-google\"></ion-icon>\n            <span>Login with Google</span> \n          </button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <div class=\"or-line\">\n            <hr>\n            <span>OR</span>\n          </div>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"links-block\" size=12>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"button new-user-button\" routerLink=\"/home/sign-up\">\n            Create new account\n          </button>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"link-button ion-float-right\">\n            Forgot password?\n          </button>\n          <!-- {{ userInfo | json}} -->\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n  <ion-toolbar>\n    <ion-img src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <form #loginForm=\"ngForm\">\n    <!-- <ion-title class=\"ion-text-center ion-margin-vertical\" color=\"warning\"><h1>Welcome to Empuraan</h1></ion-title> -->\n    <ion-title class=\"ion-text-center ion-margin-vertical\"><h2>Login</h2></ion-title>\n    <ion-grid>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">E-mail</ion-label>\n            <ion-input type=\"email\" required [ngModel]=\"'test@gmail.com'\" name=\"email\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <ion-item>\n            <ion-label position=\"floating\">Password</ion-label>\n            <ion-input type=\"password\" required [ngModel]=\"'1234'\" name=\"password\"></ion-input>\n          </ion-item>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"button-col\">\n          <button class=\"button login-button\" type=\"submit\" (click)=\"login(loginForm)\">Login</button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <button class=\"button google-button\" color=\"danger\" (click)=\"google()\">\n            <ion-icon name=\"logo-google\"></ion-icon>\n            <span>Login with Google</span> \n          </button>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col>\n          <div class=\"or-line\">\n            <hr>\n            <span>OR</span>\n          </div>\n        </ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col class=\"links-block\" size=12>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"button new-user-button\" routerLink=\"/home/sign-up\">\n            Create new account\n          </button>\n          <button color=\"tertiary\" size=\"small\" fill=\"clear\" class=\"link-button ion-float-right\" (click)=\"forgotPassword(loginForm)\">\n            Forgot password?\n          </button>\n          <!-- {{ userInfo | json}} -->\n        </ion-col>\n      </ion-row>\n    </ion-grid>\n  </form>\n</ion-content>\n";
       /***/
     },
 
@@ -336,42 +336,13 @@
           value: function login(form) {
             var _this = this;
 
-            this.userService.logIn(form.value).subscribe(function (res) {
-              var user = _this.generateUser(res);
-
-              localStorage.setItem('token', res.jwt);
-
-              _this.userService.authenticate(user, res.jwt);
-
-              _this.userService.decodedToken = _this.userService.decodeToken(res.jwt);
+            this.userService.logIn(form.value).subscribe(function () {}, function () {}, function () {
               form.resetForm();
 
               _this.router.navigate(['home', 'dashboard']);
 
               _this.userService.checkIfIsOnLoginOrSignUpPage('/home/dashboard');
             });
-          }
-        }, {
-          key: "generateUser",
-          value: function generateUser(res) {
-            var _this2 = this;
-
-            var user = {
-              email: res.user.email,
-              username: res.user.username,
-              balance: {
-                availableBal: 0,
-                openBal: 0
-              }
-            };
-            this.userService.accountDetails().subscribe(function (r) {
-              user.balance.availableBal = r.account.initialAmount;
-              user.balance.openBal = parseFloat(r.account.currentBalance);
-              user.balance.currency = r.account.currency;
-            }, function () {}, function () {
-              return _this2.userService.user.next(user);
-            });
-            return user;
           }
         }, {
           key: "google",
@@ -395,6 +366,14 @@
                 }
               }, _callee);
             }));
+          }
+        }, {
+          key: "forgotPassword",
+          value: function forgotPassword(form) {
+            var email = form.value.email;
+            this.userService.emailExists(email).subscribe(function (r) {
+              return console.log(r);
+            });
           }
         }]);
 
@@ -503,25 +482,25 @@
         }]);
 
         function GoogleAuthWeb() {
-          var _this3;
+          var _this2;
 
           _classCallCheck(this, GoogleAuthWeb);
 
-          _this3 = _super.call(this, {
+          _this2 = _super.call(this, {
             name: 'GoogleAuth',
             platforms: ['web']
           });
-          if (!_this3.webConfigured) return _possibleConstructorReturn(_this3);
-          _this3.gapiLoaded = new Promise(function (resolve) {
+          if (!_this2.webConfigured) return _possibleConstructorReturn(_this2);
+          _this2.gapiLoaded = new Promise(function (resolve) {
             // HACK: Relying on window object, can't get property in gapi.load callback
             window.gapiResolve = resolve;
 
-            _this3.initialize();
+            _this2.initialize();
           });
 
-          _this3.addUserChangeListener();
+          _this2.addUserChangeListener();
 
-          return _this3;
+          return _this2;
         }
 
         _createClass(GoogleAuthWeb, [{
@@ -556,14 +535,14 @@
           key: "signIn",
           value: function signIn() {
             return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-              var _this4 = this;
+              var _this3 = this;
 
               return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
                   switch (_context3.prev = _context3.next) {
                     case 0:
                       return _context3.abrupt("return", new Promise(function (resolve, reject) {
-                        return __awaiter(_this4, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+                        return __awaiter(_this3, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                           var serverAuthCode, needsOfflineAccess, offlineAccessResponse, googleUser, user;
                           return regeneratorRuntime.wrap(function _callee2$(_context2) {
                             while (1) {
@@ -683,7 +662,7 @@
           key: "addUserChangeListener",
           value: function addUserChangeListener() {
             return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-              var _this5 = this;
+              var _this4 = this;
 
               return regeneratorRuntime.wrap(function _callee6$(_context6) {
                 while (1) {
@@ -694,7 +673,7 @@
 
                     case 2:
                       gapi.auth2.getAuthInstance().currentUser.listen(function (googleUser) {
-                        _this5.notifyListeners("userChange", googleUser.isSignedIn() ? _this5.getUserFrom(googleUser) : null);
+                        _this4.notifyListeners("userChange", googleUser.isSignedIn() ? _this4.getUserFrom(googleUser) : null);
                       });
 
                     case 3:

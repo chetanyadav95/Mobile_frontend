@@ -15,7 +15,7 @@ export class FundsPage implements OnInit {
   constructor(private router: Router, private modalController: ModalController, private userService: UserService) { }
 
   ngOnInit() {
-    this.userService.user.subscribe(u => this.user = u)
+    this.userService.authenticated.subscribe(u => this.user = u.user)
   }
 
   navigateToAccount(){

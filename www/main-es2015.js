@@ -1475,12 +1475,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "tk/3");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _capacitor_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @capacitor/core */ "gcOT");
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs */ "qCKp");
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @auth0/angular-jwt */ "Nm8O");
-/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/environments/environment */ "AytR");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic/storage */ "e8h1");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "qCKp");
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @auth0/angular-jwt */ "Nm8O");
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/environments/environment */ "AytR");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/storage */ "e8h1");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
 
 
 
@@ -1490,28 +1490,38 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const { LocalNotifications } = _capacitor_core__WEBPACK_IMPORTED_MODULE_3__["Plugins"];
 let UserService = class UserService {
     constructor(http, storage, platform) {
         this.http = http;
         this.storage = storage;
         this.platform = platform;
-        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "auth/";
-        this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].apiUrl + "settings";
-        this.user = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](null);
-        this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_4__["BehaviorSubject"](false);
-        this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_4__["Subject"]();
+        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + "auth/";
+        this.apiSettingsUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_5__["environment"].apiUrl + "settings";
+        this.user = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](null);
+        this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
+        this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
         this.platform.ready().then(() => {
             this.checkToken();
         });
     }
     decodeToken(token) {
-        const helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_5__["JwtHelperService"]();
+        const helper = new _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_4__["JwtHelperService"]();
         this.decodedToken = helper.decodeToken(token);
-        console.log(this.decodedToken);
     }
     logIn(input) {
-        return this.http.post(this.apiUrl + "login", input);
+        return this.http.post(this.apiUrl + "login", input).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])((res) => {
+            const user = {
+                email: res.user.email,
+                username: res.user.username,
+                balance: {
+                    availableBal: 0,
+                    openBal: 0,
+                }
+            };
+            this.authenticate(user, res.jwt);
+            this.decodedToken = this.decodeToken(res.jwt);
+            this.checkToken();
+        }));
     }
     signUp(input) {
         return this.http.post(this.apiUrl + "signup", input);
@@ -1538,7 +1548,18 @@ let UserService = class UserService {
         return this.http.put(this.apiSettingsUrl, { id, datatype, risk, leverage: +leverage });
     }
     authenticate(user, token) {
-        return this.storage.set('token', { user, token }).then(r => this.authenticated.next({ user, token }));
+        return this.storage.set('token', { user, token }).then(r => {
+            localStorage.setItem('token', token);
+            this.authenticated.next({ user, token });
+        });
+    }
+    getUserFromToken() {
+        let user;
+        this.storage.get('token').then(r => {
+            if (r)
+                user = r.user;
+        });
+        return user;
     }
     checkToken() {
         return this.storage.get('token').then(r => {
@@ -1575,8 +1596,8 @@ let UserService = class UserService {
 };
 UserService.ctorParameters = () => [
     { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"] },
-    { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_8__["Storage"] },
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"] }
+    { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_7__["Storage"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_6__["Platform"] }
 ];
 UserService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["Injectable"])({
