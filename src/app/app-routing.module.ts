@@ -8,7 +8,7 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'chart',
+    path: 'chart/:id',
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/chart/chart.module').then( m => m.ChartPageModule)
   },

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { SocketService } from 'src/app/services/socket.service';
 import { TradeHistoryService } from 'src/app/services/trade-history.service';
 import {
@@ -99,58 +100,61 @@ export class ChartPage implements OnInit, OnDestroy {
     this._containerId = containerId || this._containerId;
   }
   
-  constructor(public tradeHistory: TradeHistoryService, public socketService: SocketService) { }
+  constructor(public tradeHistory: TradeHistoryService, public socketService: SocketService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-
-    this.loadTradingViewData();
-        const widgetOptions: ChartingLibraryWidgetOptions = {
-            symbol: this._symbol,
-            datafeed: this.Datafeed,
-            interval: this._interval,
-            container_id: this._containerId,
-            library_path: this._libraryPath,
-            locale: this.getLanguageFromURL() || 'en',
-            disabled_features: ['use_localstorage_for_settings'],
-            enabled_features: ['study_templates'],
-            charts_storage_url: this._chartsStorageUrl,
-            charts_storage_api_version: this._chartsStorageApiVersion,
-            client_id: this._clientId,
-            user_id: this._userId,
-            fullscreen: this._fullscreen,
-            autosize: this._autosize,
-            overrides: {
-        "mainSeriesProperties.showCountdown": true,
-				"paneProperties.background": "#131722",
-				"paneProperties.vertGridProperties.color": "#363c4e",
-				"paneProperties.horzGridProperties.color": "#363c4e",
-				"symbolWatermarkProperties.transparency": 90,
-				"scalesProperties.textColor" : "#AAA",
-				"mainSeriesProperties.candleStyle.wickUpColor": '#336854',
-				"mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
-			}
-        };
-
-    const tvWidget = new widget(widgetOptions);
-    this._tvWidget = tvWidget;
-
-    tvWidget.onChartReady(() => {
-      tvWidget.headerReady().then(() => {
-        const button = tvWidget.createButton();
-        button.setAttribute('title', 'Click to show a notification popup');
-        button.classList.add('apply-common-tooltip');
-        button.addEventListener('click', () =>
-          tvWidget.showNoticeDialog({
-            title: 'Notification',
-            body: 'TradingView Charting Library API works correctly',
-            callback: () => {
-              console.log('Noticed!');
-            },
-          })
-        );
-        button.innerHTML = 'Check API';
+    this.route.params.subscribe(data => {
+      this.symbol = data['id'];
+      this.loadTradingViewData();
+          const widgetOptions: ChartingLibraryWidgetOptions = {
+              symbol: this._symbol,
+              datafeed: this.Datafeed,
+              interval: this._interval,
+              container_id: this._containerId,
+              library_path: this._libraryPath,
+              locale: this.getLanguageFromURL() || 'en',
+              disabled_features: ['use_localstorage_for_settings'],
+              enabled_features: ['study_templates'],
+              charts_storage_url: this._chartsStorageUrl,
+              charts_storage_api_version: this._chartsStorageApiVersion,
+              client_id: this._clientId,
+              user_id: this._userId,
+              fullscreen: this._fullscreen,
+              autosize: this._autosize,
+              overrides: {
+          "mainSeriesProperties.showCountdown": true,
+          "paneProperties.background": "#131722",
+          "paneProperties.vertGridProperties.color": "#363c4e",
+          "paneProperties.horzGridProperties.color": "#363c4e",
+          "symbolWatermarkProperties.transparency": 90,
+          "scalesProperties.textColor" : "#AAA",
+          "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+          "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+        }
+          };
+  
+      const tvWidget = new widget(widgetOptions);
+      this._tvWidget = tvWidget;
+  
+      tvWidget.onChartReady(() => {
+        tvWidget.headerReady().then(() => {
+          const button = tvWidget.createButton();
+          button.setAttribute('title', 'Click to show a notification popup');
+          button.classList.add('apply-common-tooltip');
+          button.addEventListener('click', () =>
+            tvWidget.showNoticeDialog({
+              title: 'Notification',
+              body: 'TradingView Charting Library API works correctly',
+              callback: () => {
+                console.log('Noticed!');
+              },
+            })
+          );
+          button.innerHTML = 'Check API';
+        });
       });
-    });
+    })
+
   }
 
   Datafeed:IBasicDataFeed;
@@ -210,7 +214,7 @@ export class ChartPage implements OnInit, OnDestroy {
           has_weekly_and_monthly: false,
           supported_resolutions:  this.supportedResolutions,
           volume_precision: 0,
-          data_status: 'streaming',
+          // data_status: 'streaming',
           full_name:'full_name',
           listed_exchange:'listed_exchange',
           format: 'price' as SeriesFormat
