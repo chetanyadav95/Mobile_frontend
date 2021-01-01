@@ -45,6 +45,26 @@ And last but not least, we run ```npx cap open android```. <br>
 Now if you have Android Studio installed on your computer, it will open it up for you. <br>
 If not, go and install Android studio and try this line again.
 
+### Some potential bug fixes in the Android Studio
+
+Now for some reason, you will have 5 errors: <br>
+- 4 package import related (these will be shown inside build window in Android Studio) <br>
+- 1 video not showing up (this one is a logical error, therefore no error message will be seen) <br>
+
+The first four are easy. Go inside these four files (In Android Studio):
+- PushPlugin.java
+- FCMService.java
+- BackgroundActionButtonHandler.java
+- PushHandlerActivity.java
+
+All of these files will have a common error, and that is that for import packages that start with <br>
+```android.support.v4. ..``` need to be replaced with ```androidx.core. ..```
+
+The video error is quite simple to solve. You need to go the AndroidManifest.xml, and on the <br>
+```<application>``` tag you need to write the following: <br>
+```<application android:usesCleartextTraffic="true">```. 
+And that's how you solve both the issues <br>
+
 ### Second step - Generating an APK in Android Studio for Android devices
 
 In Android Studio, in the _Build_ tab, click on _Generate Signed Bundle / APK..._
