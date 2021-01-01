@@ -48,8 +48,8 @@ If not, go and install Android studio and try this line again.
 ### Some potential bug fixes in the Android Studio
 
 Now for some reason, you will have 5 errors: <br>
-- 4 package import related (these will be shown inside build window in Android Studio) <br>
-- 1 video not showing up (this one is a logical error, therefore no error message will be seen) <br>
+- 4 package import related (these will be shown inside the build window in Android Studio) <br>
+- 1 for videos not showing up (this one is a logical error, therefore no error message will be seen) <br>
 
 The first four are easy. Go inside these four files (In Android Studio):
 - PushPlugin.java
@@ -58,9 +58,9 @@ The first four are easy. Go inside these four files (In Android Studio):
 - PushHandlerActivity.java
 
 All of these files will have a common error, and that is that for import packages that start with <br>
-```android.support.v4. ..``` need to be replaced with ```androidx.core. ..```
+```android.support.v4.``` need to be replaced with ```androidx.core.```
 
-The video error is quite simple to solve. You need to go the AndroidManifest.xml, and on the <br>
+The video error is quite simple to solve. You need to go the *AndroidManifest.xml*, and on the <br>
 ```<application>``` tag you need to write the following: <br>
 ```<application android:usesCleartextTraffic="true">```. 
 And that's how you solve both the issues <br>
