@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LeaderboardService } from 'src/app/services/leaderboard.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-leaderboard',
@@ -10,10 +10,10 @@ import { LeaderboardService } from 'src/app/services/leaderboard.service';
 export class LeaderboardPage implements OnInit {
 
   leaderboard
-  constructor(private leaderboardService: LeaderboardService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.leaderboard = this.leaderboardService.leaderboard
+    this.userService.getLeaderboard().subscribe((r:any) => this.leaderboard = r.data)
   }
 
 }

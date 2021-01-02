@@ -12,6 +12,7 @@ import { MarubozuService } from 'src/app/services/marubozu.service';
 })
 export class TutorialsPage implements OnInit {
   videos: Video[]
+  sanitizedVideos: any[]
   vids: Marubozu[]
 
   constructor(private sanitizer: DomSanitizer, 
@@ -20,9 +21,15 @@ export class TutorialsPage implements OnInit {
   }
 
   ngOnInit() {
+    this.sanitizedVideos = []
     this.videos = this.learningService.videos
     this.marubozuService.get('tutorial').subscribe((r:any) => {
       this.vids = r.data
+    })
+    this.videos.forEach(v => {
+      const video: any = this.sanitizeUrl(v.url)
+      video.name = v.name
+      this.sanitizedVideos.push(video)
     })
   }
   

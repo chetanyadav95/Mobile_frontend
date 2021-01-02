@@ -149,28 +149,21 @@
       /* harmony import */
 
 
-      var src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
-      /*! src/app/services/leaderboard.service */
-      "NONO");
-      /* harmony import */
-
-
-      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
       /*! src/app/services/user.service */
       "qfBg");
       /* harmony import */
 
 
-      var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+      var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
       /*! @ionic-native/screen-orientation/ngx */
       "0QAI");
 
       var DashboardPage = /*#__PURE__*/function () {
-        function DashboardPage(router, leaderboardService, userService, platform, screenOrientation) {
+        function DashboardPage(router, userService, platform, screenOrientation) {
           _classCallCheck(this, DashboardPage);
 
           this.router = router;
-          this.leaderboardService = leaderboardService;
           this.userService = userService;
           this.platform = platform;
           this.screenOrientation = screenOrientation;
@@ -229,16 +222,21 @@
             this.view = [this.platform.width(), this.platform.height() * 0.6];
             this.screenOrientation.onChange().subscribe(function () {
               return _this.view = [_this.platform.width(), _this.platform.height() * 0.5];
-            });
-            this.leaderboard = this.leaderboardService.leaderboard;
+            }); // this.leaderboard = this.leaderboardService.leaderboard
+
             this.userService.authenticated.subscribe(function (u) {
               _this.user = u.user;
 
               _this.userService.accountDetails().subscribe(function (r) {
-                _this.user.balance.availableBal = parseFloat(r.account.currentBalance);
-                _this.user.balance.openBal = parseFloat(r.account.currentBalance);
+                _this.user.balance.availableBal = parseFloat(parseFloat(r.account.currentBalance).toFixed(2));
+                _this.user.balance.openBal = parseFloat(r.account.initialAmount);
+                _this.user.balance.pAndL = _this.user.balance.availableBal - _this.user.balance.openBal;
+                _this.user.balance.gain = _this.user.balance.pAndL / _this.user.balance.openBal;
                 _this.user.balance.currency = r.account.currency;
               });
+            });
+            this.userService.getLeaderboard().subscribe(function (r) {
+              return _this.leaderboard = r.data;
             });
           }
         }, {
@@ -265,13 +263,11 @@
         return [{
           type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]
         }, {
-          type: src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_6__["LeaderboardService"]
-        }, {
-          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__["UserService"]
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"]
         }, {
           type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"]
         }, {
-          type: _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__["ScreenOrientation"]
+          type: _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__["ScreenOrientation"]
         }];
       };
 
@@ -300,75 +296,6 @@
 
 
       __webpack_exports__["default"] = ".leaderboard-table {\n  width: 100%;\n}\n.leaderboard-table tr {\n  border-bottom: 1px solid #cecece;\n}\n.leaderboard-table td, .leaderboard-table th {\n  width: 33%;\n  text-align: center;\n  padding: 15px 0;\n}\n.leaderboard-table td:first-child, .leaderboard-table th:first-child {\n  text-align: left;\n  padding-left: 15px;\n  border-right: 1px solid #cecece;\n}\n.leaderboard-table td:last-child, .leaderboard-table th:last-child {\n  text-align: right;\n  padding-right: 15px;\n  border-left: 1px solid #cecece;\n}\nion-title {\n  color: black;\n}\n@media screen and (max-width: 360px) {\n  ion-title, h3 {\n    font-size: 15px !important;\n  }\n\n  ion-label, ion-select, ion-select-option, p, h5 {\n    font-size: 13px !important;\n  }\n}\n@media (prefers-color-scheme: dark) {\n  ion-title {\n    color: white;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGFnZXMvZGFzaGJvYXJkL2xlYWRlcmJvYXJkL2xlYWRlcmJvYXJkLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNJLFdBQUE7QUFBSjtBQUNJO0VBQ0ksZ0NBQUE7QUFDUjtBQUNJO0VBQ0ksVUFBQTtFQUNBLGtCQUFBO0VBQ0EsZUFBQTtBQUNSO0FBQ0k7RUFDSSxnQkFBQTtFQUNBLGtCQUFBO0VBQ0EsK0JBQUE7QUFDUjtBQUNJO0VBQ0ksaUJBQUE7RUFDQSxtQkFBQTtFQUNBLDhCQUFBO0FBQ1I7QUFFQTtFQUNJLFlBQUE7QUFDSjtBQUNBO0VBQ0k7SUFDRSwwQkFBQTtFQUVKOztFQUFFO0lBQ0UsMEJBQUE7RUFHSjtBQUNGO0FBREE7RUFDSTtJQUNJLFlBQUE7RUFHTjtBQUNGIiwiZmlsZSI6InNyYy9hcHAvcGFnZXMvZGFzaGJvYXJkL2xlYWRlcmJvYXJkL2xlYWRlcmJvYXJkLnBhZ2Uuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLmxlYWRlcmJvYXJkLXRhYmxle1xuICAgIHdpZHRoOiAxMDAlO1xuICAgIHRye1xuICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgI2NlY2VjZTtcbiAgICB9XG4gICAgdGQsIHRoe1xuICAgICAgICB3aWR0aDogMzMlO1xuICAgICAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gICAgICAgIHBhZGRpbmc6IDE1cHggMDtcbiAgICB9XG4gICAgdGQ6Zmlyc3QtY2hpbGQsIHRoOmZpcnN0LWNoaWxke1xuICAgICAgICB0ZXh0LWFsaWduOiBsZWZ0O1xuICAgICAgICBwYWRkaW5nLWxlZnQ6IDE1cHg7XG4gICAgICAgIGJvcmRlci1yaWdodDogMXB4IHNvbGlkICNjZWNlY2U7XG4gICAgfVxuICAgIHRkOmxhc3QtY2hpbGQsIHRoOmxhc3QtY2hpbGR7XG4gICAgICAgIHRleHQtYWxpZ246IHJpZ2h0O1xuICAgICAgICBwYWRkaW5nLXJpZ2h0OiAxNXB4O1xuICAgICAgICBib3JkZXItbGVmdDogMXB4IHNvbGlkICNjZWNlY2U7XG4gICAgfVxufVxuaW9uLXRpdGxle1xuICAgIGNvbG9yOmJsYWNrO1xuICB9XG5AbWVkaWEgc2NyZWVuIGFuZCAobWF4LXdpZHRoOiAzNjBweCkge1xuICAgIGlvbi10aXRsZSwgaDN7XG4gICAgICBmb250LXNpemU6MTVweCAhaW1wb3J0YW50O1xuICAgIH1cbiAgICBpb24tbGFiZWwsIGlvbi1zZWxlY3QsIGlvbi1zZWxlY3Qtb3B0aW9uLCBwLCBoNXtcbiAgICAgIGZvbnQtc2l6ZTogMTNweCAhaW1wb3J0YW50O1xuICAgIH1cbn1cbkBtZWRpYShwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyaykge1xuICAgIGlvbi10aXRsZXtcbiAgICAgICAgY29sb3I6d2hpdGU7XG4gICAgfVxufSJdfQ== */";
-      /***/
-    },
-
-    /***/
-    "NONO":
-    /*!*************************************************!*\
-      !*** ./src/app/services/leaderboard.service.ts ***!
-      \*************************************************/
-
-    /*! exports provided: LeaderboardService */
-
-    /***/
-    function NONO(module, __webpack_exports__, __webpack_require__) {
-      "use strict";
-
-      __webpack_require__.r(__webpack_exports__);
-      /* harmony export (binding) */
-
-
-      __webpack_require__.d(__webpack_exports__, "LeaderboardService", function () {
-        return LeaderboardService;
-      });
-      /* harmony import */
-
-
-      var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
-      /*! tslib */
-      "mrSG");
-      /* harmony import */
-
-
-      var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
-      /*! @angular/core */
-      "fXoL");
-
-      var LeaderboardService = function LeaderboardService() {
-        _classCallCheck(this, LeaderboardService);
-
-        this.leaderboard = [{
-          name: 'Chetan',
-          score: 0.310
-        }, {
-          name: 'Ibrahim',
-          score: 0.301
-        }, {
-          name: 'Muatesim',
-          score: 0.293
-        }, {
-          name: 'John',
-          score: 0.291
-        }, {
-          name: 'Priyansh',
-          score: 0.285
-        }, {
-          name: 'Amit',
-          score: 0.279
-        }, {
-          name: 'Michael',
-          score: 0.268
-        }];
-      };
-
-      LeaderboardService.ctorParameters = function () {
-        return [];
-      };
-
-      LeaderboardService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-        providedIn: 'root'
-      })], LeaderboardService);
       /***/
     },
 
@@ -418,21 +345,25 @@
       /* harmony import */
 
 
-      var src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
-      /*! src/app/services/leaderboard.service */
-      "NONO");
+      var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
+      /*! src/app/services/user.service */
+      "qfBg");
 
       var LeaderboardPage = /*#__PURE__*/function () {
-        function LeaderboardPage(leaderboardService) {
+        function LeaderboardPage(userService) {
           _classCallCheck(this, LeaderboardPage);
 
-          this.leaderboardService = leaderboardService;
+          this.userService = userService;
         }
 
         _createClass(LeaderboardPage, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            this.leaderboard = this.leaderboardService.leaderboard;
+            var _this2 = this;
+
+            this.userService.getLeaderboard().subscribe(function (r) {
+              return _this2.leaderboard = r.data;
+            });
           }
         }]);
 
@@ -441,7 +372,7 @@
 
       LeaderboardPage.ctorParameters = function () {
         return [{
-          type: src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_4__["LeaderboardService"]
+          type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_4__["UserService"]
         }];
       };
 
@@ -538,7 +469,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"home/dashboard\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Leaderboard</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<table class=\"leaderboard-table\">\n\t\t<thead class=\"header-labels\">\n\t\t\t<tr>\n\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr *ngFor=\"let user of leaderboard ; let i=index\">\n\t\t\t\t<td><ion-label>{{i + 1}}</ion-label></td>\n\t\t\t\t<td><ion-label>{{user.name}}</ion-label></td>\n\t\t\t\t<td><ion-label>{{user.score | percent:'1.1'}}</ion-label></td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"home/dashboard\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Leaderboard</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column; justify-content: center; align-items: center\">\n\t\t\t\t<!-- <ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Leaderboard</ion-title> -->\n\t\t\t\t<ion-list style=\"width: 100%\">\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.rank}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.userName}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.gain | number:'1.1'}}%</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 
@@ -558,7 +489,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title>Dashboard</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content class=\"ion-padding-top\">\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text> <h5>Hi {{user?.username}}</h5> </ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<hr />\n\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\" style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-no-padding ion-padding-bottom\">Funds</ion-title>\n\t\t\t\t<table class=\"balance-overview-table\">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Opening bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{user?.balance.openBal != null ? user?.balance.openBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Available bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{user?.balance.availableBal != null ? user?.balance.availableBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>P/L:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{user?.balance.pAndL != null ? user?.balance.pAndL : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>% gain:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.gain != null ? user?.balance.gain * 100 : 0}}%</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Funds Chart</ion-title>\n\t\t\t\t<ngx-charts-line-chart\n\t\t\t\t\t[legend]=\"false\"\n\t\t\t\t\t[showXAxisLabel]=\"false\"\n\t\t\t\t\t[showYAxisLabel]=\"false\"\n\t\t\t\t\t[xAxis]=\"true\"\n\t\t\t\t\t[yAxis]=\"true\"\n\t\t\t\t\t[timeline]=\"true\"\n\t\t\t\t\t[results]=\"data\"\n\t\t\t\t\t[view]=\"view\"\n\t\t\t\t>\n\t\t\t\t</ngx-charts-line-chart>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Leaderboard</ion-title>\n\t\t\t\t<ion-list style=\"width: 100%;\">\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard | slice:0:5 ; let i=index\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{i + 1}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.name}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.score | percent:'1.1'}}</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-button\n\t\t\t\t\t\t\t(click)=\"navigateToLeaderboard()\"\n\t\t\t\t\t\t\tcolor=\"tertiary\"\n\t\t\t\t\t\t\tsize=\"small\"\n\t\t\t\t\t\t\tfill=\"clear\"\n\t\t\t\t\t\t\tclass=\"see-more-button\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\tSee more\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title>Dashboard</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content class=\"ion-padding-top\">\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text> <h5>Hi {{user?.username}}</h5> </ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<hr />\n\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\" style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-no-padding ion-padding-bottom\">Funds</ion-title>\n\t\t\t\t<table class=\"balance-overview-table\">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Opening bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{(user?.balance.openBal != null ? user?.balance.openBal : 0) | number:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Available bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{(user?.balance.availableBal != null ? user?.balance.availableBal : 0) | number:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>P/L:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{(user?.balance.pAndL != null ? user?.balance.pAndL : 0) | number:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>% gain:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{(user?.balance.gain != null ? user?.balance.gain : 0) | percent:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Funds Chart</ion-title>\n\t\t\t\t<ngx-charts-line-chart\n\t\t\t\t\t[legend]=\"false\"\n\t\t\t\t\t[showXAxisLabel]=\"false\"\n\t\t\t\t\t[showYAxisLabel]=\"false\"\n\t\t\t\t\t[xAxis]=\"true\"\n\t\t\t\t\t[yAxis]=\"true\"\n\t\t\t\t\t[timeline]=\"true\"\n\t\t\t\t\t[results]=\"data\"\n\t\t\t\t\t[view]=\"view\"\n\t\t\t\t>\n\t\t\t\t</ngx-charts-line-chart>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Leaderboard</ion-title>\n\t\t\t\t<ion-list style=\"width: 100%;\">\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard | slice:0:5\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.rank}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.userName}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.gain | number:'1.1'}}%</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-button\n\t\t\t\t\t\t\t(click)=\"navigateToLeaderboard()\"\n\t\t\t\t\t\t\tcolor=\"tertiary\"\n\t\t\t\t\t\t\tsize=\"small\"\n\t\t\t\t\t\t\tfill=\"clear\"\n\t\t\t\t\t\t\tclass=\"see-more-button\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\tSee more\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 

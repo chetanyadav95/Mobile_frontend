@@ -1,12 +1,12 @@
 <ion-content>
 	<ion-list>
-		<div *ngFor="let video of videos; let i = index" class="video-card" >
-			<ion-label class="ion-padding-horizontal"><h4 class="video-title" >{{video.name}}</h4></ion-label>
+		<div *ngFor="let video of sanitizedVideos; let i = index" class="video-card" >
+			<ion-label class="ion-padding-horizontal"><h4 class="video-title">{{video.name}}</h4></ion-label>
 			<iframe
 				class="ion-padding"
 				width="fit-content"
 				height="250"
-				[src]="sanitizeUrl(video.url)"
+				[src]="video"
 				id="{{'video'+i}}"
 				frameborder="0"
 				allowfullscreen

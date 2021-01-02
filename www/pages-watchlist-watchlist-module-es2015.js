@@ -102,7 +102,6 @@ let WatchlistPage = class WatchlistPage {
     }
     ionViewDidEnter() {
         this.getWatchlists();
-        this.updateLtp();
     }
     getWatchlists() {
         this.watchlists = [];
@@ -117,10 +116,6 @@ let WatchlistPage = class WatchlistPage {
                     });
                     this.moveInArray();
                     this.updateLtp();
-                }, () => { }, () => {
-                    setTimeout(() => {
-                        this.dataLoaded = true;
-                    }, 500);
                 });
             if (datatype == 'realtime')
                 this.watchlistService.getRealtimeWatchlists().subscribe((r) => {
@@ -130,25 +125,23 @@ let WatchlistPage = class WatchlistPage {
                     });
                     this.moveInArray();
                     this.updateLtp();
-                }, () => { }, () => {
-                    setTimeout(() => {
-                        this.dataLoaded = true;
-                    }, 500);
                 });
         });
     }
     updateLtp() {
         this.unsubscribeFromSockets();
+        this.selectedWatchlistId = this.watchlists[this.selectedWatchlist]._id;
         this.watchlists.forEach(w => {
-            w.stockIds.forEach(s => {
+            w.stockIds.forEach((s, i) => {
                 const socketSub = this.stockService.listen(s.id).subscribe((res) => {
-                    // console.log(res)
                     s.ltp = res[0].price;
-                    // this.dataLoaded = true
                 });
+                if (i == (w.stockIds.length - 1))
+                    this.dataLoaded = true;
                 this.subscribedSockets.push(socketSub);
             });
         });
+        console.log(this.watchlists);
     }
     unsubscribeFromSockets() {
         this.subscribedSockets.forEach(s => {
@@ -264,6 +257,7 @@ let WatchlistPage = class WatchlistPage {
             this.selectedWatchlist = tab;
         else
             this.selectedWatchlist = tab.detail;
+        this.selectedWatchlistId = this.watchlists[this.selectedWatchlist]._id;
         this.updateLtp();
     }
     moveInArray() {
@@ -477,7 +471,7 @@ WatchlistPageRoutingModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decora
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title (click)=\"onWatchlistTitleClick()\">Watchlist</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<super-tabs *ngIf=\"!dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label\n\t\t\t\t\tstyle=\"width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center\"\n\t\t\t\t>\n\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container>\n\t\t\t<super-tab>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let item of [].constructor(9)\" class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-label class=\"ion-padding-start\" style=\"display: flex; flex-direction: column; align-items: flex-start\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 40%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 30%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label style=\"display: flex; flex-direction: column; align-items: flex-end\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t<ion-label style=\"display: flex; flex-direction: row; justify-content: flex-end; width: 100%\">\n\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%; margin-right: 10px\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<super-tabs *ngIf=\"watchlists.length > 0 && dataLoaded\">\n\t\t<super-tabs-toolbar\n\t\t\tslot=\"top\"\n\t\t\tcolor=\"translucent\"\n\t\t\t[scrollable]=\"watchlists.length > 4\"\n\t\t\t[scrollablePadding]=\"watchlists.length < 3\"\n\t\t>\n\t\t\t<super-tab-button\n\t\t\t\t*ngFor=\"let w of watchlists; let i = index\"\n\t\t\t\t(click)=\"tabIndex(i)\"\n\t\t\t\tappDoubleTap\n\t\t\t\t(eventHandler)=\"onWatchlistTabClick()\"\n\t\t\t>\n\t\t\t\t<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container (activeTabIndexChange)=\"tabIndex($event)\">\n\t\t\t<super-tab *ngFor=\"let w of watchlists\">\n\t\t\t\t<ion-list>\n\t\t\t\t\t<div *ngFor=\"let c of w.stockIds\" (click)=\"openBuySellModal(c)\" class=\"ion-no-padding\" style=\"width: 100%;\">\n\t\t\t\t\t\t<ion-item *ngIf=\"c != undefined\" style=\"width: 100%;\" class=\"ion-no-padding\">\n\t\t\t\t\t\t\t<ion-label class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t<h3>{{c.name}}</h3>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"+c.ltp - +c.ldp >= 0\">\n\t\t\t\t\t\t\t\t<ion-text color=\"success\"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>\n\t\t\t\t\t\t\t\t<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"+c.ltp - +c.ldp < 0\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>\n\t\t\t\t\t\t\t\t<p>-{{+c.ltp - +c.ldp | number:'1.1-2'}} (-{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t</ion-item>\n\t\t\t\t\t</div>\n\t\t\t\t</ion-list>\n\t\t\t\t<ion-fab horizontal=\"end\" vertical=\"bottom\" *ngIf=\"w.name != 'Trending'\">\n\t\t\t\t\t<ion-fab-button (click)=\"openCompaniesModal(w._id)\">\n\t\t\t\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t\t\t\t</ion-fab-button>\n\t\t\t\t</ion-fab>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<ion-content padding *ngIf=\"watchlists.length == 0 && dataLoaded\">\n\t\t<div>\n\t\t\t<h6 class=\"gray\">\n\t\t\t\tGo on and create your personal watchlist <br />\n\t\t\t\tby pressing 'Watchlist' in the toolbar\n\t\t\t</h6>\n\t\t</div>\n\t</ion-content>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title (click)=\"onWatchlistTitleClick()\">Watchlist</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<super-tabs *ngIf=\"!dataLoaded\">\n\t\t<super-tabs-toolbar slot=\"top\" color=\"translucent\">\n\t\t\t<super-tab-button>\n\t\t\t\t<ion-label\n\t\t\t\t\tstyle=\"width: 100%; display: flex; flex-direction: row; justify-content: center; align-items: center\"\n\t\t\t\t>\n\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container>\n\t\t\t<super-tab>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let item of [].constructor(9)\" class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-label class=\"ion-padding-start\" style=\"display: flex; flex-direction: column; align-items: flex-start\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 40%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 30%\"></ion-skeleton-text>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-label style=\"display: flex; flex-direction: column; align-items: flex-end\">\n\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 50%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t<ion-label style=\"display: flex; flex-direction: row; justify-content: flex-end; width: 100%\">\n\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%; margin-right: 10px\"></ion-skeleton-text>\n\t\t\t\t\t\t\t\t<ion-skeleton-text animated style=\"width: 20%\"></ion-skeleton-text>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<super-tabs *ngIf=\"watchlists.length > 0 && dataLoaded\">\n\t\t<super-tabs-toolbar\n\t\t\tslot=\"top\"\n\t\t\tcolor=\"translucent\"\n\t\t\t[scrollable]=\"watchlists.length > 4\"\n\t\t\t[scrollablePadding]=\"watchlists.length < 3\"\n\t\t>\n\t\t\t<super-tab-button\n\t\t\t\t*ngFor=\"let w of watchlists; let i = index\"\n\t\t\t\t(click)=\"tabIndex(i)\"\n\t\t\t\tappDoubleTap\n\t\t\t\t(eventHandler)=\"onWatchlistTabClick()\"\n\t\t\t>\n\t\t\t\t<ion-label>{{w.name.length > 8 ? w.name.substring(0,8) + '...' : w.name}}</ion-label>\n\t\t\t</super-tab-button>\n\t\t</super-tabs-toolbar>\n\t\t<super-tabs-container (activeTabIndexChange)=\"tabIndex($event)\">\n\t\t\t<super-tab *ngFor=\"let w of watchlists\">\n\t\t\t\t<ion-list>\n\t\t\t\t\t<div *ngFor=\"let c of w.stockIds\" (click)=\"openBuySellModal(c)\" class=\"ion-no-padding\" style=\"width: 100%;\">\n\t\t\t\t\t\t<ion-item *ngIf=\"c != undefined\" style=\"width: 100%;\" class=\"ion-no-padding\">\n\t\t\t\t\t\t\t<ion-label class=\"ion-padding-start\">\n\t\t\t\t\t\t\t\t<h3>{{c.name}}</h3>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"+c.ltp - +c.ldp >= 0\">\n\t\t\t\t\t\t\t\t<ion-text color=\"success\"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>\n\t\t\t\t\t\t\t\t<p>+{{+c.ltp - +c.ldp | number:'1.1-2'}} (+{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t\t<ion-label class=\"ion-margin-start ion-text-right\" *ngIf=\"+c.ltp - +c.ldp < 0\">\n\t\t\t\t\t\t\t\t<ion-text color=\"danger\"><h3>{{c.ltp | number:'1.1-2'}}</h3></ion-text>\n\t\t\t\t\t\t\t\t<p>-{{+c.ltp - +c.ldp | number:'1.1-2'}} (-{{(+c.ltp - +c.ldp) / +c.ldp | percent:'1.1-2'}})</p>\n\t\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t</ion-item>\n\t\t\t\t\t</div>\n\t\t\t\t</ion-list>\n\t\t\t</super-tab>\n\t\t</super-tabs-container>\n\t</super-tabs>\n\t<ion-content padding *ngIf=\"watchlists.length == 0 && dataLoaded\">\n\t\t<div>\n\t\t\t<h6 class=\"gray\">\n\t\t\t\tGo on and create your personal watchlist <br />\n\t\t\t\tby pressing 'Watchlist' in the toolbar\n\t\t\t</h6>\n\t\t</div>\n\t</ion-content>\n</ion-content>\n<ion-fab horizontal=\"end\" vertical=\"bottom\" style=\"position: absolute; bottom: 10px; right: 10px\">\n\t<ion-fab-button (click)=\"openCompaniesModal(selectedWatchlistId)\">\n\t\t<ion-icon name=\"add\"></ion-icon>\n\t</ion-fab-button>\n</ion-fab>\n");
 
 /***/ }),
 

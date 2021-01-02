@@ -1,7 +1,6 @@
 import { Platform } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LeaderboardService } from 'src/app/services/leaderboard.service';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user.model';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
@@ -79,7 +78,6 @@ export class DashboardPage {
   view = []
   
   constructor(private router: Router, 
-    private leaderboardService: LeaderboardService,
     private userService: UserService,
     private platform: Platform,
     private screenOrientation: ScreenOrientation){
@@ -89,15 +87,18 @@ export class DashboardPage {
     this.checkIfItIsDashboard()
     this.view = [this.platform.width(),this.platform.height() * 0.6]
     this.screenOrientation.onChange().subscribe(() => this.view = [this.platform.width(),this.platform.height() * 0.5])
-    this.leaderboard = this.leaderboardService.leaderboard
+    // this.leaderboard = this.leaderboardService.leaderboard
     this.userService.authenticated.subscribe(u => {
       this.user = u.user
       this.userService.accountDetails().subscribe((r:any) => {
-        this.user.balance.availableBal = parseFloat(r.account.currentBalance)
-        this.user.balance.openBal = parseFloat(r.account.currentBalance)
+        this.user.balance.availableBal = parseFloat(parseFloat(r.account.currentBalance).toFixed(2))
+        this.user.balance.openBal = parseFloat(r.account.initialAmount)
+        this.user.balance.pAndL = this.user.balance.availableBal - this.user.balance.openBal
+        this.user.balance.gain = this.user.balance.pAndL / this.user.balance.openBal
         this.user.balance.currency = r.account.currency
       })
     })
+    this.userService.getLeaderboard().subscribe((r:any) => this.leaderboard = r.data)
   }
 
   navigateToLeaderboard(){

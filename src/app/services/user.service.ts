@@ -55,6 +55,10 @@ export class UserService {
     return this.http.get(this.apiUrl + 'google')
   }
 
+  getLeaderboard(){
+    return this.http.get(this.apiUrl + 'leaderboard')
+  }
+
   accountDetails(){
     return this.http.get(this.apiUrl + 'account')
   }

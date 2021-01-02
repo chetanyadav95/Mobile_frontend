@@ -23,18 +23,24 @@ export class ModalEditOrderComponent implements OnInit {
   }
 
   savePosition(){
-    (this.position != null) && this.orderService.updateOrder(this.position.id, this.position.target, this.position.stoploss).subscribe(r => console.log(r))
-    this.dismissModal(true)
+    (this.position != null) 
+      && this.orderService
+      .updateOrder(this.position.id, this.position.target, this.position.stoploss)
+      .subscribe(() => {}, () => {}, () => this.dismissModal(true))
   }
 
   sellPosition(){
-    (this.position != null) && this.orderService.exitPosition(this.position.id).subscribe(r => console.log(r))
-    this.dismissModal()
+    (this.position != null) 
+    && this.orderService
+      .exitPosition(this.position.id)
+      .subscribe(() => {}, () => {}, () => this.dismissModal())
   }
 
   savePending(){
-    (this.pending != null) && this.orderService.updateOrder(this.pending.id, this.pending.target, this.pending.stoploss).subscribe(r => console.log(r))
-    this.dismissModal(true)
+    (this.pending != null) 
+    && this.orderService
+      .updateOrder(this.pending.id, this.pending.target, this.pending.stoploss)
+      .subscribe(() => {}, () => {}, () => this.dismissModal(true))
   }
 
 }

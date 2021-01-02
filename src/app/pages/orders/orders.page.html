@@ -113,7 +113,7 @@
 												<td>
 													<p>
 														<ion-text [color]="+p.ltp - p.price >= 0 ? 'success' : 'danger'">
-															{{+p.ltp - p.price > 0 ? ' +' : ' '}}{{+p.ltp - p.price | number:'1.2'}}
+															{{+p.ltp - p.price > 0 ? ' +' : ' '}}{{+(p.ltp - p.price)*p.quantity | number:'1.2'}}
 														</ion-text>
 													</p>
 												</td>

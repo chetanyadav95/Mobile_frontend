@@ -455,6 +455,57 @@ ModalChangePasswordComponent = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__deco
 
 /***/ }),
 
+/***/ "KwcL":
+/*!*************************************************************************************************************************************************!*\
+  !*** ./node_modules/@ionic/pwa-elements/dist/esm lazy ^\.\/.*\.entry\.js$ include: \.entry\.js$ exclude: \.system\.entry\.js$ namespace object ***!
+  \*************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./pwa-action-sheet.entry.js": [
+		"jDxf",
+		46
+	],
+	"./pwa-camera-modal-instance.entry.js": [
+		"37vE",
+		47
+	],
+	"./pwa-camera-modal.entry.js": [
+		"cJxf",
+		48
+	],
+	"./pwa-camera.entry.js": [
+		"eGHz",
+		49
+	],
+	"./pwa-toast.entry.js": [
+		"fHjd",
+		50
+	]
+};
+function webpackAsyncContext(req) {
+	if(!__webpack_require__.o(map, req)) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+
+	var ids = map[req], id = ids[0];
+	return __webpack_require__.e(ids[1]).then(function() {
+		return __webpack_require__(id);
+	});
+}
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = "KwcL";
+module.exports = webpackAsyncContext;
+
+/***/ }),
+
 /***/ "LX2U":
 /*!***********************************************************************!*\
   !*** ./src/app/modals/modal-edit-order/modal-edit-order.component.ts ***!
@@ -490,16 +541,22 @@ let ModalEditOrderComponent = class ModalEditOrderComponent {
         this.modalCtrl.dismiss(change);
     }
     savePosition() {
-        (this.position != null) && this.orderService.updateOrder(this.position.id, this.position.target, this.position.stoploss).subscribe(r => console.log(r));
-        this.dismissModal(true);
+        (this.position != null)
+            && this.orderService
+                .updateOrder(this.position.id, this.position.target, this.position.stoploss)
+                .subscribe(() => { }, () => { }, () => this.dismissModal(true));
     }
     sellPosition() {
-        (this.position != null) && this.orderService.exitPosition(this.position.id).subscribe(r => console.log(r));
-        this.dismissModal();
+        (this.position != null)
+            && this.orderService
+                .exitPosition(this.position.id)
+                .subscribe(() => { }, () => { }, () => this.dismissModal());
     }
     savePending() {
-        (this.pending != null) && this.orderService.updateOrder(this.pending.id, this.pending.target, this.pending.stoploss).subscribe(r => console.log(r));
-        this.dismissModal(true);
+        (this.pending != null)
+            && this.orderService
+                .updateOrder(this.pending.id, this.pending.target, this.pending.stoploss)
+                .subscribe(() => { }, () => { }, () => this.dismissModal(true));
     }
 };
 ModalEditOrderComponent.ctorParameters = () => [
@@ -553,6 +610,7 @@ let ModalWatchlistComponent = class ModalWatchlistComponent {
         this.stockService = stockService;
     }
     ngOnInit() {
+        console.log(this.selectedWatchlist);
         this.stockService.getStocks().subscribe((s) => {
             this.stocks = s.data;
             console.log(this.stocks);
@@ -1538,6 +1596,9 @@ let UserService = class UserService {
     googleAuth() {
         return this.http.get(this.apiUrl + 'google');
     }
+    getLeaderboard() {
+        return this.http.get(this.apiUrl + 'leaderboard');
+    }
     accountDetails() {
         return this.http.get(this.apiUrl + 'account');
     }
@@ -1870,11 +1931,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser-dynamic */ "a3Wg");
 /* harmony import */ var _app_app_module__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app/app.module */ "ZAI4");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./environments/environment */ "AytR");
+/* harmony import */ var _ionic_pwa_elements_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/pwa-elements/loader */ "2Zi2");
 
 
 
 
 
+
+Object(_ionic_pwa_elements_loader__WEBPACK_IMPORTED_MODULE_5__["defineCustomElements"])(window);
 if (_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].production) {
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["enableProdMode"])();
 }

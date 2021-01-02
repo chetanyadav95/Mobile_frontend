@@ -144,13 +144,13 @@ updateStoredImages(name) {
                 this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
             }
           },
-          // {
-          //   text: 'Use Camera',
-          //   icon: 'camera',
-          //   handler: () => {
-          //       this.takePicture(this.camera.PictureSourceType.CAMERA);
-          //   }
-          // },
+          {
+            text: 'Use Camera',
+            icon: 'camera',
+            handler: () => {
+                this.takePicture(this.camera.PictureSourceType.CAMERA);
+            }
+          },
           {
             text: 'Cancel',
             role: 'cancel'

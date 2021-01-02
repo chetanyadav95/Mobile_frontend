@@ -19,6 +19,7 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
 export class WatchlistPage implements OnInit, OnDestroy {
   watchlists: Watchlist[] = []
   selectedWatchlist: number
+  selectedWatchlistId: string
   dataLoaded: boolean
   isSimualted: boolean
   subscribedSockets: Subscription[] = []
@@ -35,7 +36,6 @@ export class WatchlistPage implements OnInit, OnDestroy {
 
   ionViewDidEnter(){
     this.getWatchlists()
-    this.updateLtp()
   }
 
   getWatchlists(){
@@ -49,41 +49,30 @@ export class WatchlistPage implements OnInit, OnDestroy {
         });
         this.moveInArray()
         this.updateLtp()
-      }
-      ,()=>{},()=>{
-        setTimeout(() => {
-          this.dataLoaded = true
-        }, 500);
-      }
-      )
+      })
       if(datatype == 'realtime') this.watchlistService.getRealtimeWatchlists().subscribe((r:any) => {
         r.data.forEach(w => {
           if(w != null) this.watchlists.push(w)
         });
         this.moveInArray()
         this.updateLtp()
-      }
-      ,()=>{},()=>{
-        setTimeout(() => {
-          this.dataLoaded = true
-        }, 500);
-      }
-      )
+      })
     })
   }
 
   updateLtp(){
     this.unsubscribeFromSockets()
+    this.selectedWatchlistId = this.watchlists[this.selectedWatchlist]._id
     this.watchlists.forEach(w => {
-      w.stockIds.forEach(s => {
+      w.stockIds.forEach((s,i) => {
           const socketSub: Subscription = this.stockService.listen(s.id).subscribe((res:any) => {
-          // console.log(res)
           s.ltp = res[0].price
-          // this.dataLoaded = true
         })
+        if(i == (w.stockIds.length - 1)) this.dataLoaded = true
         this.subscribedSockets.push(socketSub)
       });
     })
+    console.log(this.watchlists)
   }
 
   unsubscribeFromSockets(){
@@ -195,6 +184,7 @@ export class WatchlistPage implements OnInit, OnDestroy {
   tabIndex(tab){
     if(typeof(tab) == 'number') this.selectedWatchlist = tab
     else this.selectedWatchlist = tab.detail
+    this.selectedWatchlistId = this.watchlists[this.selectedWatchlist]._id
     this.updateLtp()
   }
 

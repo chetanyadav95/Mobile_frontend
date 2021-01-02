@@ -20,6 +20,7 @@ export class ModalWatchlistComponent implements OnInit{
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService, private stockService: StockService) { }
   
   ngOnInit(){
+    console.log(this.selectedWatchlist)
     this.stockService.getStocks().subscribe((s: any) => {
       this.stocks = s.data
       console.log(this.stocks)

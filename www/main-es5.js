@@ -742,6 +742,49 @@
     },
 
     /***/
+    "KwcL":
+    /*!*************************************************************************************************************************************************!*\
+      !*** ./node_modules/@ionic/pwa-elements/dist/esm lazy ^\.\/.*\.entry\.js$ include: \.entry\.js$ exclude: \.system\.entry\.js$ namespace object ***!
+      \*************************************************************************************************************************************************/
+
+    /*! no static exports found */
+
+    /***/
+    function KwcL(module, exports, __webpack_require__) {
+      var map = {
+        "./pwa-action-sheet.entry.js": ["jDxf", 46],
+        "./pwa-camera-modal-instance.entry.js": ["37vE", 47],
+        "./pwa-camera-modal.entry.js": ["cJxf", 48],
+        "./pwa-camera.entry.js": ["eGHz", 49],
+        "./pwa-toast.entry.js": ["fHjd", 50]
+      };
+
+      function webpackAsyncContext(req) {
+        if (!__webpack_require__.o(map, req)) {
+          return Promise.resolve().then(function () {
+            var e = new Error("Cannot find module '" + req + "'");
+            e.code = 'MODULE_NOT_FOUND';
+            throw e;
+          });
+        }
+
+        var ids = map[req],
+            id = ids[0];
+        return __webpack_require__.e(ids[1]).then(function () {
+          return __webpack_require__(id);
+        });
+      }
+
+      webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+        return Object.keys(map);
+      };
+
+      webpackAsyncContext.id = "KwcL";
+      module.exports = webpackAsyncContext;
+      /***/
+    },
+
+    /***/
     "LX2U":
     /*!***********************************************************************!*\
       !*** ./src/app/modals/modal-edit-order/modal-edit-order.component.ts ***!
@@ -819,26 +862,29 @@
         }, {
           key: "savePosition",
           value: function savePosition() {
-            this.position != null && this.orderService.updateOrder(this.position.id, this.position.target, this.position.stoploss).subscribe(function (r) {
-              return console.log(r);
+            var _this5 = this;
+
+            this.position != null && this.orderService.updateOrder(this.position.id, this.position.target, this.position.stoploss).subscribe(function () {}, function () {}, function () {
+              return _this5.dismissModal(true);
             });
-            this.dismissModal(true);
           }
         }, {
           key: "sellPosition",
           value: function sellPosition() {
-            this.position != null && this.orderService.exitPosition(this.position.id).subscribe(function (r) {
-              return console.log(r);
+            var _this6 = this;
+
+            this.position != null && this.orderService.exitPosition(this.position.id).subscribe(function () {}, function () {}, function () {
+              return _this6.dismissModal();
             });
-            this.dismissModal();
           }
         }, {
           key: "savePending",
           value: function savePending() {
-            this.pending != null && this.orderService.updateOrder(this.pending.id, this.pending.target, this.pending.stoploss).subscribe(function (r) {
-              return console.log(r);
+            var _this7 = this;
+
+            this.pending != null && this.orderService.updateOrder(this.pending.id, this.pending.target, this.pending.stoploss).subscribe(function () {}, function () {}, function () {
+              return _this7.dismissModal(true);
             });
-            this.dismissModal(true);
           }
         }]);
 
@@ -943,15 +989,16 @@
         _createClass(ModalWatchlistComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this5 = this;
+            var _this8 = this;
 
+            console.log(this.selectedWatchlist);
             this.stockService.getStocks().subscribe(function (s) {
-              _this5.stocks = s.data;
-              console.log(_this5.stocks);
+              _this8.stocks = s.data;
+              console.log(_this8.stocks);
             });
             this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
-              _this5.sWatchlist = w.data;
-              console.log(_this5.sWatchlist);
+              _this8.sWatchlist = w.data;
+              console.log(_this8.sWatchlist);
             });
           }
         }, {
@@ -963,12 +1010,12 @@
         }, {
           key: "onSelect",
           value: function onSelect(event, stock) {
-            var _this6 = this;
+            var _this9 = this;
 
             if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(function () {
-              return _this6.changeOfWatchlist = true;
+              return _this9.changeOfWatchlist = true;
             });else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe(function () {
-              return _this6.changeOfWatchlist = true;
+              return _this9.changeOfWatchlist = true;
             });
           }
         }, {
@@ -1163,10 +1210,10 @@
         }, {
           key: "connectionLostEvent",
           value: function connectionLostEvent() {
-            var _this7 = this;
+            var _this10 = this;
 
             this.networkListener = Network.addListener('networkStatusChange', function (status) {
-              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this7, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this10, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -1193,10 +1240,10 @@
         }, {
           key: "backButtonEvent",
           value: function backButtonEvent() {
-            var _this8 = this;
+            var _this11 = this;
 
             this.platform.backButton.subscribeWithPriority(10, function () {
-              if (_this8.router.url == "/home/dashboard") _this8.backButtonAlert();else _this8.location.back();
+              if (_this11.router.url == "/home/dashboard") _this11.backButtonAlert();else _this11.location.back();
             });
           }
         }, {
@@ -1263,15 +1310,15 @@
         }, {
           key: "initializeApp",
           value: function initializeApp() {
-            var _this9 = this;
+            var _this12 = this;
 
             this.platform.ready().then(function () {
-              _this9.statusBar.styleDefault();
+              _this12.statusBar.styleDefault();
 
-              _this9.splashScreen.hide();
+              _this12.splashScreen.hide();
 
-              _this9.userService.authenticated.subscribe(function (a) {
-                a ? _this9.router.navigate(['home', 'dashboard']) : _this9.router.navigate(['home', 'login']);
+              _this12.userService.authenticated.subscribe(function (a) {
+                a ? _this12.router.navigate(['home', 'dashboard']) : _this12.router.navigate(['home', 'login']);
               });
             });
           }
@@ -2093,7 +2140,7 @@
         }, {
           key: "buy",
           value: function buy(cId, quantity, stopLoss, target, order, price) {
-            var _this10 = this;
+            var _this13 = this;
 
             var company;
             this.stockService.getStock(cId).subscribe(function (c) {
@@ -2106,9 +2153,9 @@
                 target: target,
                 price: price
               };
-              order == 'limit' ? _this10.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
+              order == 'limit' ? _this13.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
                 return console.log('buy', r);
-              }) : _this10.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
+              }) : _this13.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
                 return console.log('buy', r);
               });
             });
@@ -2116,7 +2163,7 @@
         }, {
           key: "sell",
           value: function sell(cId, quantity, stopLoss, target, order, price) {
-            var _this11 = this;
+            var _this14 = this;
 
             var company;
             this.stockService.getStock(cId).subscribe(function (c) {
@@ -2129,9 +2176,9 @@
                 target: target,
                 price: price
               };
-              order == 'limit' ? _this11.stockService.orderStockLimitSell(pending).subscribe(function (r) {
+              order == 'limit' ? _this14.stockService.orderStockLimitSell(pending).subscribe(function (r) {
                 return console.log('sell', r);
-              }) : _this11.stockService.orderStockMarketSell(pending).subscribe(function (r) {
+              }) : _this14.stockService.orderStockMarketSell(pending).subscribe(function (r) {
                 return console.log('sell', r);
               });
             });
@@ -2241,10 +2288,10 @@
         _createClass(BuySellModalPopupComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this12 = this;
+            var _this15 = this;
 
             this.stockService.listen(this.selectedStock.id).subscribe(function (res) {
-              _this12.selectedStock.ltp = res[0].price;
+              _this15.selectedStock.ltp = res[0].price;
             });
           }
         }, {
@@ -2373,7 +2420,7 @@
 
       var UserService = /*#__PURE__*/function () {
         function UserService(http, storage, platform) {
-          var _this13 = this;
+          var _this16 = this;
 
           _classCallCheck(this, UserService);
 
@@ -2386,7 +2433,7 @@
           this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
           this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
           this.platform.ready().then(function () {
-            _this13.checkToken();
+            _this16.checkToken();
           });
         }
 
@@ -2399,7 +2446,7 @@
         }, {
           key: "logIn",
           value: function logIn(input) {
-            var _this14 = this;
+            var _this17 = this;
 
             return this.http.post(this.apiUrl + "login", input).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (res) {
               var user = {
@@ -2411,11 +2458,11 @@
                 }
               };
 
-              _this14.authenticate(user, res.jwt);
+              _this17.authenticate(user, res.jwt);
 
-              _this14.decodedToken = _this14.decodeToken(res.jwt);
+              _this17.decodedToken = _this17.decodeToken(res.jwt);
 
-              _this14.checkToken();
+              _this17.checkToken();
             }));
           }
         }, {
@@ -2427,6 +2474,11 @@
           key: "googleAuth",
           value: function googleAuth() {
             return this.http.get(this.apiUrl + 'google');
+          }
+        }, {
+          key: "getLeaderboard",
+          value: function getLeaderboard() {
+            return this.http.get(this.apiUrl + 'leaderboard');
           }
         }, {
           key: "accountDetails",
@@ -2474,7 +2526,7 @@
         }, {
           key: "authenticate",
           value: function authenticate(user, token) {
-            var _this15 = this;
+            var _this18 = this;
 
             return this.storage.set('token', {
               user: user,
@@ -2482,7 +2534,7 @@
             }).then(function (r) {
               localStorage.setItem('token', token);
 
-              _this15.authenticated.next({
+              _this18.authenticated.next({
                 user: user,
                 token: token
               });
@@ -2500,25 +2552,25 @@
         }, {
           key: "checkToken",
           value: function checkToken() {
-            var _this16 = this;
+            var _this19 = this;
 
             return this.storage.get('token').then(function (r) {
               if (r) {
-                _this16.authenticated.next(r);
+                _this19.authenticated.next(r);
 
-                _this16.user.next(r.user);
+                _this19.user.next(r.user);
               }
             });
           }
         }, {
           key: "logout",
           value: function logout() {
-            var _this17 = this;
+            var _this20 = this;
 
             this.user.next(null);
             localStorage.removeItem('token');
             return this.storage.remove('token').then(function (r) {
-              return _this17.authenticated.next(false);
+              return _this20.authenticated.next(false);
             });
           }
         }, {
@@ -2644,16 +2696,16 @@
         _createClass(ModalEditWatchlistsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this18 = this;
+            var _this21 = this;
 
             this.userService.getSettings().subscribe(function (r) {
               var datatype = r.data.datatype;
-              if (datatype == 'simulated') _this18.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
+              if (datatype == 'simulated') _this21.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
                 console.log('simulated', r);
               });
-              if (datatype == 'realtime') _this18.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
+              if (datatype == 'realtime') _this21.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
                 console.log('realtime', r);
-                _this18.watchlists = r.data;
+                _this21.watchlists = r.data;
               });
             });
           }
@@ -2665,12 +2717,12 @@
         }, {
           key: "onCreateWatchlist",
           value: function onCreateWatchlist(createWatchlistForm) {
-            var _this19 = this;
+            var _this22 = this;
 
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
               this.watchlistService.createWatchlist(this.watchlistName).subscribe(function () {
-                return _this19.changeInWatchlist = true;
+                return _this22.changeInWatchlist = true;
               });
               this.watchlistName = '';
             }
@@ -2685,7 +2737,7 @@
         }, {
           key: "changePosition",
           value: function changePosition() {
-            var _this20 = this;
+            var _this23 = this;
 
             // this.watchlists = this.watchlistService.moveInArray(this.watchlists, event.previousIndex, event.currentIndex)
             var positions = [];
@@ -2699,7 +2751,7 @@
             }
 
             this.watchlistService.updateWatchlistPositions(positions).subscribe(function () {
-              return _this20.changeInWatchlist = true;
+              return _this23.changeInWatchlist = true;
             });
           }
         }]);
@@ -2879,10 +2931,10 @@
         _createClass(ModalWithdrawAddFundsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this21 = this;
+            var _this24 = this;
 
             this.userService.authenticated.subscribe(function (u) {
-              return _this21.user = u.user;
+              return _this24.user = u.user;
             });
           }
         }, {
@@ -3030,6 +3082,14 @@
       var _environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
       /*! ./environments/environment */
       "AytR");
+      /* harmony import */
+
+
+      var _ionic_pwa_elements_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+      /*! @ionic/pwa-elements/loader */
+      "2Zi2");
+
+      Object(_ionic_pwa_elements_loader__WEBPACK_IMPORTED_MODULE_5__["defineCustomElements"])(window);
 
       if (_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].production) {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["enableProdMode"])();

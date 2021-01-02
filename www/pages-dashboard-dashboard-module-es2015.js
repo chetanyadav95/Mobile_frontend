@@ -63,10 +63,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "TEn/");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "tyNb");
-/* harmony import */ var src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/services/leaderboard.service */ "NONO");
-/* harmony import */ var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! src/app/services/user.service */ "qfBg");
-/* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "0QAI");
-
+/* harmony import */ var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! src/app/services/user.service */ "qfBg");
+/* harmony import */ var _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/screen-orientation/ngx */ "0QAI");
 
 
 
@@ -76,9 +74,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let DashboardPage = class DashboardPage {
-    constructor(router, leaderboardService, userService, platform, screenOrientation) {
+    constructor(router, userService, platform, screenOrientation) {
         this.router = router;
-        this.leaderboardService = leaderboardService;
         this.userService = userService;
         this.platform = platform;
         this.screenOrientation = screenOrientation;
@@ -148,15 +145,18 @@ let DashboardPage = class DashboardPage {
         this.checkIfItIsDashboard();
         this.view = [this.platform.width(), this.platform.height() * 0.6];
         this.screenOrientation.onChange().subscribe(() => this.view = [this.platform.width(), this.platform.height() * 0.5]);
-        this.leaderboard = this.leaderboardService.leaderboard;
+        // this.leaderboard = this.leaderboardService.leaderboard
         this.userService.authenticated.subscribe(u => {
             this.user = u.user;
             this.userService.accountDetails().subscribe((r) => {
-                this.user.balance.availableBal = parseFloat(r.account.currentBalance);
-                this.user.balance.openBal = parseFloat(r.account.currentBalance);
+                this.user.balance.availableBal = parseFloat(parseFloat(r.account.currentBalance).toFixed(2));
+                this.user.balance.openBal = parseFloat(r.account.initialAmount);
+                this.user.balance.pAndL = this.user.balance.availableBal - this.user.balance.openBal;
+                this.user.balance.gain = this.user.balance.pAndL / this.user.balance.openBal;
                 this.user.balance.currency = r.account.currency;
             });
         });
+        this.userService.getLeaderboard().subscribe((r) => this.leaderboard = r.data);
     }
     navigateToLeaderboard() {
         this.router.navigate(['home', 'dashboard', 'leaderboard']);
@@ -170,10 +170,9 @@ let DashboardPage = class DashboardPage {
 };
 DashboardPage.ctorParameters = () => [
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] },
-    { type: src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_6__["LeaderboardService"] },
-    { type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__["UserService"] },
+    { type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_6__["UserService"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"] },
-    { type: _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_8__["ScreenOrientation"] }
+    { type: _ionic_native_screen_orientation_ngx__WEBPACK_IMPORTED_MODULE_7__["ScreenOrientation"] }
 ];
 DashboardPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_4__["Component"])({
@@ -200,65 +199,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "NONO":
-/*!*************************************************!*\
-  !*** ./src/app/services/leaderboard.service.ts ***!
-  \*************************************************/
-/*! exports provided: LeaderboardService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LeaderboardService", function() { return LeaderboardService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
-
-
-let LeaderboardService = class LeaderboardService {
-    constructor() {
-        this.leaderboard = [
-            {
-                name: 'Chetan',
-                score: 0.310
-            },
-            {
-                name: 'Ibrahim',
-                score: 0.301
-            },
-            {
-                name: 'Muatesim',
-                score: 0.293
-            },
-            {
-                name: 'John',
-                score: 0.291
-            },
-            {
-                name: 'Priyansh',
-                score: 0.285
-            },
-            {
-                name: 'Amit',
-                score: 0.279
-            },
-            {
-                name: 'Michael',
-                score: 0.268
-            },
-        ];
-    }
-};
-LeaderboardService.ctorParameters = () => [];
-LeaderboardService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-        providedIn: 'root'
-    })
-], LeaderboardService);
-
-
-
-/***/ }),
-
 /***/ "Rmqo":
 /*!*****************************************************************!*\
   !*** ./src/app/pages/dashboard/leaderboard/leaderboard.page.ts ***!
@@ -273,22 +213,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _raw_loader_leaderboard_page_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! raw-loader!./leaderboard.page.html */ "rcsW");
 /* harmony import */ var _leaderboard_page_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./leaderboard.page.scss */ "9lGJ");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/leaderboard.service */ "NONO");
+/* harmony import */ var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/user.service */ "qfBg");
 
 
 
 
 
 let LeaderboardPage = class LeaderboardPage {
-    constructor(leaderboardService) {
-        this.leaderboardService = leaderboardService;
+    constructor(userService) {
+        this.userService = userService;
     }
     ngOnInit() {
-        this.leaderboard = this.leaderboardService.leaderboard;
+        this.userService.getLeaderboard().subscribe((r) => this.leaderboard = r.data);
     }
 };
 LeaderboardPage.ctorParameters = () => [
-    { type: src_app_services_leaderboard_service__WEBPACK_IMPORTED_MODULE_4__["LeaderboardService"] }
+    { type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_4__["UserService"] }
 ];
 LeaderboardPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
@@ -354,7 +294,7 @@ DashboardPageRoutingModule = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decora
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"home/dashboard\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Leaderboard</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<table class=\"leaderboard-table\">\n\t\t<thead class=\"header-labels\">\n\t\t\t<tr>\n\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr *ngFor=\"let user of leaderboard ; let i=index\">\n\t\t\t\t<td><ion-label>{{i + 1}}</ion-label></td>\n\t\t\t\t<td><ion-label>{{user.name}}</ion-label></td>\n\t\t\t\t<td><ion-label>{{user.score | percent:'1.1'}}</ion-label></td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"home/dashboard\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>Leaderboard</ion-title>\n\t</ion-toolbar>\n</ion-header>\n\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column; justify-content: center; align-items: center\">\n\t\t\t\t<!-- <ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Leaderboard</ion-title> -->\n\t\t\t\t<ion-list style=\"width: 100%\">\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.rank}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.userName}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.gain | number:'1.1'}}%</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n");
 
 /***/ }),
 
@@ -367,7 +307,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title>Dashboard</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content class=\"ion-padding-top\">\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text> <h5>Hi {{user?.username}}</h5> </ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<hr />\n\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\" style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-no-padding ion-padding-bottom\">Funds</ion-title>\n\t\t\t\t<table class=\"balance-overview-table\">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Opening bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{user?.balance.openBal != null ? user?.balance.openBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Available bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{user?.balance.availableBal != null ? user?.balance.availableBal : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>P/L:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{user?.balance.pAndL != null ? user?.balance.pAndL : 0}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>% gain:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.gain != null ? user?.balance.gain * 100 : 0}}%</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Funds Chart</ion-title>\n\t\t\t\t<ngx-charts-line-chart\n\t\t\t\t\t[legend]=\"false\"\n\t\t\t\t\t[showXAxisLabel]=\"false\"\n\t\t\t\t\t[showYAxisLabel]=\"false\"\n\t\t\t\t\t[xAxis]=\"true\"\n\t\t\t\t\t[yAxis]=\"true\"\n\t\t\t\t\t[timeline]=\"true\"\n\t\t\t\t\t[results]=\"data\"\n\t\t\t\t\t[view]=\"view\"\n\t\t\t\t>\n\t\t\t\t</ngx-charts-line-chart>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Leaderboard</ion-title>\n\t\t\t\t<ion-list style=\"width: 100%;\">\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard | slice:0:5 ; let i=index\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{i + 1}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.name}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.score | percent:'1.1'}}</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-button\n\t\t\t\t\t\t\t(click)=\"navigateToLeaderboard()\"\n\t\t\t\t\t\t\tcolor=\"tertiary\"\n\t\t\t\t\t\t\tsize=\"small\"\n\t\t\t\t\t\t\tfill=\"clear\"\n\t\t\t\t\t\t\tclass=\"see-more-button\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\tSee more\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header>\n\t<ion-toolbar>\n\t\t<ion-title>Dashboard</ion-title>\n\t\t<ion-img slot=\"end\" src=\"/assets/logo_no_back.png\" class=\"logo\"></ion-img>\n\t</ion-toolbar>\n</ion-header>\n<ion-content class=\"ion-padding-top\">\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\">\n\t\t\t\t<ion-text> <h5>Hi {{user?.username}}</h5> </ion-text>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<hr />\n\n\t\t<ion-row>\n\t\t\t<ion-col size=\"12\" style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-no-padding ion-padding-bottom\">Funds</ion-title>\n\t\t\t\t<table class=\"balance-overview-table\">\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Opening bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{(user?.balance.openBal != null ? user?.balance.openBal : 0) | number:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>Available bal:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{(user?.balance.availableBal != null ? user?.balance.availableBal : 0) | number:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>P/L:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{user?.balance.currency}} {{(user?.balance.pAndL != null ? user?.balance.pAndL : 0) | number:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td><ion-label>% gain:</ion-label></td>\n\t\t\t\t\t\t<td class=\"ion-padding-start ion-text-right\"><ion-label>{{(user?.balance.gain != null ? user?.balance.gain : 0) | percent:'1.2'}}</ion-label></td>\n\t\t\t\t\t</tr>\n\t\t\t\t</table>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Funds Chart</ion-title>\n\t\t\t\t<ngx-charts-line-chart\n\t\t\t\t\t[legend]=\"false\"\n\t\t\t\t\t[showXAxisLabel]=\"false\"\n\t\t\t\t\t[showYAxisLabel]=\"false\"\n\t\t\t\t\t[xAxis]=\"true\"\n\t\t\t\t\t[yAxis]=\"true\"\n\t\t\t\t\t[timeline]=\"true\"\n\t\t\t\t\t[results]=\"data\"\n\t\t\t\t\t[view]=\"view\"\n\t\t\t\t>\n\t\t\t\t</ngx-charts-line-chart>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col style=\"display: flex; flex-direction: column;;justify-content: center;align-items: center;\">\n\t\t\t\t<ion-title class=\"ion-margin-vertical ion-no-padding ion-text-left\">Leaderboard</ion-title>\n\t\t\t\t<ion-list style=\"width: 100%;\">\n\t\t\t\t\t<table class=\"leaderboard-table\">\n\t\t\t\t\t\t<thead class=\"header-labels\">\n\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t<th><ion-label>Rank</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>Name</ion-label></th>\n\t\t\t\t\t\t\t\t<th><ion-label>% Gain</ion-label></th>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</thead>\n\t\t\t\t\t\t<tbody>\n\t\t\t\t\t\t\t<tr *ngFor=\"let user of leaderboard | slice:0:5\">\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.rank}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.userName}}</ion-label></td>\n\t\t\t\t\t\t\t\t<td><ion-label>{{user?.gain | number:'1.1'}}%</ion-label></td>\n\t\t\t\t\t\t\t</tr>\n\t\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n\t\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t\t<ion-button\n\t\t\t\t\t\t\t(click)=\"navigateToLeaderboard()\"\n\t\t\t\t\t\t\tcolor=\"tertiary\"\n\t\t\t\t\t\t\tsize=\"small\"\n\t\t\t\t\t\t\tfill=\"clear\"\n\t\t\t\t\t\t\tclass=\"see-more-button\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\tSee more\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n");
 
 /***/ }),
 

@@ -202,7 +202,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of filteredPositional || positionalPsts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of filteredPositional || positionalPsts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n</ion-content>\n<ion-fab horizontal=\"end\" vertical=\"bottom\" style=\"position: absolute; bottom: 10px; right: 10px\">\n\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t<ion-icon name=\"add\"></ion-icon>\n\t</ion-fab-button>\n</ion-fab>\n");
 
 /***/ }),
 
@@ -270,7 +270,7 @@ MarubozuService = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let demo of filteredDemotrading || demotrading\" (click)=\"openPostModal(demo)\">\n\t\t<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"demo.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let demo of filteredDemotrading || demotrading\" (click)=\"openPostModal(demo)\">\n\t\t<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"demo.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n</ion-content>\n<ion-fab horizontal=\"end\" vertical=\"bottom\" style=\"position: absolute; bottom: 10px; right: 10px\">\n\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t<ion-icon name=\"add\"></ion-icon>\n\t</ion-fab-button>\n</ion-fab>\n");
 
 /***/ }),
 
@@ -467,7 +467,7 @@ LearningPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of videos; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.name}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.url)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tallowtransparency=\"true\"\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of sanitizedVideos; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\">{{video.name}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"video\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tallowtransparency=\"true\"\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n");
 
 /***/ }),
 
@@ -573,7 +573,7 @@ PositionalPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input [(ngModel)]=\"title\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input [(ngModel)]=\"stockName\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item>\n\t\t\t\t\t<ion-label position=\"floating\">Content</ion-label>\n\t\t\t\t\t<ion-textarea [(ngModel)]=\"content\"></ion-textarea>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\">\n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon>\n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\" (click)=\"uploadImageData()\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input [(ngModel)]=\"title\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input [(ngModel)]=\"stockName\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Content</ion-label>\n\t\t\t\t\t<ion-textarea [(ngModel)]=\"content\"></ion-textarea>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\">\n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon>\n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\" (click)=\"uploadImageData()\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n");
 
 /***/ }),
 
@@ -608,9 +608,15 @@ let TutorialsPage = class TutorialsPage {
         this.marubozuService = marubozuService;
     }
     ngOnInit() {
+        this.sanitizedVideos = [];
         this.videos = this.learningService.videos;
         this.marubozuService.get('tutorial').subscribe((r) => {
             this.vids = r.data;
+        });
+        this.videos.forEach(v => {
+            const video = this.sanitizeUrl(v.url);
+            video.name = v.name;
+            this.sanitizedVideos.push(video);
         });
     }
     sanitizeUrl(url) {
@@ -804,7 +810,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of filteredPosts || intraday\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of filteredPosts || intraday\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n</ion-content>\n<ion-fab horizontal=\"end\" vertical=\"bottom\" style=\"position: absolute; bottom: 10px; right: 10px\">\n\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t<ion-icon name=\"add\"></ion-icon>\n\t</ion-fab-button>\n</ion-fab>\n");
 
 /***/ }),
 
@@ -1212,13 +1218,13 @@ let ModalUploadPostComponent = class ModalUploadPostComponent {
                             this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
                         }
                     },
-                    // {
-                    //   text: 'Use Camera',
-                    //   icon: 'camera',
-                    //   handler: () => {
-                    //       this.takePicture(this.camera.PictureSourceType.CAMERA);
-                    //   }
-                    // },
+                    {
+                        text: 'Use Camera',
+                        icon: 'camera',
+                        handler: () => {
+                            this.takePicture(this.camera.PictureSourceType.CAMERA);
+                        }
+                    },
                     {
                         text: 'Cancel',
                         role: 'cancel'
@@ -1284,7 +1290,8 @@ let ModalUploadPostComponent = class ModalUploadPostComponent {
             const imgBlob = new Blob([reader.result], {
                 type: file.type
             });
-            this.formData.append('file', imgBlob, file.name);
+            if (this.formData == null)
+                this.formData.append('file', imgBlob, file.name);
             // this.uploadImageData(formData);
         };
         reader.readAsArrayBuffer(file);
