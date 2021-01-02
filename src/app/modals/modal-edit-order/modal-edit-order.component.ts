@@ -13,15 +13,18 @@ export class ModalEditOrderComponent implements OnInit {
   
   constructor(private modalCtrl: ModalController, private orderService: OrderService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.position)
+    console.log(this.pending)
+  }
 
-  dismissModal(){
-    this.modalCtrl.dismiss()
+  dismissModal(change?){
+    this.modalCtrl.dismiss(change)
   }
 
   savePosition(){
-    (this.position != null) && this.orderService.savePosition(this.position.id, this.position.target, this.position.stoploss).subscribe(r => console.log(r))
-    this.dismissModal()
+    (this.position != null) && this.orderService.updateOrder(this.position.id, this.position.target, this.position.stoploss).subscribe(r => console.log(r))
+    this.dismissModal(true)
   }
 
   sellPosition(){
@@ -30,8 +33,8 @@ export class ModalEditOrderComponent implements OnInit {
   }
 
   savePending(){
-    // (this.pending != null) && this.orderService.savePending(this.pending)
-    // this.dismissModal()
+    (this.pending != null) && this.orderService.updateOrder(this.pending.id, this.pending.target, this.pending.stoploss).subscribe(r => console.log(r))
+    this.dismissModal(true)
   }
 
 }

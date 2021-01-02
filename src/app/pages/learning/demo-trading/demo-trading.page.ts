@@ -2,7 +2,7 @@ import { ModalController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { ModalUploadPostComponent } from 'src/app/modals/modal-upload-post/modal-upload-post.component';
 import { MarubozuService } from 'src/app/services/marubozu.service';
-import { Marubozu } from 'src/app/models/marubozu';
+import { Marubozu } from 'src/app/models/marubozu.model';
 import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.component';
 
 @Component({
@@ -12,6 +12,7 @@ import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.compone
 })
 export class DemoTradingPage implements OnInit {
   demotrading: Marubozu[]
+  filteredDemotrading: Marubozu[]
   constructor(private modalController: ModalController, private marubozuService: MarubozuService) { }
 
   ngOnInit() {
@@ -28,12 +29,17 @@ export class DemoTradingPage implements OnInit {
     });
     return await modal.present();
   }
+
   async openPostModal(demotrading) {
     const modal = await this.modalController.create({
       component: ModalPostComponent,
       componentProps: {blog: demotrading}
     });
     return await modal.present();
+  }
+
+  filter(e){
+    this.filteredDemotrading = this.demotrading.filter(p => p.title.toLowerCase().includes(e.detail.value.toLowerCase()))
   }
 
 }

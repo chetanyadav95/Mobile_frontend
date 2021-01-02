@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.component';
 import { Blog } from 'src/app/models/blog.model';
-import { Marubozu } from 'src/app/models/marubozu';
+import { Marubozu } from 'src/app/models/marubozu.model';
 import { LearningService } from 'src/app/services/learning.service';
 import { MarubozuService } from 'src/app/services/marubozu.service';
 

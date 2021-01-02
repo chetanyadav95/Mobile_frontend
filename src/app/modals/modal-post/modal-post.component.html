@@ -1,12 +1,13 @@
 <ion-header class="ion-no-border">
 	<ion-toolbar>
-		<ion-title>Blog</ion-title>
+		<ion-title>{{blog.title}}</ion-title>
 		<ion-buttons slot="end">
 			<ion-button (click)="dismissModal()">Close</ion-button>
 		</ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-	<h4 class="ion-padding-horizontal">{{blog.name}}</h4>
-	<span class="ion-padding-horizontal">{{blog.url}}</span>
+<ion-content style="display: flex; flex-direction: column">
+	<!-- <h4 class="ion-padding-horizontal"></h4> -->
+	<ion-img [src]="blog.image" class="ion-margin"></ion-img>
+	<span class="ion-padding-horizontal">{{blog.content}}</span>
 </ion-content>

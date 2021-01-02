@@ -1,13 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/services/order.service';
-import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, ModalController } from '@ionic/angular';
 import { ModalEditOrderComponent } from 'src/app/modals/modal-edit-order/modal-edit-order.component';
 import { Order } from 'src/app/models/order.model';
 import { StockService } from 'src/app/services/stock.service';
-import { Stock } from 'src/app/models/stock.model';
 import { Subscription } from 'rxjs';
-import { data } from 'jquery';
 import { OrderMin } from 'src/app/models/order-min';
 
 @Component({
@@ -16,9 +13,12 @@ import { OrderMin } from 'src/app/models/order-min';
   styleUrls: ['./orders.page.scss'],
 })
 export class OrdersPage implements OnInit, OnDestroy {
-  position: OrderMin[] = []
-  completed: OrderMin[] = []
-  pending: OrderMin[] = []
+  position: OrderMin[]
+  completed: OrderMin[]
+  pending: OrderMin[]
+  filteredPosition: OrderMin[]
+  filteredCompleted: OrderMin[]
+  filteredPending: OrderMin[]
   dataLoaded: boolean
   totalPandL: number
   pageIndex: number
@@ -93,7 +93,7 @@ export class OrdersPage implements OnInit, OnDestroy {
   //     }
   //   }
   // }
-  orderPlacement(status, order, price, key = 'price', orderCategory?){
+  orderPlacement(status, order, price, key?, orderCategory?){
     const o = Object.assign({},order)
     switch (status) {
       case 'completed':
@@ -109,6 +109,7 @@ export class OrdersPage implements OnInit, OnDestroy {
           o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy'
         else o.orderCategory = order.orderCategory
         key != null ? o.key = key : o.key = 'price'
+        console.log('key not recognized as target nor stoploss');
         this.pending.push(o)
         break;
       case 'notFilled':
@@ -172,6 +173,9 @@ export class OrdersPage implements OnInit, OnDestroy {
       component: ModalEditOrderComponent,
       componentProps: {position}
     });
+    modal.onDidDismiss().then((data) => {
+      if(data == true) this.getOrders()
+    })
     return await modal.present();
   }
 
@@ -180,6 +184,9 @@ export class OrdersPage implements OnInit, OnDestroy {
       component: ModalEditOrderComponent,
       componentProps: {pending}
     });
+    modal.onDidDismiss().then((data) => {
+      if(data == true) this.getOrders()
+    })
     return await modal.present();
   }
 
@@ -198,6 +205,18 @@ export class OrdersPage implements OnInit, OnDestroy {
     if(typeof(tab) == 'number') this.pageIndex = tab
     else this.pageIndex = tab.detail.index
     this.updateLtp()
+  }
+
+  filterPosition(e){
+    this.filteredPosition = this.position.filter(p => p.name.toLowerCase().includes(e.detail.value.toLowerCase()))
+  }
+
+  filterCompleted(e){
+    this.filteredCompleted = this.completed.filter(p => p.name.toLowerCase().includes(e.detail.value.toLowerCase()))
+  }
+
+  filterPending(e){
+    this.filteredPending = this.pending.filter(p => p.name.toLowerCase().includes(e.detail.value.toLowerCase()))
   }
 
   ionViewDidLeave(){

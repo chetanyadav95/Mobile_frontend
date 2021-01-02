@@ -5,6 +5,8 @@ export interface OrderMin {
     name: string
     price: number
     quantity: number
+    ltp?: number
+    status?: string
     stoploss?: number
     target?: number
     key?: number

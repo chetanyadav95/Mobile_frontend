@@ -93,7 +93,6 @@ let WatchlistPage = class WatchlistPage {
         this.actionSheetController = actionSheetController;
         this.stockService = stockService;
         this.userService = userService;
-        this.companies = [];
         this.watchlists = [];
         this.subscribedSockets = [];
     }
@@ -163,8 +162,8 @@ let WatchlistPage = class WatchlistPage {
                 component: src_app_modals_modal_watchlist_modal_watchlist_component__WEBPACK_IMPORTED_MODULE_8__["ModalWatchlistComponent"],
                 componentProps: { selectedWatchlist: id }
             });
-            modal.onDidDismiss().then(() => {
-                this.getWatchlists();
+            modal.onDidDismiss().then(d => {
+                d == true && this.getWatchlists();
             });
             return yield modal.present();
         });
@@ -175,8 +174,8 @@ let WatchlistPage = class WatchlistPage {
                 component: src_app_modals_modal_watchlist_ce_modal_watchlist_ce_component__WEBPACK_IMPORTED_MODULE_7__["ModalWatchlistCeComponent"],
                 componentProps: { isEdit, selectedWatchlist: this.watchlists[this.selectedWatchlist] }
             });
-            modal.onDidDismiss().then(() => {
-                this.getWatchlists();
+            modal.onDidDismiss().then(d => {
+                d == true && this.getWatchlists();
             });
             return yield modal.present();
         });
@@ -195,8 +194,8 @@ let WatchlistPage = class WatchlistPage {
             const modal = yield this.modalController.create({
                 component: src_app_modals_modal_edit_watchlists_modal_edit_watchlists_component__WEBPACK_IMPORTED_MODULE_6__["ModalEditWatchlistsComponent"],
             });
-            modal.onDidDismiss().then(() => {
-                this.getWatchlists();
+            modal.onDidDismiss().then(d => {
+                d == true && this.getWatchlists();
             });
             return yield modal.present();
         });
@@ -515,11 +514,13 @@ let BuySellPage = class BuySellPage {
         this.orderService = orderService;
         this.router = router;
         this.userService = userService;
+        this.price = 0;
+        this.quantity = 0;
+        this.capitalAtRisk = 0;
         this.limitVal = 0;
+        this.approxMargin = 0;
     }
     ngOnInit() {
-        this.approxMargin = 2167;
-        this.capitalAtRisk = this.approxMargin / this.availableBalance;
         this.userService.accountDetails().subscribe((res) => {
             this.availableBalance = res.account.currentBalance;
         });
@@ -530,6 +531,16 @@ let BuySellPage = class BuySellPage {
             this.company = c.data;
             this.updateLtp();
         }));
+    }
+    ngAfterViewInit() {
+        this.buySellForm.valueChanges.subscribe(data => {
+            this.approxMargin = data.price * data.quantity;
+            this.capitalAtRisk = this.approxMargin / this.availableBalance;
+            if ((data.quantity == 0 && data.price == 0) || data.quantity == null || data.price == null) {
+                this.capitalAtRisk = 0;
+                this.approxMargin = 0;
+            }
+        });
     }
     updateLtp() {
         var _a;
@@ -573,7 +584,8 @@ BuySellPage.ctorParameters = () => [
     { type: src_app_services_user_service__WEBPACK_IMPORTED_MODULE_7__["UserService"] }
 ];
 BuySellPage.propDecorators = {
-    buySellForm: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["ViewChild"], args: ['buySellForm',] }]
+    buySellForm: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["ViewChild"], args: ['buySellForm',] }],
+    marketRadio: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_3__["ViewChild"], args: ['marketRadio',] }]
 };
 BuySellPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_3__["Component"])({
@@ -596,7 +608,7 @@ BuySellPage = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"])([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<ion-header translucent>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"['home','watchlist']\" (click)=\"navigateToWatchlist()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>{{company?.companyName}}</ion-title>\n\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button>\n\t\t\t\t<ion-select ok-text=\"Okay\" cancel-text=\"Cancel\" value=\"{{isBuy ? 'true' : 'false'}}\" (ionChange)=\"changeType($event)\">\n\t\t\t\t\t<ion-select-option value=\"true\">Buy</ion-select-option>\n\t\t\t\t\t<ion-select-option value=\"false\">Sell</ion-select-option>\n\t\t\t\t</ion-select>\n\t\t\t</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<form #buySellForm=\"ngForm\" id=\"buySellForm\">\n\t\t<ion-card>\n\t\t\t<ion-grid>\n\t\t\t\t<ion-row>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Quantity</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Lot: 1</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"quantity\" ngModel required min=0></ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Price</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Tick: 0.05</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\t\tname=\"price\"\n\t\t\t\t\t\t\t\t[(ngModel)]=\"marketRadio.checked ? company?.ltp : limitVal\"\n\t\t\t\t\t\t\t\t[ngClass]=\"{'disabled-input':marketRadio.checked}\"\n\t\t\t\t\t\t\t\t[required]=\"!marketRadio.checked\"\n\t\t\t\t\t\t\t\t[disabled]=\"marketRadio.checked\"\n\t\t\t\t\t\t\t\tmin=0\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t</ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t</ion-row>\n\t\t\t</ion-grid>\n\t\t</ion-card>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"stopLoss\" ngModel required min=0></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"target\" ngModel required min=0></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"bs-radio-group\">\n\t\t\t\t\t<ion-text><h5>Order</h5></ion-text>\n\t\t\t\t\t<ul class=\"radios\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t#marketRadio\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"market\"\n\t\t\t\t\t\t\t\tid=\"radio-market\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tchecked\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-market\">MARKET</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"limit\"\n\t\t\t\t\t\t\t\tid=\"radio-limit\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-limit\">LIMIT</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr />\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=6 class=\"ion-text-left\">\n\t\t\t\t\t<ion-text><p>Approx. Margin:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Available Balance:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Capital at Risk:</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=6 class=\"ion-text-right\">\n\t\t\t\t\t<ion-text><p>{{approxMargin}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{availableBalance}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{capitalAtRisk | percent:'1.1'}}</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</form>\n</ion-content>\n<ion-footer>\n\t<ion-toolbar>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"tertiary\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm buy\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"!isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"danger\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm Sell\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</ion-toolbar>\n</ion-footer>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<ion-header translucent>\n\t<ion-toolbar>\n\t\t<ion-buttons slot=\"start\">\n\t\t\t<ion-back-button defaultHref=\"['home','watchlist']\" (click)=\"navigateToWatchlist()\"></ion-back-button>\n\t\t</ion-buttons>\n\t\t<ion-title>{{company?.companyName}}</ion-title>\n\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button>\n\t\t\t\t<ion-select\n\t\t\t\t\tok-text=\"Okay\"\n\t\t\t\t\tcancel-text=\"Cancel\"\n\t\t\t\t\tvalue=\"{{isBuy ? 'true' : 'false'}}\"\n\t\t\t\t\t(ionChange)=\"changeType($event)\"\n\t\t\t\t>\n\t\t\t\t\t<ion-select-option value=\"true\">Buy</ion-select-option>\n\t\t\t\t\t<ion-select-option value=\"false\">Sell</ion-select-option>\n\t\t\t\t</ion-select>\n\t\t\t</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<form #buySellForm=\"ngForm\" id=\"buySellForm\" form-directive>\n\t\t<ion-card>\n\t\t\t<ion-grid>\n\t\t\t\t<ion-row>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Quantity</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Lot: 1</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\t\tname=\"quantity\"\n\t\t\t\t\t\t\t\t[(ngModel)]=\"quantity\"\n\t\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t\t<ion-card-title>Price</ion-card-title>\n\t\t\t\t\t\t\t<ion-card-subtitle>Tick: 0.05</ion-card-subtitle>\n\t\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\t\tname=\"price\"\n\t\t\t\t\t\t\t\t[(ngModel)]=\"marketRadio.checked ? company?.ltp : limitVal\"\n\t\t\t\t\t\t\t\t[ngClass]=\"{'disabled-input':marketRadio.checked}\"\n\t\t\t\t\t\t\t\t[required]=\"!marketRadio.checked\"\n\t\t\t\t\t\t\t\t[disabled]=\"marketRadio.checked\"\n\t\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t</ion-input>\n\t\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t</ion-col>\n\t\t\t\t</ion-row>\n\t\t\t</ion-grid>\n\t\t</ion-card>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"stopLoss\" ngModel required min=\"0\"></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=\"6\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input type=\"number\" class=\"card-input\" name=\"target\" ngModel required min=\"0\"></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr />\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"bs-radio-group\">\n\t\t\t\t\t<ion-text><h5>Order</h5></ion-text>\n\t\t\t\t\t<ul class=\"radios\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\t#marketRadio\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"market\"\n\t\t\t\t\t\t\t\tid=\"radio-market\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tchecked\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-market\">MARKET</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t<input\n\t\t\t\t\t\t\t\ttype=\"radio\"\n\t\t\t\t\t\t\t\tslot=\"start\"\n\t\t\t\t\t\t\t\tvalue=\"limit\"\n\t\t\t\t\t\t\t\tid=\"radio-limit\"\n\t\t\t\t\t\t\t\tname=\"order\"\n\t\t\t\t\t\t\t\tngModel\n\t\t\t\t\t\t\t\t[ngClass]=\"{'red':!isBuy,'blue':isBuy}\"\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t\t<label for=\"radio-limit\">LIMIT</label>\n\t\t\t\t\t\t</li>\n\t\t\t\t\t</ul>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t\t<hr />\n\t\t\t<ion-row>\n\t\t\t\t<ion-col size=\"6\" class=\"ion-text-left\">\n\t\t\t\t\t<ion-text><p>Approx. Margin:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Available Balance:</p></ion-text>\n\t\t\t\t\t<ion-text><p>Capital at Risk:</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col size=\"6\" class=\"ion-text-right\">\n\t\t\t\t\t<ion-text><p>{{approxMargin}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{availableBalance}}</p></ion-text>\n\t\t\t\t\t<ion-text><p>{{capitalAtRisk | percent:'1.1'}}</p></ion-text>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</form>\n</ion-content>\n<ion-footer>\n\t<ion-toolbar>\n\t\t<ion-grid>\n\t\t\t<ion-row>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"tertiary\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm buy\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t\t<ion-col class=\"footer\" *ngIf=\"!isBuy\">\n\t\t\t\t\t<ion-button class=\"footer-button\" size=\"medium\" color=\"danger\" form=\"buySellForm\" (click)=\"onSubmit()\">\n\t\t\t\t\t\tConfirm Sell\n\t\t\t\t\t</ion-button>\n\t\t\t\t</ion-col>\n\t\t\t</ion-row>\n\t\t</ion-grid>\n\t</ion-toolbar>\n</ion-footer>\n");
 
 /***/ })
 

@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage';
 import { FilePath } from '@ionic-native/file-path/ngx';
 import { Post } from 'src/app/models/post.model';
 import { LearningService } from 'src/app/services/learning.service';
+import { MarubozuService } from 'src/app/services/marubozu.service';
 
 const STORAGE_KEY = 'assets';
 
@@ -21,12 +22,15 @@ export class ModalUploadPostComponent implements OnInit {
   @Input() positional: boolean = false
   @Input() demoTrading: boolean = false
   formData
+  stockName: string
+  title: string
+  content: string
   images = [];
   constructor(private modalCtrl: ModalController,
     private camera: Camera, private file: File, private http: HttpClient, private webview: WebView,
     private actionSheetController: ActionSheetController, private toastController: ToastController,
     private storage: Storage, private plt: Platform, private loadingController: LoadingController,
-    private ref: ChangeDetectorRef, private filePath: FilePath, private learningService: LearningService) { }
+    private ref: ChangeDetectorRef, private filePath: FilePath, private marubozuService: MarubozuService) { }
 
   ngOnInit() {}
 
@@ -215,7 +219,8 @@ readFile(file: any) {
       const imgBlob = new Blob([reader.result], {
           type: file.type
       });
-      this.formData.append('file', imgBlob, file.name);
+      if(this.formData == null)
+        this.formData.append('file', imgBlob, file.name);
       // this.uploadImageData(formData);
   };
   reader.readAsArrayBuffer(file);
@@ -228,20 +233,11 @@ async uploadImageData(formData: FormData) {
   await loading.present();
   
   console.log(formData)
-//   this.http.post("http://localhost:8888/upload.php", formData)
-//       .pipe(
-//           finalize(() => {
-//               loading.dismiss();
-//           })
-//       )
-//       .subscribe(res => {
-//           if (res['success']) {
-//               this.presentToast('File upload complete.')
-//           } else {
-//               this.presentToast('File upload failed.')
-//           }
-//       });
-//   }  
-  }
+  let key
+  if(this.intraDay) key = 'intraday'
+  else if(this.positional) key = 'positional'
+  else if(this.demoTrading) key = 'demotrading'
+  this.marubozuService.create(this.title,this.content,this.stockName, formData,key).subscribe(r => console.log(r))
 
+  }
 }

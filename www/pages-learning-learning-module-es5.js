@@ -376,6 +376,13 @@
               }, _callee3, this);
             }));
           }
+        }, {
+          key: "filter",
+          value: function filter(e) {
+            this.filteredDemotrading = this.demotrading.filter(function (p) {
+              return p.title.toLowerCase().includes(e.detail.value.toLowerCase());
+            });
+          }
         }]);
 
         return DemoTradingPage;
@@ -433,7 +440,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of positionalPsts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let positional of filteredPositional || positionalPsts\" (click)=\"openPostModal(positional)\">\n\t\t<ion-card-header><h5>{{positional.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"positional.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{positional.content | slice:0:120}}{{positional.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
       /***/
     },
 
@@ -564,7 +571,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let demo of demotrading\" (click)=\"openPostModal(demo)\">\n\t\t<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"demo.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let demo of filteredDemotrading || demotrading\" (click)=\"openPostModal(demo)\">\n\t\t<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"demo.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
       /***/
     },
 
@@ -690,7 +697,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Blog</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n  </ion-toolbar>\n</ion-header>\n<ion-content>\n\t<h4 class=\"ion-padding-horizontal\">{{blog.name}}</h4>\n\t<span class=\"ion-padding-horizontal\">{{blog.url}}</span>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>{{blog.title}}</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n  </ion-toolbar>\n</ion-header>\n<ion-content style=\"display: flex; flex-direction: column\">\n\t<!-- <h4 class=\"ion-padding-horizontal\"></h4> -->\n\t<ion-img [src]=\"blog.image\" class=\"ion-margin\"></ion-img>\n\t<span class=\"ion-padding-horizontal\">{{blog.content}}</span>\n</ion-content>\n";
       /***/
     },
 
@@ -917,7 +924,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of vids; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.title}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.embededurl)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-list>\n\t\t<div *ngFor=\"let video of videos; let i = index\" class=\"video-card\" >\n\t\t\t<ion-label class=\"ion-padding-horizontal\"><h4 class=\"video-title\" >{{video.name}}</h4></ion-label>\n\t\t\t<iframe\n\t\t\t\tclass=\"ion-padding\"\n\t\t\t\twidth=\"fit-content\"\n\t\t\t\theight=\"250\"\n\t\t\t\t[src]=\"sanitizeUrl(video.url)\"\n\t\t\t\tid=\"{{'video'+i}}\"\n\t\t\t\tframeborder=\"0\"\n\t\t\t\tallowfullscreen\n\t\t\t\tallowtransparency=\"true\"\n\t\t\t\tappVideoSwiper\n\t\t\t></iframe>\n\t\t</div>\n\t</ion-list>\n</ion-content>\n";
       /***/
     },
 
@@ -1101,6 +1108,13 @@
               }, _callee5, this);
             }));
           }
+        }, {
+          key: "filter",
+          value: function filter(e) {
+            this.filteredPositional = this.positionalPsts.filter(function (p) {
+              return p.title.toLowerCase().includes(e.detail.value.toLowerCase());
+            });
+          }
         }]);
 
         return PositionalPage;
@@ -1140,7 +1154,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\"> \n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon> \n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\" (click)=\"uploadImageData()\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>Upload post</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Post title</ion-label>\n\t\t\t\t\t<ion-input [(ngModel)]=\"title\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item class=\"ion-no-padding\">\n\t\t\t\t\t<ion-label position=\"floating\">Stock Name</ion-label>\n\t\t\t\t\t<ion-input [(ngModel)]=\"stockName\"></ion-input>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t\t<ion-col>\n\t\t\t\t<ion-item>\n\t\t\t\t\t<ion-label position=\"floating\">Content</ion-label>\n\t\t\t\t\t<ion-textarea [(ngModel)]=\"content\"></ion-textarea>\n\t\t\t\t</ion-item>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button color=\"success\" class=\"post-button\" expand=\"block\" (click)=\"selectImage()\">\n\t\t\t\t\t<ion-icon name=\"attach-outline\"></ion-icon>\n\t\t\t\t</ion-button>\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-button expand=\"block\" class=\"post-button\" (click)=\"uploadImageData()\">Post</ion-button>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-list>\n\t\t\t\t\t<ion-item *ngFor=\"let img of images; index as pos\" text-wrap>\n\t\t\t\t\t\t<ion-thumbnail slot=\"start\">\n\t\t\t\t\t\t\t<ion-img [src]=\"img.path\"></ion-img>\n\t\t\t\t\t\t</ion-thumbnail>\n\t\t\t\t\t\t<ion-label>\n\t\t\t\t\t\t\t{{ img.name }}\n\t\t\t\t\t\t</ion-label>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"startUpload(img)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"cloud-upload\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t\t<ion-button slot=\"end\" fill=\"clear\" (click)=\"deleteImage(img, pos)\">\n\t\t\t\t\t\t\t<ion-icon slot=\"icon-only\" name=\"trash\"></ion-icon>\n\t\t\t\t\t\t</ion-button>\n\t\t\t\t\t</ion-item>\n\t\t\t\t</ion-list>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n";
       /***/
     },
 
@@ -1559,7 +1573,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of intraday\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.embededurl\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
+      __webpack_exports__["default"] = "<ion-content>\n\t<ion-grid>\n\t\t<ion-row>\n\t\t\t<ion-col>\n\t\t\t\t<ion-searchbar class=\"ion-no-padding\" showCancelButton=\"focus\" (ionChange)=\"filter($event)\"></ion-searchbar>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n\t<ion-card *ngFor=\"let intraDay of filteredPosts || intraday\" (click)=\"openPostModal(intraDay)\">\n\t\t<ion-card-header><h5>{{intraDay.title}}</h5></ion-card-header>\n\t\t<ion-card-content>\n\t\t\t<ion-img [src]=\"intraDay.image\" class=\"ion-margin-bottom\"></ion-img>\n\t\t\t<ion-text><p>{{intraDay.content | slice:0:120}}{{intraDay.content.length > 0 ? '...' : ''}}</p></ion-text>\n\t\t</ion-card-content>\n\t</ion-card>\n\t<ion-fab horizontal=\"end\" vertical=\"bottom\">\n\t\t<ion-fab-button (click)=\"openUploadPostModal()\">\n\t\t\t<ion-icon name=\"add\"></ion-icon>\n\t\t</ion-fab-button>\n\t</ion-fab>\n</ion-content>\n";
       /***/
     },
 
@@ -1745,6 +1759,13 @@
                 }
               }, _callee7, this);
             }));
+          }
+        }, {
+          key: "filter",
+          value: function filter(ev) {
+            this.filteredPosts = this.intraday.filter(function (p) {
+              return p.title.toLowerCase().includes(ev.detail.value.toLowerCase());
+            });
           }
         }]);
 
@@ -1997,14 +2018,14 @@
       /* harmony import */
 
 
-      var src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(
-      /*! src/app/services/learning.service */
-      "uetY");
+      var src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(
+      /*! src/app/services/marubozu.service */
+      "BCkd");
 
       var STORAGE_KEY = 'assets';
 
       var ModalUploadPostComponent = /*#__PURE__*/function () {
-        function ModalUploadPostComponent(modalCtrl, camera, file, http, webview, actionSheetController, toastController, storage, plt, loadingController, ref, filePath, learningService) {
+        function ModalUploadPostComponent(modalCtrl, camera, file, http, webview, actionSheetController, toastController, storage, plt, loadingController, ref, filePath, marubozuService) {
           _classCallCheck(this, ModalUploadPostComponent);
 
           this.modalCtrl = modalCtrl;
@@ -2019,7 +2040,7 @@
           this.loadingController = loadingController;
           this.ref = ref;
           this.filePath = filePath;
-          this.learningService = learningService;
+          this.marubozuService = marubozuService;
           this.intraDay = false;
           this.positional = false;
           this.demoTrading = false;
@@ -2332,7 +2353,7 @@
           key: "uploadImageData",
           value: function uploadImageData(formData) {
             return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
-              var loading;
+              var loading, key;
               return regeneratorRuntime.wrap(function _callee11$(_context11) {
                 while (1) {
                   switch (_context11.prev = _context11.next) {
@@ -2348,22 +2369,13 @@
                       return loading.present();
 
                     case 5:
-                      console.log(formData); //   this.http.post("http://localhost:8888/upload.php", formData)
-                      //       .pipe(
-                      //           finalize(() => {
-                      //               loading.dismiss();
-                      //           })
-                      //       )
-                      //       .subscribe(res => {
-                      //           if (res['success']) {
-                      //               this.presentToast('File upload complete.')
-                      //           } else {
-                      //               this.presentToast('File upload failed.')
-                      //           }
-                      //       });
-                      //   }  
+                      console.log(formData);
+                      if (this.intraDay) key = 'intraday';else if (this.positional) key = 'positional';else if (this.demoTrading) key = 'demotrading';
+                      this.marubozuService.create(this.title, this.content, this.stockName, formData, key).subscribe(function (r) {
+                        return console.log(r);
+                      });
 
-                    case 6:
+                    case 8:
                     case "end":
                       return _context11.stop();
                   }
@@ -2402,7 +2414,7 @@
         }, {
           type: _ionic_native_file_path_ngx__WEBPACK_IMPORTED_MODULE_10__["FilePath"]
         }, {
-          type: src_app_services_learning_service__WEBPACK_IMPORTED_MODULE_11__["LearningService"]
+          type: src_app_services_marubozu_service__WEBPACK_IMPORTED_MODULE_11__["MarubozuService"]
         }];
       };
 

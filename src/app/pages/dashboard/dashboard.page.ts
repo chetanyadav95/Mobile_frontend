@@ -93,7 +93,7 @@ export class DashboardPage {
     this.userService.authenticated.subscribe(u => {
       this.user = u.user
       this.userService.accountDetails().subscribe((r:any) => {
-        this.user.balance.availableBal = r.account.initialAmount
+        this.user.balance.availableBal = parseFloat(r.account.currentBalance)
         this.user.balance.openBal = parseFloat(r.account.currentBalance)
         this.user.balance.currency = r.account.currency
       })

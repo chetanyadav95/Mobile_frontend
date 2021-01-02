@@ -64,7 +64,7 @@ export class UserService {
   }
 
   emailExists(email: string){
-    return this.http.post(this.apiUrl + 'password/reset/emailcheck', email)
+    return this.http.post(this.apiUrl + 'password/reset/emailcheck', {email})
   }
 
   checkCodeValid(email: string, code: string){

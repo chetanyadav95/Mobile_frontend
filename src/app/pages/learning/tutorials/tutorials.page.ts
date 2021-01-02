@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Marubozu } from 'src/app/models/marubozu';
+import { Marubozu } from 'src/app/models/marubozu.model';
 import { Video } from 'src/app/models/video.model';
 import { LearningService } from 'src/app/services/learning.service';
 import { MarubozuService } from 'src/app/services/marubozu.service';

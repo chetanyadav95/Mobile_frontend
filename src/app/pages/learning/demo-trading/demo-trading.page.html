@@ -2,14 +2,14 @@
 	<ion-grid>
 		<ion-row>
 			<ion-col>
-				<ion-searchbar class="ion-no-padding" showCancelButton="focus"></ion-searchbar>
+				<ion-searchbar class="ion-no-padding" showCancelButton="focus" (ionChange)="filter($event)"></ion-searchbar>
 			</ion-col>
 		</ion-row>
 	</ion-grid>
-	<ion-card *ngFor="let demo of demotrading" (click)="openPostModal(demo)">
+	<ion-card *ngFor="let demo of filteredDemotrading || demotrading" (click)="openPostModal(demo)">
 		<ion-card-header><h5>{{demo.title}}</h5></ion-card-header>
 		<ion-card-content>
-			<ion-img [src]="demo.embededurl" class="ion-margin-bottom"></ion-img>
+			<ion-img [src]="demo.image" class="ion-margin-bottom"></ion-img>
 			<ion-text><p>{{demo.content | slice:0:120}}{{demo.content.length > 0 ? '...' : ''}}</p></ion-text>
 		</ion-card-content>
 	</ion-card>

@@ -17,7 +17,6 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
   styleUrls: ['./watchlist.page.scss'],
 })
 export class WatchlistPage implements OnInit, OnDestroy {
-  companies: Stock[] = []
   watchlists: Watchlist[] = []
   selectedWatchlist: number
   dataLoaded: boolean
@@ -99,8 +98,8 @@ export class WatchlistPage implements OnInit, OnDestroy {
       component: ModalWatchlistComponent,
       componentProps: {selectedWatchlist: id}
     });
-    modal.onDidDismiss().then(() => {
-      this.getWatchlists()
+    modal.onDidDismiss().then(d => {
+      d == true && this.getWatchlists()
     })
     return await modal.present();
   }
@@ -110,8 +109,8 @@ export class WatchlistPage implements OnInit, OnDestroy {
       component: ModalWatchlistCeComponent,
       componentProps: {isEdit, selectedWatchlist: this.watchlists[this.selectedWatchlist]}
     });
-    modal.onDidDismiss().then(() => {
-      this.getWatchlists()
+    modal.onDidDismiss().then(d => {
+      d == true && this.getWatchlists()
     })
     return await modal.present();
   }
@@ -128,8 +127,8 @@ export class WatchlistPage implements OnInit, OnDestroy {
     const modal = await this.modalController.create({
       component: ModalEditWatchlistsComponent,
     });
-    modal.onDidDismiss().then(() => {
-      this.getWatchlists()
+    modal.onDidDismiss().then(d => {
+      d == true && this.getWatchlists()
     })
     return await modal.present();
   }

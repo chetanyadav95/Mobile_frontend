@@ -24,7 +24,7 @@ export class OrderService {
   }
 
   updateOrder(id: string, stoploss: number, target: number){
-    return this.http.post(this.apiUrl + 'order/update', {id, stoploss, target} )
+    return this.http.put(this.apiUrl + 'order/update', {id, stoploss, target} )
   }
 
   savePosition(id, target, stoploss){

@@ -7,7 +7,12 @@
 
 		<ion-buttons slot="end">
 			<ion-button>
-				<ion-select ok-text="Okay" cancel-text="Cancel" value="{{isBuy ? 'true' : 'false'}}" (ionChange)="changeType($event)">
+				<ion-select
+					ok-text="Okay"
+					cancel-text="Cancel"
+					value="{{isBuy ? 'true' : 'false'}}"
+					(ionChange)="changeType($event)"
+				>
 					<ion-select-option value="true">Buy</ion-select-option>
 					<ion-select-option value="false">Sell</ion-select-option>
 				</ion-select>
@@ -16,7 +21,7 @@
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-	<form #buySellForm="ngForm" id="buySellForm">
+	<form #buySellForm="ngForm" id="buySellForm" form-directive>
 		<ion-card>
 			<ion-grid>
 				<ion-row>
@@ -26,7 +31,14 @@
 							<ion-card-subtitle>Lot: 1</ion-card-subtitle>
 						</ion-card-header>
 						<ion-card-content>
-							<ion-input type="number" class="card-input" name="quantity" ngModel required min=0></ion-input>
+							<ion-input
+								type="number"
+								class="card-input"
+								name="quantity"
+								[(ngModel)]="quantity"
+								required
+								min="0"
+							></ion-input>
 						</ion-card-content>
 					</ion-col>
 					<ion-col size="6">
@@ -43,7 +55,7 @@
 								[ngClass]="{'disabled-input':marketRadio.checked}"
 								[required]="!marketRadio.checked"
 								[disabled]="marketRadio.checked"
-								min=0
+								min="0"
 							>
 							</ion-input>
 						</ion-card-content>
@@ -58,7 +70,7 @@
 						<ion-card-title>Stop-loss</ion-card-title>
 					</ion-card-header>
 					<ion-card-content>
-						<ion-input type="number" class="card-input" name="stopLoss" ngModel required min=0></ion-input>
+						<ion-input type="number" class="card-input" name="stopLoss" ngModel required min="0"></ion-input>
 					</ion-card-content>
 				</ion-col>
 				<ion-col size="6">
@@ -66,11 +78,11 @@
 						<ion-card-title>Target</ion-card-title>
 					</ion-card-header>
 					<ion-card-content>
-						<ion-input type="number" class="card-input" name="target" ngModel required min=0></ion-input>
+						<ion-input type="number" class="card-input" name="target" ngModel required min="0"></ion-input>
 					</ion-card-content>
 				</ion-col>
 			</ion-row>
-			<hr>
+			<hr />
 			<ion-row>
 				<ion-col class="bs-radio-group">
 					<ion-text><h5>Order</h5></ion-text>
@@ -106,12 +118,12 @@
 			</ion-row>
 			<hr />
 			<ion-row>
-				<ion-col size=6 class="ion-text-left">
+				<ion-col size="6" class="ion-text-left">
 					<ion-text><p>Approx. Margin:</p></ion-text>
 					<ion-text><p>Available Balance:</p></ion-text>
 					<ion-text><p>Capital at Risk:</p></ion-text>
 				</ion-col>
-				<ion-col size=6 class="ion-text-right">
+				<ion-col size="6" class="ion-text-right">
 					<ion-text><p>{{approxMargin}}</p></ion-text>
 					<ion-text><p>{{availableBalance}}</p></ion-text>
 					<ion-text><p>{{capitalAtRisk | percent:'1.1'}}</p></ion-text>

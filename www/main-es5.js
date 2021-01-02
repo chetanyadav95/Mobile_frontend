@@ -203,7 +203,7 @@
         }, {
           key: "dismissModal",
           value: function dismissModal() {
-            this.modalCtrl.dismiss();
+            this.modalCtrl.dismiss(this.changeInWatchlist);
           }
         }, {
           key: "onEditWatchlist",
@@ -211,6 +211,7 @@
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
               this.watchlistService.editWatchlist(this.selectedWatchlist._id, this.watchlistName);
+              console.log('update watchlist name editing');
             }
           }
         }, {
@@ -223,6 +224,8 @@
         }, {
           key: "changePosition",
           value: function changePosition() {
+            var _this2 = this;
+
             var stocks = [];
 
             for (var i = 0; i < this.stocks.length; i++) {
@@ -233,7 +236,9 @@
               });
             }
 
-            this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id, stocks).subscribe();
+            this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id, stocks).subscribe(function () {
+              return _this2.changeInWatchlist = true;
+            });
           }
         }]);
 
@@ -396,10 +401,10 @@
         _createClass(StockService, [{
           key: "listen",
           value: function listen(eventName) {
-            var _this2 = this;
+            var _this3 = this;
 
             return new rxjs__WEBPACK_IMPORTED_MODULE_5__["Observable"](function (subscriber) {
-              _this2.socket.on(eventName, function (data) {
+              _this3.socket.on(eventName, function (data) {
                 subscriber.next(data);
               });
             });
@@ -693,10 +698,10 @@
         _createClass(ModalChangePasswordComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this3 = this;
+            var _this4 = this;
 
-            this.userService.user.subscribe(function (u) {
-              return _this3.user = u;
+            this.userService.authenticated.subscribe(function (u) {
+              return _this4.user = u.user;
             });
           }
         }, {
@@ -802,19 +807,22 @@
 
         _createClass(ModalEditOrderComponent, [{
           key: "ngOnInit",
-          value: function ngOnInit() {}
+          value: function ngOnInit() {
+            console.log(this.position);
+            console.log(this.pending);
+          }
         }, {
           key: "dismissModal",
-          value: function dismissModal() {
-            this.modalCtrl.dismiss();
+          value: function dismissModal(change) {
+            this.modalCtrl.dismiss(change);
           }
         }, {
           key: "savePosition",
           value: function savePosition() {
-            this.position != null && this.orderService.savePosition(this.position.id, this.position.target, this.position.stoploss).subscribe(function (r) {
+            this.position != null && this.orderService.updateOrder(this.position.id, this.position.target, this.position.stoploss).subscribe(function (r) {
               return console.log(r);
             });
-            this.dismissModal();
+            this.dismissModal(true);
           }
         }, {
           key: "sellPosition",
@@ -826,8 +834,11 @@
           }
         }, {
           key: "savePending",
-          value: function savePending() {// (this.pending != null) && this.orderService.savePending(this.pending)
-            // this.dismissModal()
+          value: function savePending() {
+            this.pending != null && this.orderService.updateOrder(this.pending.id, this.pending.target, this.pending.stoploss).subscribe(function (r) {
+              return console.log(r);
+            });
+            this.dismissModal(true);
           }
         }]);
 
@@ -932,36 +943,48 @@
         _createClass(ModalWatchlistComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this4 = this;
+            var _this5 = this;
 
             this.stockService.getStocks().subscribe(function (s) {
-              _this4.stocks = s.data;
+              _this5.stocks = s.data;
+              console.log(_this5.stocks);
             });
             this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe(function (w) {
-              _this4.sWatchlist = w.data;
+              _this5.sWatchlist = w.data;
+              console.log(_this5.sWatchlist);
             });
           }
         }, {
           key: "dismissModal",
           value: function dismissModal() {
-            this.modalCtrl.dismiss(true);
+            this.modalCtrl.dismiss(this.changeOfWatchlist);
+            this.changeOfWatchlist = false;
           }
         }, {
           key: "onSelect",
           value: function onSelect(event, stock) {
-            if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe();else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe();
+            var _this6 = this;
+
+            if (event == true) this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(function () {
+              return _this6.changeOfWatchlist = true;
+            });else if (event == false) this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe(function () {
+              return _this6.changeOfWatchlist = true;
+            });
           }
         }, {
           key: "filter",
           value: function filter(filterValue) {
+            console.log(filterValue);
             this.filteredData = this.stocks.filter(function (stock) {
-              return stock.name.toLowerCase().includes(filterValue.toLowerCase());
+              return stock.companyName.toLowerCase().includes(filterValue.toLowerCase());
             });
           }
         }, {
           key: "seeIfChecked",
           value: function seeIfChecked(stock) {
-            if (this.sWatchlist.stockIds.length > 0) return this.sWatchlist.stockIds.find(function (s) {
+            var _a, _b;
+
+            if (((_a = this.sWatchlist) === null || _a === void 0 ? void 0 : _a.stockIds.length) > 0) return (_b = this.sWatchlist) === null || _b === void 0 ? void 0 : _b.stockIds.find(function (s) {
               return s.id == stock._id;
             });else false;
           }
@@ -1140,10 +1163,10 @@
         }, {
           key: "connectionLostEvent",
           value: function connectionLostEvent() {
-            var _this5 = this;
+            var _this7 = this;
 
             this.networkListener = Network.addListener('networkStatusChange', function (status) {
-              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this5, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+              return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this7, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -1170,10 +1193,10 @@
         }, {
           key: "backButtonEvent",
           value: function backButtonEvent() {
-            var _this6 = this;
+            var _this8 = this;
 
             this.platform.backButton.subscribeWithPriority(10, function () {
-              if (_this6.router.url == "/home/dashboard") _this6.backButtonAlert();else _this6.location.back();
+              if (_this8.router.url == "/home/dashboard") _this8.backButtonAlert();else _this8.location.back();
             });
           }
         }, {
@@ -1240,15 +1263,15 @@
         }, {
           key: "initializeApp",
           value: function initializeApp() {
-            var _this7 = this;
+            var _this9 = this;
 
             this.platform.ready().then(function () {
-              _this7.statusBar.styleDefault();
+              _this9.statusBar.styleDefault();
 
-              _this7.splashScreen.hide();
+              _this9.splashScreen.hide();
 
-              _this7.userService.authenticated.subscribe(function (a) {
-                a ? _this7.router.navigate(['home', 'dashboard']) : _this7.router.navigate(['home', 'login']);
+              _this9.userService.authenticated.subscribe(function (a) {
+                a ? _this9.router.navigate(['home', 'dashboard']) : _this9.router.navigate(['home', 'login']);
               });
             });
           }
@@ -1307,7 +1330,7 @@
       /* harmony default export */
 
 
-      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>{{ position != null ? \"Edit Position\" : \"Edit Pending\" }}</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-title class=\"ion-padding\" *ngIf=\"position != null\">{{ position.name }}</ion-title>\n\t<ion-title class=\"ion-padding\" *ngIf=\"pending != null\">{{ pending.name }}</ion-title>\n\t<ion-grid>\n\t\t<ion-row *ngIf=\"position != null\">\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-card-header>\n\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t</ion-card-header>\n\t\t\t\t<ion-card-content>\n\t\t\t\t\t<ion-input\n\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\tname=\"stopLoss\"\n\t\t\t\t\t\t[(ngModel)]=\"position.stoploss\"\n\t\t\t\t\t\trequired\n\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t></ion-input>\n\t\t\t\t</ion-card-content>\n\t\t\t\t<!-- <ion-label>Stop-Loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.stoploss\"></ion-input> -->\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-card-header>\n\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t</ion-card-header>\n\t\t\t\t<ion-card-content>\n\t\t\t\t\t<ion-input\n\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\tname=\"target\"\n\t\t\t\t\t\t[(ngModel)]=\"position.target\"\n\t\t\t\t\t\trequired\n\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t></ion-input>\n\t\t\t\t</ion-card-content>\n\t\t\t\t<!-- <ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.target\"></ion-input> -->\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row *ngIf=\"pending != null\">\n\t\t\t<ion-col>\n\t\t\t\t<div *ngIf=\"!pending.isStopLoss\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\tname=\"target\"\n\t\t\t\t\t\t\t[(ngModel)]=\"pending.target\"\n\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t<!-- <ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.target\"></ion-input> -->\n\t\t\t\t</div>\n\t\t\t\t<div *ngIf=\"pending.isStopLoss\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\tname=\"stopLoss\"\n\t\t\t\t\t\t\t[(ngModel)]=\"pending.stoploss\"\n\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t<!-- <ion-label>Stop-loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.stoploss\"></ion-input> -->\n\t\t\t\t</div>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n<ion-footer class=\"ion-padding\">\n\t<div *ngIf=\"position != null\">\n\t\t<ion-button expand=\"block\" color=\"success\" (click)=\"savePosition()\">\n\t\t\t<ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSave\n\t\t</ion-button>\n\t\t<ion-button expand=\"block\" color=\"danger\" (click)=\"sellPosition()\">\n\t\t\t<ion-icon name=\"trash-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSell\n\t\t</ion-button>\n\t</div>\n\t<div *ngIf=\"pending != null\">\n\t\t<ion-button expand=\"block\" color=\"success\" (click)=\"savePending()\">\n\t\t\t<ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSave\n\t\t</ion-button>\n\t</div>\n</ion-footer>\n";
+      __webpack_exports__["default"] = "<ion-header class=\"ion-no-border\">\n\t<ion-toolbar>\n\t\t<ion-title>{{ position != null ? \"Edit Position\" : \"Edit Pending\" }}</ion-title>\n\t\t<ion-buttons slot=\"end\">\n\t\t\t<ion-button (click)=\"dismissModal()\">Close</ion-button>\n\t\t</ion-buttons>\n\t</ion-toolbar>\n</ion-header>\n<ion-content>\n\t<ion-title class=\"ion-padding\" *ngIf=\"position != null\">{{ position.name }}</ion-title>\n\t<ion-title class=\"ion-padding\" *ngIf=\"pending != null\">{{ pending.name }}</ion-title>\n\t<ion-grid>\n\t\t<ion-row *ngIf=\"position != null\">\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-card-header>\n\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t</ion-card-header>\n\t\t\t\t<ion-card-content>\n\t\t\t\t\t<ion-input\n\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\tname=\"stopLoss\"\n\t\t\t\t\t\t[(ngModel)]=\"position.stoploss\"\n\t\t\t\t\t\trequired\n\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t></ion-input>\n\t\t\t\t</ion-card-content>\n\t\t\t\t<!-- <ion-label>Stop-Loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.stoploss\"></ion-input> -->\n\t\t\t</ion-col>\n\t\t\t<ion-col size=\"6\">\n\t\t\t\t<ion-card-header>\n\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t</ion-card-header>\n\t\t\t\t<ion-card-content>\n\t\t\t\t\t<ion-input\n\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\tname=\"target\"\n\t\t\t\t\t\t[(ngModel)]=\"position.target\"\n\t\t\t\t\t\trequired\n\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t></ion-input>\n\t\t\t\t</ion-card-content>\n\t\t\t\t<!-- <ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" min=0 [(ngModel)]=\"position.target\"></ion-input> -->\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t\t<ion-row *ngIf=\"pending != null\">\n\t\t\t<ion-col>\n\t\t\t\t<div *ngIf=\"!pending.isStopLoss\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Target</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\tname=\"target\"\n\t\t\t\t\t\t\t[(ngModel)]=\"pending.price\"\n\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t<!-- <ion-label>Target</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.target\"></ion-input> -->\n\t\t\t\t</div>\n\t\t\t\t<div *ngIf=\"pending.isStopLoss\">\n\t\t\t\t\t<ion-card-header>\n\t\t\t\t\t\t<ion-card-title>Stop-loss</ion-card-title>\n\t\t\t\t\t</ion-card-header>\n\t\t\t\t\t<ion-card-content>\n\t\t\t\t\t\t<ion-input\n\t\t\t\t\t\t\ttype=\"number\"\n\t\t\t\t\t\t\tclass=\"card-input\"\n\t\t\t\t\t\t\tname=\"stopLoss\"\n\t\t\t\t\t\t\t[(ngModel)]=\"pending.stoploss\"\n\t\t\t\t\t\t\trequired\n\t\t\t\t\t\t\tmin=\"0\"\n\t\t\t\t\t\t></ion-input>\n\t\t\t\t\t</ion-card-content>\n\t\t\t\t\t<!-- <ion-label>Stop-loss</ion-label>\n\t\t\t\t\t<ion-input type=\"number\" [(ngModel)]=\"pending.stoploss\"></ion-input> -->\n\t\t\t\t</div>\n\t\t\t</ion-col>\n\t\t</ion-row>\n\t</ion-grid>\n</ion-content>\n<ion-footer class=\"ion-padding\">\n\t<div *ngIf=\"position != null\">\n\t\t<ion-button expand=\"block\" color=\"success\" (click)=\"savePosition()\">\n\t\t\t<ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSave\n\t\t</ion-button>\n\t\t<ion-button expand=\"block\" color=\"danger\" (click)=\"sellPosition()\">\n\t\t\t<ion-icon name=\"trash-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSell\n\t\t</ion-button>\n\t</div>\n\t<div *ngIf=\"pending != null\">\n\t\t<ion-button expand=\"block\" color=\"success\" (click)=\"savePending()\">\n\t\t\t<ion-icon name=\"save-outline\" style=\"padding-right: 5px\"></ion-icon>\n\t\t\tSave\n\t\t</ion-button>\n\t</div>\n</ion-footer>\n";
       /***/
     },
 
@@ -2045,7 +2068,7 @@
         }, {
           key: "updateOrder",
           value: function updateOrder(id, stoploss, target) {
-            return this.http.post(this.apiUrl + 'order/update', {
+            return this.http.put(this.apiUrl + 'order/update', {
               id: id,
               stoploss: stoploss,
               target: target
@@ -2070,7 +2093,7 @@
         }, {
           key: "buy",
           value: function buy(cId, quantity, stopLoss, target, order, price) {
-            var _this8 = this;
+            var _this10 = this;
 
             var company;
             this.stockService.getStock(cId).subscribe(function (c) {
@@ -2083,9 +2106,9 @@
                 target: target,
                 price: price
               };
-              order == 'limit' ? _this8.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
+              order == 'limit' ? _this10.stockService.orderStockLimitBuy(pending).subscribe(function (r) {
                 return console.log('buy', r);
-              }) : _this8.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
+              }) : _this10.stockService.orderStockMarketBuy(pending).subscribe(function (r) {
                 return console.log('buy', r);
               });
             });
@@ -2093,7 +2116,7 @@
         }, {
           key: "sell",
           value: function sell(cId, quantity, stopLoss, target, order, price) {
-            var _this9 = this;
+            var _this11 = this;
 
             var company;
             this.stockService.getStock(cId).subscribe(function (c) {
@@ -2106,9 +2129,9 @@
                 target: target,
                 price: price
               };
-              order == 'limit' ? _this9.stockService.orderStockLimitSell(pending).subscribe(function (r) {
+              order == 'limit' ? _this11.stockService.orderStockLimitSell(pending).subscribe(function (r) {
                 return console.log('sell', r);
-              }) : _this9.stockService.orderStockMarketSell(pending).subscribe(function (r) {
+              }) : _this11.stockService.orderStockMarketSell(pending).subscribe(function (r) {
                 return console.log('sell', r);
               });
             });
@@ -2218,10 +2241,10 @@
         _createClass(BuySellModalPopupComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this10 = this;
+            var _this12 = this;
 
             this.stockService.listen(this.selectedStock.id).subscribe(function (res) {
-              _this10.selectedStock.ltp = res[0].price;
+              _this12.selectedStock.ltp = res[0].price;
             });
           }
         }, {
@@ -2350,7 +2373,7 @@
 
       var UserService = /*#__PURE__*/function () {
         function UserService(http, storage, platform) {
-          var _this11 = this;
+          var _this13 = this;
 
           _classCallCheck(this, UserService);
 
@@ -2363,7 +2386,7 @@
           this.authenticated = new rxjs__WEBPACK_IMPORTED_MODULE_3__["BehaviorSubject"](false);
           this.isOnLoginOrSignUpPage = new rxjs__WEBPACK_IMPORTED_MODULE_3__["Subject"]();
           this.platform.ready().then(function () {
-            _this11.checkToken();
+            _this13.checkToken();
           });
         }
 
@@ -2376,7 +2399,7 @@
         }, {
           key: "logIn",
           value: function logIn(input) {
-            var _this12 = this;
+            var _this14 = this;
 
             return this.http.post(this.apiUrl + "login", input).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_8__["map"])(function (res) {
               var user = {
@@ -2388,11 +2411,11 @@
                 }
               };
 
-              _this12.authenticate(user, res.jwt);
+              _this14.authenticate(user, res.jwt);
 
-              _this12.decodedToken = _this12.decodeToken(res.jwt);
+              _this14.decodedToken = _this14.decodeToken(res.jwt);
 
-              _this12.checkToken();
+              _this14.checkToken();
             }));
           }
         }, {
@@ -2421,7 +2444,9 @@
         }, {
           key: "emailExists",
           value: function emailExists(email) {
-            return this.http.post(this.apiUrl + 'password/reset/emailcheck', email);
+            return this.http.post(this.apiUrl + 'password/reset/emailcheck', {
+              email: email
+            });
           }
         }, {
           key: "checkCodeValid",
@@ -2449,7 +2474,7 @@
         }, {
           key: "authenticate",
           value: function authenticate(user, token) {
-            var _this13 = this;
+            var _this15 = this;
 
             return this.storage.set('token', {
               user: user,
@@ -2457,7 +2482,7 @@
             }).then(function (r) {
               localStorage.setItem('token', token);
 
-              _this13.authenticated.next({
+              _this15.authenticated.next({
                 user: user,
                 token: token
               });
@@ -2475,25 +2500,25 @@
         }, {
           key: "checkToken",
           value: function checkToken() {
-            var _this14 = this;
+            var _this16 = this;
 
             return this.storage.get('token').then(function (r) {
               if (r) {
-                _this14.authenticated.next(r);
+                _this16.authenticated.next(r);
 
-                _this14.user.next(r.user);
+                _this16.user.next(r.user);
               }
             });
           }
         }, {
           key: "logout",
           value: function logout() {
-            var _this15 = this;
+            var _this17 = this;
 
             this.user.next(null);
             localStorage.removeItem('token');
             return this.storage.remove('token').then(function (r) {
-              return _this15.authenticated.next(false);
+              return _this17.authenticated.next(false);
             });
           }
         }, {
@@ -2619,31 +2644,33 @@
         _createClass(ModalEditWatchlistsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this16 = this;
+            var _this18 = this;
 
             this.userService.getSettings().subscribe(function (r) {
               var datatype = r.data.datatype;
-              if (datatype == 'simulated') _this16.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
+              if (datatype == 'simulated') _this18.watchlistService.getSimulatedWatchlists().subscribe(function (r) {
                 console.log('simulated', r);
               });
-              if (datatype == 'realtime') _this16.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
+              if (datatype == 'realtime') _this18.watchlistService.getRealtimeWatchlists().subscribe(function (r) {
                 console.log('realtime', r);
-                _this16.watchlists = r.data;
+                _this18.watchlists = r.data;
               });
             });
           }
         }, {
           key: "dismissModal",
           value: function dismissModal() {
-            this.modalCtrl.dismiss();
+            this.modalCtrl.dismiss(this.changeInWatchlist);
           }
         }, {
           key: "onCreateWatchlist",
           value: function onCreateWatchlist(createWatchlistForm) {
+            var _this19 = this;
+
             if (this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined) {
               this.watchlistName = this.watchlistName.trim();
-              this.watchlistService.createWatchlist(this.watchlistName).subscribe(function (r) {
-                return console.log('w created', r);
+              this.watchlistService.createWatchlist(this.watchlistName).subscribe(function () {
+                return _this19.changeInWatchlist = true;
               });
               this.watchlistName = '';
             }
@@ -2658,6 +2685,8 @@
         }, {
           key: "changePosition",
           value: function changePosition() {
+            var _this20 = this;
+
             // this.watchlists = this.watchlistService.moveInArray(this.watchlists, event.previousIndex, event.currentIndex)
             var positions = [];
 
@@ -2669,7 +2698,9 @@
               });
             }
 
-            this.watchlistService.updateWatchlistPositions(positions).subscribe();
+            this.watchlistService.updateWatchlistPositions(positions).subscribe(function () {
+              return _this20.changeInWatchlist = true;
+            });
           }
         }]);
 
@@ -2848,10 +2879,10 @@
         _createClass(ModalWithdrawAddFundsComponent, [{
           key: "ngOnInit",
           value: function ngOnInit() {
-            var _this17 = this;
+            var _this21 = this;
 
-            this.userService.user.subscribe(function (u) {
-              return _this17.user = u;
+            this.userService.authenticated.subscribe(function (u) {
+              return _this21.user = u.user;
             });
           }
         }, {

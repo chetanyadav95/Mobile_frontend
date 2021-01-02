@@ -1,24 +1,25 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Stock } from 'src/app/models/stock.model';
 import { OrderService } from 'src/app/services/order.service';
 import { StockService } from 'src/app/services/stock.service';
 import { UserService } from 'src/app/services/user.service';
-
 @Component({
   selector: 'app-buy-sell',
   templateUrl: './buy-sell.page.html',
   styleUrls: ['./buy-sell.page.scss'],
 })
-export class BuySellPage implements OnInit {
+export class BuySellPage implements OnInit, AfterViewInit {
   isBuy: boolean
   company: any
+  price: number = 0
+  quantity: number = 0
   availableBalance: number
-  approxMargin: number
-  capitalAtRisk: number
+  capitalAtRisk: number = 0
   limitVal: number = 0
+  approxMargin: number = 0
   @ViewChild('buySellForm') buySellForm: NgForm
+  @ViewChild('marketRadio') marketRadio
   constructor(private route: ActivatedRoute, 
     private stockService: StockService,
     private orderService: OrderService,
@@ -26,8 +27,6 @@ export class BuySellPage implements OnInit {
     private userService: UserService) { }
 
   ngOnInit() {
-    this.approxMargin = 2167
-    this.capitalAtRisk = this.approxMargin / this.availableBalance
     this.userService.accountDetails().subscribe((res:any) => {
       this.availableBalance = res.account.currentBalance
     })
@@ -40,6 +39,16 @@ export class BuySellPage implements OnInit {
         this.updateLtp()
       })
     )
+  }
+  ngAfterViewInit(){
+    this.buySellForm.valueChanges.subscribe(data => {
+      this.approxMargin = data.price * data.quantity
+      this.capitalAtRisk = this.approxMargin / this.availableBalance
+      if((data.quantity == 0 && data.price == 0) || data.quantity == null || data.price == null){
+        this.capitalAtRisk = 0
+        this.approxMargin = 0
+      }
+    });
   }
   
   updateLtp(){

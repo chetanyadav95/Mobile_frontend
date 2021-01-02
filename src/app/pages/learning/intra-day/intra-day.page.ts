@@ -11,7 +11,7 @@ import { LearningService } from 'src/app/services/learning.service';
 import { ModalUploadPostComponent } from 'src/app/modals/modal-upload-post/modal-upload-post.component';
 import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.component';
 import { MarubozuService } from 'src/app/services/marubozu.service';
-import { Marubozu } from 'src/app/models/marubozu';
+import { Marubozu } from 'src/app/models/marubozu.model';
 
 const STORAGE_KEY = 'assets';
 
@@ -23,6 +23,7 @@ const STORAGE_KEY = 'assets';
 export class IntraDayPage implements OnInit {
   intraDayPosts: Post[]
   intraday: Marubozu[]
+  filteredPosts:Marubozu[]
   // images = [];
  
   constructor(private modalController: ModalController, 
@@ -50,5 +51,9 @@ export class IntraDayPage implements OnInit {
       componentProps: {blog: intraDay}
     });
     return await modal.present();
+  }
+
+  filter(ev){
+    this.filteredPosts = this.intraday.filter(p => p.title.toLowerCase().includes(ev.detail.value.toLowerCase()))
   }
 }

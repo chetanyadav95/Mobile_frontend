@@ -1,6 +1,6 @@
 export interface Stock{
     id: string
-    name: string
+    companyName: string
     ltp?: string
     ldp?: string
     position: number

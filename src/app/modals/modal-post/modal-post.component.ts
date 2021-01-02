@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Blog } from 'src/app/models/blog.model';
+import { Marubozu } from 'src/app/models/marubozu.model';
 
 @Component({
   selector: 'app-modal-post',
@@ -8,7 +9,7 @@ import { Blog } from 'src/app/models/blog.model';
   styleUrls: ['./modal-post.component.scss'],
 })
 export class ModalPostComponent implements OnInit {
-  @Input() blog: Blog
+  @Input() blog: Marubozu
   constructor(private modalCtrl: ModalController){}
 
   ngOnInit() {}

@@ -5,7 +5,7 @@ import { Post } from 'src/app/models/post.model';
 import { ModalController } from '@ionic/angular';
 import { ModalPostComponent } from 'src/app/modals/modal-post/modal-post.component';
 import { MarubozuService } from 'src/app/services/marubozu.service';
-import { Marubozu } from 'src/app/models/marubozu';
+import { Marubozu } from 'src/app/models/marubozu.model';
 
 @Component({
   selector: 'app-positional',
@@ -15,6 +15,7 @@ import { Marubozu } from 'src/app/models/marubozu';
 export class PositionalPage implements OnInit {
   positionalPosts: Post[]
   positionalPsts: Marubozu[]
+  filteredPositional: Marubozu[]
   constructor(private modalController: ModalController,
     private learningService: LearningService, 
     private marubozuService: MarubozuService) { }
@@ -40,5 +41,9 @@ export class PositionalPage implements OnInit {
       componentProps: {blog: positional}
     });
     return await modal.present();
+  }
+
+  filter(e){
+    this.filteredPositional = this.positionalPsts.filter(p => p.title.toLowerCase().includes(e.detail.value.toLowerCase()))
   }
 }

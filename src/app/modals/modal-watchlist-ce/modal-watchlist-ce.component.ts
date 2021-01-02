@@ -14,6 +14,7 @@ export class ModalWatchlistCeComponent implements OnInit {
   @Input() selectedWatchlist: Watchlist
   watchlistName: string
   stocks = []
+  changeInWatchlist: boolean
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService) { }
 
   ngOnInit() {
@@ -22,13 +23,14 @@ export class ModalWatchlistCeComponent implements OnInit {
   }
 
   dismissModal(){
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss(this.changeInWatchlist)
   }
   
   onEditWatchlist(){    
     if(this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined){
       this.watchlistName = this.watchlistName.trim()
       this.watchlistService.editWatchlist(this.selectedWatchlist._id, this.watchlistName)
+      console.log('update watchlist name editing')
     }
   }
 
@@ -44,6 +46,6 @@ export class ModalWatchlistCeComponent implements OnInit {
       const s = this.stocks[i];
       stocks.push({stockId:s.id, position:i})
     }
-    this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id,stocks).subscribe()
+    this.watchlistService.updateWatchlistStocksPositions(this.selectedWatchlist._id,stocks).subscribe(() => this.changeInWatchlist = true)
   }
 }

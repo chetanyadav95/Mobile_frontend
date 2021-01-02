@@ -15,6 +15,7 @@ import { WatchlistService } from 'src/app/services/watchlist.service';
 export class ModalEditWatchlistsComponent implements OnInit {
   watchlists: Watchlist[] = []
   watchlistName: string
+  changeInWatchlist: boolean
 
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService, private userService: UserService) { }
 
@@ -32,13 +33,13 @@ export class ModalEditWatchlistsComponent implements OnInit {
   }
 
   dismissModal(){
-    this.modalCtrl.dismiss()
+    this.modalCtrl.dismiss(this.changeInWatchlist)
   }
   
   onCreateWatchlist(createWatchlistForm: NgForm){
     if(this.watchlistName.trim() != '' && this.watchlistName != null && this.watchlistName != undefined){
       this.watchlistName = this.watchlistName.trim()
-      this.watchlistService.createWatchlist(this.watchlistName).subscribe(r => console.log('w created',r))
+      this.watchlistService.createWatchlist(this.watchlistName).subscribe(() => this.changeInWatchlist = true)
       this.watchlistName = ''
     }
   }
@@ -56,6 +57,6 @@ export class ModalEditWatchlistsComponent implements OnInit {
       const w = this.watchlists[i];
       positions.push({watchlistId:w._id, position:i})
     }
-    this.watchlistService.updateWatchlistPositions(positions).subscribe()
+    this.watchlistService.updateWatchlistPositions(positions).subscribe(() => this.changeInWatchlist = true)
   }
 }

@@ -14,6 +14,7 @@ export class ModalWatchlistComponent implements OnInit{
   stocks: Stock[]
   filteredData: Stock[]
   sWatchlist: Watchlist
+  changeOfWatchlist: boolean
   @Input() selectedWatchlist: string
 
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService, private stockService: StockService) { }
@@ -21,30 +22,34 @@ export class ModalWatchlistComponent implements OnInit{
   ngOnInit(){
     this.stockService.getStocks().subscribe((s: any) => {
       this.stocks = s.data
+      console.log(this.stocks)
     })
     this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w:any)=> {
       this.sWatchlist = w.data
+      console.log(this.sWatchlist)
     })
   }
 
   dismissModal(){
-    this.modalCtrl.dismiss(true)
+    this.modalCtrl.dismiss(this.changeOfWatchlist)
+    this.changeOfWatchlist = false
   }
 
   onSelect(event: boolean, stock){
     if(event == true)
-      this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe()
+      this.watchlistService.addToWatchlist(this.selectedWatchlist, stock._id).subscribe(() => this.changeOfWatchlist = true)
     else if(event == false) 
-      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe()
+      this.watchlistService.removeFromWatchlist(this.selectedWatchlist, stock._id).subscribe(() => this.changeOfWatchlist = true)
   }
 
-  filter(filterValue: any){
-    this.filteredData = this.stocks.filter(stock => stock.name.toLowerCase().includes(filterValue.toLowerCase()))
+  filter(filterValue: string){
+    console.log(filterValue)
+    this.filteredData = this.stocks.filter(stock => stock.companyName.toLowerCase().includes(filterValue.toLowerCase()))
   }
 
   seeIfChecked(stock){
-    if(this.sWatchlist.stockIds.length > 0)
-      return this.sWatchlist.stockIds.find(s => s.id == stock._id)
+    if(this.sWatchlist?.stockIds.length > 0)
+      return this.sWatchlist?.stockIds.find(s => s.id == stock._id)
     else false
   }
 }

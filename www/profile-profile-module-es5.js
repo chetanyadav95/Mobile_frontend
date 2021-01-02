@@ -148,8 +148,8 @@
           value: function ngOnInit() {
             var _this = this;
 
-            this.userService.user.subscribe(function (u) {
-              return _this.user = u;
+            this.userService.authenticated.subscribe(function (u) {
+              return _this.user = u.user;
             });
           }
         }, {

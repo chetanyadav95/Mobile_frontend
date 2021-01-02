@@ -40,12 +40,12 @@
 									</span>
 									<span style="display: flex; flex-direction: row; justify-content: flex-start;">
 										<ion-skeleton-text animated style="width: 25%;margin-right: 10px;"></ion-skeleton-text>
-										<ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+										<ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
 									</span>
-									<span style="display: flex; flex-direction: row; justify-content: flex-start;">
+									<!-- <span style="display: flex; flex-direction: row; justify-content: flex-start;">
 										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
 										<ion-skeleton-text animated style="width: 25%"></ion-skeleton-text>
-									</span>
+									</span> -->
 								</ion-col>
 								<ion-col col="6" class="ion-padding-end">
 									<span style="display: flex; flex-direction: row; justify-content: flex-end;">
@@ -56,10 +56,10 @@
 										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
 										<ion-skeleton-text animated style="width: 15%"></ion-skeleton-text>
 									</span>
-									<span style="display: flex; flex-direction: row; justify-content: flex-end;">
+									<!-- <span style="display: flex; flex-direction: row; justify-content: flex-end;">
 										<ion-skeleton-text animated style="width: 15%;margin-right: 10px;"></ion-skeleton-text>
 										<ion-skeleton-text animated style="width: 20%"></ion-skeleton-text>
-									</span>
+									</span> -->
 								</ion-col>
 							</ion-row>
 						</ion-grid>
@@ -82,7 +82,7 @@
 		</super-tabs-toolbar>
 		<super-tabs-container (activeTabIndexChange)="tabIndex($event)">
 			<super-tab>
-				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-searchbar showCancelButton="focus" (ionChange)="filterPosition($event)"></ion-searchbar>
 				<!-- <ion-card>
 					<ion-card-content>
 						<ion-card-subtitle>Total P&L</ion-card-subtitle>
@@ -92,7 +92,7 @@
 					</ion-card-content>
 				</ion-card> -->
 				<ion-list>
-					<ion-item class="ion-no-padding" *ngFor="let p of position" (click)="ordersActionSheet(p)">
+					<ion-item class="ion-no-padding" *ngFor="let p of filteredPosition || position" (click)="ordersActionSheet(p)">
 						<ion-grid class="ion-no-padding ion-padding-vertical">
 							<ion-row>
 								<ion-col col="6" class="ion-padding-start">
@@ -143,9 +143,9 @@
 				</ion-list>
 			</super-tab>
 			<super-tab>
-				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-searchbar showCancelButton="focus" (ionChange)="filterCompleted($event)"></ion-searchbar>
 				<ion-list>
-					<ion-item class="ion-no-padding" *ngFor="let c of completed">
+					<ion-item class="ion-no-padding" *ngFor="let c of filteredCompleted || completed">
 						<ion-grid class="ion-no-padding ion-padding-vertical">
 							<ion-row>
 								<ion-col col="6" class="ion-padding-start">
@@ -184,9 +184,9 @@
 				</ion-list>
 			</super-tab>
 			<super-tab>
-				<ion-searchbar showCancelButton="focus"></ion-searchbar>
+				<ion-searchbar showCancelButton="focus" (ionChange)="filterPending($event)"></ion-searchbar>
 				<ion-list>
-					<ion-item class="ion-no-padding" *ngFor="let p of pending" (click)="ordersActionSheet(p)">
+					<ion-item class="ion-no-padding" *ngFor="let p of filteredPending || pending" (click)="ordersActionSheet(p)">
 						<ion-grid class="ion-no-padding ion-padding-vertical">
 							<ion-row>
 								<ion-col col="6" class="ion-padding-start">
