@@ -13,10 +13,7 @@ export class ModalEditOrderComponent implements OnInit {
   
   constructor(private modalCtrl: ModalController, private orderService: OrderService) { }
 
-  ngOnInit() {
-    console.log(this.position)
-    console.log(this.pending)
-  }
+  ngOnInit() {}
 
   dismissModal(change?){
     this.modalCtrl.dismiss(change)
@@ -33,7 +30,7 @@ export class ModalEditOrderComponent implements OnInit {
     (this.position != null) 
     && this.orderService
       .exitPosition(this.position.id)
-      .subscribe(() => {}, () => {}, () => this.dismissModal())
+      .subscribe(() => {}, () => {}, () => this.dismissModal(true))
   }
 
   savePending(){

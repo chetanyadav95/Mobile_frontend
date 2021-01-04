@@ -68,8 +68,8 @@ export class WatchlistPage implements OnInit, OnDestroy {
           const socketSub: Subscription = this.stockService.listen(s.id).subscribe((res:any) => {
           s.ltp = res[0].price
         })
-        if(i == (w.stockIds.length - 1)) this.dataLoaded = true
         this.subscribedSockets.push(socketSub)
+        if(i == (w.stockIds.length - 1)) this.dataLoaded = true
       });
     })
     console.log(this.watchlists)
@@ -88,7 +88,8 @@ export class WatchlistPage implements OnInit, OnDestroy {
       componentProps: {selectedWatchlist: id}
     });
     modal.onDidDismiss().then(d => {
-      d == true && this.getWatchlists()
+      console.log(d)
+      d.data == true && this.getWatchlists()
     })
     return await modal.present();
   }
@@ -99,7 +100,7 @@ export class WatchlistPage implements OnInit, OnDestroy {
       componentProps: {isEdit, selectedWatchlist: this.watchlists[this.selectedWatchlist]}
     });
     modal.onDidDismiss().then(d => {
-      d == true && this.getWatchlists()
+      d.data == true && this.getWatchlists()
     })
     return await modal.present();
   }
@@ -117,7 +118,7 @@ export class WatchlistPage implements OnInit, OnDestroy {
       component: ModalEditWatchlistsComponent,
     });
     modal.onDidDismiss().then(d => {
-      d == true && this.getWatchlists()
+      d.data == true && this.getWatchlists()
     })
     return await modal.present();
   }

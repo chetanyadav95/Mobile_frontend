@@ -20,14 +20,12 @@ export class ModalWatchlistComponent implements OnInit{
   constructor(private modalCtrl: ModalController, private watchlistService: WatchlistService, private stockService: StockService) { }
   
   ngOnInit(){
-    console.log(this.selectedWatchlist)
     this.stockService.getStocks().subscribe((s: any) => {
       this.stocks = s.data
       console.log(this.stocks)
     })
     this.watchlistService.getWatchlist(this.selectedWatchlist).subscribe((w:any)=> {
       this.sWatchlist = w.data
-      console.log(this.sWatchlist)
     })
   }
 
@@ -44,7 +42,6 @@ export class ModalWatchlistComponent implements OnInit{
   }
 
   filter(filterValue: string){
-    console.log(filterValue)
     this.filteredData = this.stocks.filter(stock => stock.companyName.toLowerCase().includes(filterValue.toLowerCase()))
   }
 

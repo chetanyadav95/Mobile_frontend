@@ -94,6 +94,7 @@ export class OrdersPage implements OnInit, OnDestroy {
   //   }
   // }
   orderPlacement(status, order, price, key?, orderCategory?){
+    price = 'price'
     const o = Object.assign({},order)
     switch (status) {
       case 'completed':
@@ -109,6 +110,7 @@ export class OrdersPage implements OnInit, OnDestroy {
           o.orderCategory = orderCategory == 'buy' ? 'sell' : 'buy'
         else o.orderCategory = order.orderCategory
         key != null ? o.key = key : o.key = 'price'
+        // key == 'target' ? o.target = order.target : o.stoploss = order.stoploss
         console.log('key not recognized as target nor stoploss');
         this.pending.push(o)
         break;
@@ -127,17 +129,17 @@ export class OrdersPage implements OnInit, OnDestroy {
 
   updateLtp(){
     this.unsubscribeFromSockets()
-    this.position.forEach((s:any) => {
+    this.position.forEach((s:any,i) => {
       let stockSub : Subscription = this.stockService.listen(s.stockId).subscribe((res:any) => {
         s.ltp = res[0].price
-        this.dataLoaded = true
+        if(i == (this.pending.length - 1)) this.dataLoaded = true
       })
       this.subscribedPositionSockets.push(stockSub)
     });
-    this.pending.forEach((s:any) => {
+    this.pending.forEach((s:any,i) => {
       let stockSub : Subscription = this.stockService.listen(s.stockId).subscribe((res:any) => {
         s.ltp = res[0].price
-        this.dataLoaded = true
+        if(i == (this.pending.length - 1)) this.dataLoaded = true
       })
       this.subscribedPendingSockets.push(stockSub)
     });
@@ -173,8 +175,8 @@ export class OrdersPage implements OnInit, OnDestroy {
       component: ModalEditOrderComponent,
       componentProps: {position}
     });
-    modal.onDidDismiss().then((data) => {
-      if(data == true) this.getOrders()
+    modal.onDidDismiss().then((d) => {
+      if(d.data == true) this.getOrders()
     })
     return await modal.present();
   }
@@ -184,8 +186,8 @@ export class OrdersPage implements OnInit, OnDestroy {
       component: ModalEditOrderComponent,
       componentProps: {pending}
     });
-    modal.onDidDismiss().then((data) => {
-      if(data == true) this.getOrders()
+    modal.onDidDismiss().then((d) => {
+      if(d.data == true) this.getOrders()
     })
     return await modal.present();
   }

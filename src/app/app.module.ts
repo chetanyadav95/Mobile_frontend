@@ -37,6 +37,9 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { environment } from 'src/environments/environment';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { ModalUploadPostComponent } from './modals/modal-upload-post/modal-upload-post.component';
+import { ModalFpCodeCheckComponent } from './modals/modal-fp-code-check/modal-fp-code-check.component';
+import { ModalFpEmailComponent } from './modals/modal-fp-email/modal-fp-email.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -52,6 +55,9 @@ export function tokenGetter() {
     ModalEditOrderComponent,
     ModalChangePasswordComponent,
     ModalWithdrawAddFundsComponent,
+    ModalUploadPostComponent,
+    ModalFpCodeCheckComponent,
+    ModalFpEmailComponent
   ],
   imports: [
     BrowserModule, 

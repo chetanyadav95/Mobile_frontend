@@ -6,6 +6,8 @@ import { UserService } from 'src/app/services/user.service';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import '@codetrix-studio/capacitor-google-auth';
 import { Plugins } from '@capacitor/core';
+import { ModalController } from '@ionic/angular';
+import { ModalFpEmailComponent } from 'src/app/modals/modal-fp-email/modal-fp-email.component';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ import { Plugins } from '@capacitor/core';
 export class LoginPage implements OnInit {
   result: any
   userInfo: any
-  constructor(private router: Router, private userService: UserService, private googlePlus: GooglePlus) { }
+  constructor(private router: Router, private userService: UserService, private modalCtrl: ModalController) { }
 
   ngOnInit() {
     this.userService.checkIfIsOnLoginOrSignUpPage(this.router.url)
@@ -29,14 +31,20 @@ export class LoginPage implements OnInit {
     })
   }
 
+  async openForgotPasswordModal(){
+    const modal = await this.modalCtrl.create({
+      component: ModalFpEmailComponent
+    });
+    return await modal.present()
+  }
+
   async google(){
     const googleUser = await Plugins.GoogleAuth.signIn() as any;
     // this.userService.googleAuth().subscribe()
   }
 
-  forgotPassword(form: NgForm){
-    const email = form.value.email
-    this.userService.emailExists(email).subscribe(r => console.log(r))
+  forgotPassword(){
+    this.openForgotPasswordModal()
   }
 
   //     authentication:

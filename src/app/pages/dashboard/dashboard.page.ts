@@ -11,7 +11,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
 })
-export class DashboardPage {
+export class DashboardPage{
   data = [
     {
       "name": "Open balance",
@@ -85,9 +85,14 @@ export class DashboardPage {
 
   ionViewDidEnter(){
     this.checkIfItIsDashboard()
-    this.view = [this.platform.width(),this.platform.height() * 0.6]
-    this.screenOrientation.onChange().subscribe(() => this.view = [this.platform.width(),this.platform.height() * 0.5])
-    // this.leaderboard = this.leaderboardService.leaderboard
+    this.platform.isLandscape() 
+      ? this.view = [this.platform.width(),this.platform.height() * 0.69]
+      : this.view = [this.platform.width(),this.platform.height() * 0.5]
+    this.screenOrientation.onChange().subscribe((r:any) => {
+      this.platform.isPortrait() 
+        ? this.view = [r.path[0].innerHeight,r.path[0].innerWidth * 0.69]
+        : this.view = [r.path[0].innerHeight,r.path[0].innerWidth * 0.5]
+    })
     this.userService.authenticated.subscribe(u => {
       this.user = u.user
       this.userService.accountDetails().subscribe((r:any) => {

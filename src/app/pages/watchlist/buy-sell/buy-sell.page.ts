@@ -42,7 +42,7 @@ export class BuySellPage implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(){
     this.buySellForm.valueChanges.subscribe(data => {
-      this.approxMargin = data.price * data.quantity
+      this.approxMargin = parseFloat(data.price) * data.quantity
       this.capitalAtRisk = this.approxMargin / this.availableBalance
       if((data.quantity == 0 && data.price == 0) || data.quantity == null || data.price == null){
         this.capitalAtRisk = 0
@@ -76,12 +76,12 @@ export class BuySellPage implements OnInit, AfterViewInit {
         this.isBuy 
           ?  this.orderService.buy(this.company._id, quantity, stopLoss, target, order, price)
           :  this.orderService.sell(this.company._id, quantity, stopLoss, target, order, price)
-        this.router.navigate(['home','orders'])
+        // this.router.navigate(['home','orders'])
       } else {
         this.isBuy 
           ?  this.orderService.buy(this.company._id, quantity, stopLoss, target, order, this.company.ltp)
           :  this.orderService.sell(this.company._id, quantity, stopLoss, target, order, this.company.ltp)
-        this.router.navigate(['home','orders'])
+        // this.router.navigate(['home','orders'])
       }
     }
   }

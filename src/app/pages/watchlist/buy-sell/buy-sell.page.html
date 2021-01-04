@@ -54,7 +54,7 @@
 								[(ngModel)]="marketRadio.checked ? company?.ltp : limitVal"
 								[ngClass]="{'disabled-input':marketRadio.checked}"
 								[required]="!marketRadio.checked"
-								[disabled]="marketRadio.checked"
+								[readonly]="marketRadio.checked"
 								min="0"
 							>
 							</ion-input>
@@ -124,9 +124,9 @@
 					<ion-text><p>Capital at Risk:</p></ion-text>
 				</ion-col>
 				<ion-col size="6" class="ion-text-right">
-					<ion-text><p>{{approxMargin}}</p></ion-text>
-					<ion-text><p>{{availableBalance}}</p></ion-text>
-					<ion-text><p>{{capitalAtRisk | percent:'1.1'}}</p></ion-text>
+					<ion-text><p>{{approxMargin | number:'1.2'}}</p></ion-text>
+					<ion-text><p>{{availableBalance | number:'1.2'}}</p></ion-text>
+					<ion-text><p>{{capitalAtRisk | percent:'1.2'}}</p></ion-text>
 				</ion-col>
 			</ion-row>
 		</ion-grid>

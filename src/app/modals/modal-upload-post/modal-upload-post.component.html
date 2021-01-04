@@ -7,60 +7,55 @@
 	</ion-toolbar>
 </ion-header>
 <ion-content>
-	<ion-grid>
-		<ion-row>
-			<ion-col>
-				<ion-item class="ion-no-padding">
-					<ion-label position="floating">Post title</ion-label>
-					<ion-input [(ngModel)]="title"></ion-input>
-				</ion-item>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col>
-				<ion-item class="ion-no-padding">
-					<ion-label position="floating">Stock Name</ion-label>
-					<ion-input [(ngModel)]="stockName"></ion-input>
-				</ion-item>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col>
-				<ion-item class="ion-no-padding">
-					<ion-label position="floating">Content</ion-label>
-					<ion-textarea [(ngModel)]="content"></ion-textarea>
-				</ion-item>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col size="6">
-				<ion-button color="success" class="post-button" expand="block" (click)="selectImage()">
-					<ion-icon name="attach-outline"></ion-icon>
-				</ion-button>
-			</ion-col>
-			<ion-col size="6">
-				<ion-button expand="block" class="post-button" (click)="uploadImageData()">Post</ion-button>
-			</ion-col>
-		</ion-row>
-		<ion-row>
-			<ion-col>
-				<ion-list>
-					<ion-item *ngFor="let img of images; index as pos" text-wrap>
-						<ion-thumbnail slot="start">
-							<ion-img [src]="img.path"></ion-img>
-						</ion-thumbnail>
-						<ion-label>
-							{{ img.name }}
-						</ion-label>
-						<ion-button slot="end" fill="clear" (click)="startUpload(img)">
-							<ion-icon slot="icon-only" name="cloud-upload"></ion-icon>
-						</ion-button>
-						<ion-button slot="end" fill="clear" (click)="deleteImage(img, pos)">
-							<ion-icon slot="icon-only" name="trash"></ion-icon>
-						</ion-button>
+	<form #postForm="ngForm">
+		<ion-grid>
+			<ion-row>
+				<ion-col>
+					<ion-item class="ion-no-padding">
+						<ion-label position="floating">Post title</ion-label>
+						<ion-input name="title" ngModel="Some post title" required maxlength=100></ion-input>
 					</ion-item>
-				</ion-list>
-			</ion-col>
-		</ion-row>
-	</ion-grid>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col>
+					<ion-item class="ion-no-padding">
+						<ion-label position="floating">Stock Name</ion-label>
+						<ion-input name="stockname" ngModel="Some stock name" required maxlength=100></ion-input>
+					</ion-item>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col>
+					<ion-item class="ion-no-padding">
+						<ion-label position="floating">Content</ion-label>
+						<ion-textarea name="content" ngModel="Some content" required maxlength=255></ion-textarea>
+					</ion-item>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col size="6">
+					<ion-button color="success" class="post-button" expand="block" (click)="selectImageSource()">
+						<ion-icon name="attach-outline"></ion-icon>
+					</ion-button>
+				</ion-col>
+				<ion-col size="6">
+					<ion-button expand="block" class="post-button" (click)="uploadFile(postForm)">Post</ion-button>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col size="6" *ngFor="let img of images; let i = index" class="ion-text-center">
+					<ion-label>
+						<!-- <p>{{ img.createdAt | date: "short" }}</p> -->
+					</ion-label>
+					<ion-img [src]="img.url" [alt]="img"></ion-img>
+					<ion-fab vertical="bottom" horizontal="end">
+						<ion-fab-button color="danger" size="small" (click)="deleteImage(i)">
+							<ion-icon name="trash-outline"></ion-icon>
+						</ion-fab-button>
+					</ion-fab>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
+	</form>
 </ion-content>

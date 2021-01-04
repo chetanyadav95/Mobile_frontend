@@ -6,7 +6,7 @@
 </ion-header>
 
 <ion-content>
-	<super-tabs [config]="config">
+	<super-tabs [config]="config" (tabChange)="tabIndex($event)" >
 		<super-tabs-toolbar slot="top" color="translucent" scrollable="true" scrollable-padding="false">
 			<super-tab-button><ion-label>Tutorials</ion-label></super-tab-button>
 			<super-tab-button><ion-label>Blogs</ion-label></super-tab-button>

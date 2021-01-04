@@ -1,243 +1,137 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { Camera, CameraOptions, PictureSourceType } from '@ionic-native/Camera/ngx';
-import { ActionSheetController, ToastController, Platform, LoadingController, ModalController } from '@ionic/angular';
-import { File, FileEntry } from '@ionic-native/File/ngx';
-import { HttpClient } from '@angular/common/http';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { Storage } from '@ionic/storage';
-import { FilePath } from '@ionic-native/file-path/ngx';
-import { Post } from 'src/app/models/post.model';
-import { LearningService } from 'src/app/services/learning.service';
-import { MarubozuService } from 'src/app/services/marubozu.service';
+import { Component, OnInit, Input, ElementRef, ViewChild } from "@angular/core";
+import { ActionSheetController, ModalController, Platform } from "@ionic/angular";
+import { MarubozuService } from "src/app/services/marubozu.service";
+import { CameraSource, CameraResultType, Plugins } from "@capacitor/core";
+import { NgForm } from "@angular/forms";
+const { Camera } = Plugins;
 
-const STORAGE_KEY = 'assets';
+const STORAGE_KEY = "assets";
+
+export interface ApiImage {
+	_id: string;
+	name: string;
+	createdAt: Date;
+	url: string;
+}
 
 @Component({
-  selector: 'app-modal-upload-post',
-  templateUrl: './modal-upload-post.component.html',
-  styleUrls: ['./modal-upload-post.component.scss'],
+	selector: "app-modal-upload-post",
+	templateUrl: "./modal-upload-post.component.html",
+	styleUrls: ["./modal-upload-post.component.scss"],
 })
 export class ModalUploadPostComponent implements OnInit {
-  @Input() intraDay: boolean = false
-  @Input() positional: boolean = false
-  @Input() demoTrading: boolean = false
-  formData
-  stockName: string
-  title: string
-  content: string
-  images = [];
-  constructor(private modalCtrl: ModalController,
-    private camera: Camera, private file: File, private http: HttpClient, private webview: WebView,
-    private actionSheetController: ActionSheetController, private toastController: ToastController,
-    private storage: Storage, private plt: Platform, private loadingController: LoadingController,
-    private ref: ChangeDetectorRef, private filePath: FilePath, private marubozuService: MarubozuService) { }
+	@Input() intraDay: boolean = false;
+	@Input() positional: boolean = false;
+	@Input() demoTrading: boolean = false;
+	title: string;
+	stockName: string;
+	content: string;
+	images = [];
+	@ViewChild("fileInput", { static: false }) fileInput: ElementRef;
 
-  ngOnInit() {}
+	constructor(
+		private api: MarubozuService,
+		private plt: Platform,
+		private actionSheetCtrl: ActionSheetController,
+		private modalCtrl: ModalController
+	) {}
 
-  dismissModal(){
-    this.modalCtrl.dismiss()
-  }
-    
-  takePicture(sourceType: PictureSourceType) {
-    var options: CameraOptions = {
-        quality: 100,
-        sourceType: sourceType,
-        saveToPhotoAlbum: false,
-        correctOrientation: true
-    };
- 
-    this.camera.getPicture(options).then(imagePath => {
-        if (this.plt.is('android') && sourceType === this.camera.PictureSourceType.PHOTOLIBRARY) {
-            this.filePath.resolveNativePath(imagePath)
-                .then(filePath => {
-                    let correctPath = filePath.substr(0, filePath.lastIndexOf('/') + 1);
-                    let currentName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.lastIndexOf('?'));
-                    this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
-                });
-        } else {
-            var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
-            var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-            this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
-        }
-    });
- 
-}
+	ngOnInit() {}
 
-createFileName() {
-  var d = new Date(),
-      n = d.getTime(),
-      newFileName = n + ".jpg";
-  return newFileName;
-}
+	dismissModal(val?) {
+		this.modalCtrl.dismiss(val);
+	}
 
-copyFileToLocalDir(namePath, currentName, newFileName) {
-  this.file.copyFile(namePath, currentName, this.file.dataDirectory, newFileName).then(success => {
-      this.updateStoredImages(newFileName);
-  }, error => {
-      this.presentToast('Error while storing file.');
-  });
-}
-updateStoredImages(name) {
-  this.storage.get(STORAGE_KEY).then(images => {
-      let arr = JSON.parse(images);
-      if (!arr) {
-          let newImages = [name];
-          this.storage.set(STORAGE_KEY, JSON.stringify(newImages));
-      } else {
-          arr.push(name);
-          this.storage.set(STORAGE_KEY, JSON.stringify(arr));
-      }
+	async selectImageSource() {
+		const buttons = [
+			{
+				text: "Select a Photo",
+				icon: "image",
+				handler: () => {
+					this.addImage(CameraSource.Photos);
+				},
+			},
+		];
+		if (!this.plt.is("hybrid")) {
+			buttons.push({
+				text: "Choose a File",
+				icon: "attach",
+				handler: () => {
+					this.fileInput.nativeElement.click();
+				},
+			});
+		}
+		buttons.push({
+			text: "Close",
+			icon: "close",
+			handler: () => {},
+		});
 
-      let filePath = this.file.dataDirectory + name;
-      let resPath = this.pathForImage(filePath);
+		const actionSheet = await this.actionSheetCtrl.create({
+			header: "Select Image Source",
+			buttons,
+		});
+		await actionSheet.present();
+	}
 
-      let newEntry = {
-          name: name,
-          path: resPath,
-          filePath: filePath
-      };
+	async addImage(source: CameraSource) {
+		if (this.images.length == 0) {
+			const image = await Camera.getPhoto({
+				quality: 60,
+				allowEditing: true,
+				resultType: CameraResultType.Base64,
+				source,
+			});
+			const blobData = this.b64toBlob(image.base64String, `image/${image.format}`);
+			const img = URL.createObjectURL(blobData);
+      this.images.push({blobData,name: 'img',format: image.format, url: img});
+      console.log(this.images)
+		}
+	}
 
-      this.images = [newEntry, ...this.images];
-      this.ref.detectChanges(); // trigger change detection cycle
-  });
-}
- 
-  loadStoredImages() {
-    this.storage.get(STORAGE_KEY).then(images => {
-      if (images) {
-        let arr = JSON.parse(images);
-        this.images = [];
-        for (let img of arr) {
-          let filePath = this.file.dataDirectory + img;
-          let resPath = this.pathForImage(filePath);
-          this.images.push({ name: img, path: resPath, filePath: filePath });
-        }
-      }
-    });
-  }
-
-  pathForImage(img) {
-    if (img === null) {
-      return '';
-    } else {
-      let converted = this.webview.convertFileSrc(img);
-      return converted;
-    }
-  }
-
-  async presentToast(text) {
-    const toast = await this.toastController.create({
-        message: text,
-        position: 'bottom',
-        duration: 3000
-    });
-    toast.present();
-  }
-
-  async selectImage(){
-    const actionSheet = await this.actionSheetController.create({
-        header: "Select Image Source",
-        buttons: [{
-            text: 'Load from Library',
-            icon: 'image',
-            handler: () => {
-                this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
-            }
-          },
-          {
-            text: 'Use Camera',
-            icon: 'camera',
-            handler: () => {
-                this.takePicture(this.camera.PictureSourceType.CAMERA);
-            }
-          },
-          {
-            text: 'Cancel',
-            role: 'cancel'
-          }
-        ]
-    });
-    await actionSheet.present();
-  }
-
-  async presentActionSheet() {
-    const actionSheet = await this.actionSheetController.create({
-      // header: 'Albums',
-      cssClass: 'my-custom-class',
-      buttons: [{
-        text: 'Camera',
-        icon: 'camera',
-        handler: () => {
-          // this.accessCamera()
-        }
-      }, {
-        text: 'Gallery',
-        icon: 'image',
-        handler: () => {
-          // this.accessGallery()
-        }
-      }, {
-        text: 'Cancel',
-        icon: 'close',
-        role: 'cancel',
-        handler: () => {
-        }
-      }]
-    });
-    await actionSheet.present();
-  }
-
-  deleteImage(imgEntry, position) {
-    this.images.splice(position, 1);
- 
-    this.storage.get(STORAGE_KEY).then(images => {
-        let arr = JSON.parse(images);
-        let filtered = arr.filter(name => name != imgEntry.name);
-        this.storage.set(STORAGE_KEY, JSON.stringify(filtered));
- 
-        var correctPath = imgEntry.filePath.substr(0, imgEntry.filePath.lastIndexOf('/') + 1);
- 
-        this.file.removeFile(correctPath, imgEntry.name).then(res => {
-            this.presentToast('File removed.');
-        });
-    });
-}
-startUpload(imgEntry) {
-  this.file.resolveLocalFilesystemUrl(imgEntry.filePath)
-    .then(entry => {
-        ( < FileEntry > entry).file(file => this.readFile(file))
-    })
-    .catch(err => {
-        this.presentToast('Error while reading file.');
-    });
-}
-
-readFile(file: any) {
-  const reader = new FileReader();
-  reader.onload = () => {
-      // const formData = new FormData();
-      const imgBlob = new Blob([reader.result], {
-          type: file.type
+	uploadFile(postForm: NgForm) {
+    const image = this.images[0]
+		if (postForm.valid && image != null) {
+			const title = postForm.value.title;
+			const content = postForm.value.content;
+      const stockName = postForm.value.stockname;
+			let key = "";
+			if (this.intraDay == true) key = "intraday";
+			else if (this.positional == true) key = "positional";
+			else if (this.demoTrading == true) key = "demotrading";
+			this.api.createWithBlob(title, content, stockName, key, image.blobData, image.name, image.format).subscribe(() => {
+        this.dismissModal(true)
       });
-      if(this.formData == null)
-        this.formData.append('file', imgBlob, file.name);
-      // this.uploadImageData(formData);
-  };
-  reader.readAsArrayBuffer(file);
-}
+		} else console.log("something is missing!");
+	}
 
-async uploadImageData(formData: FormData) {
-  const loading = await this.loadingController.create({
-      message: 'Uploading image...',
-  });
-  await loading.present();
-  
-  console.log(formData)
-  let key
-  if(this.intraDay) key = 'intraday'
-  else if(this.positional) key = 'positional'
-  else if(this.demoTrading) key = 'demotrading'
-  this.marubozuService.create(this.title,this.content,this.stockName, formData,key).subscribe(r => console.log(r))
+	deleteImage(index) {
+		this.images.splice(index, 1);
+	}
 
-  }
+	b64toBlob(b64Data, contentType = "", sliceSize = 512) {
+		const byteCharacters = atob(b64Data);
+		const byteArrays = [];
+
+		for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+			const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+			const byteNumbers = new Array(slice.length);
+			for (let i = 0; i < slice.length; i++) {
+				byteNumbers[i] = slice.charCodeAt(i);
+			}
+
+			const byteArray = new Uint8Array(byteNumbers);
+			byteArrays.push(byteArray);
+		}
+
+		const blob = new Blob(byteArrays, { type: contentType });
+		return blob;
+	}
+
+	// blobToFile(theBlob: Blob, fileName:string): File{
+	//   var b: any = theBlob;
+	//   b.name = fileName;
+	//   return <File>theBlob;
+	// }
 }

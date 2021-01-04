@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Code Validation</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-label class="ion-margin-vertical">Enter the code that you've recieved on {{email}}</ion-label>
+  <ion-item class="ion-margin-bottom">
+    <ion-label>Code</ion-label>
+    <ion-input [(ngModel)]="code"></ion-input>
+  </ion-item>
+  <ion-button size="block" (click)="codeCheck(email, code)">Validate my code!</ion-button>
+</ion-content>

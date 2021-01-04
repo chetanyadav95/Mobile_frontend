@@ -3,13 +3,14 @@ import { Stock } from '../models/stock.model';
 import { StockService } from './stock.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
   apiUrl = environment.apiUrl + 'stocks/'
-  constructor(private stockService: StockService, private http: HttpClient) { }
+  constructor(private stockService: StockService, private http: HttpClient, private router: Router) { }
 
   getAllUserOrders(){
     return this.http.get(this.apiUrl + 'orders/all')
@@ -42,8 +43,8 @@ export class OrderService {
       var pending
       pending = {stockId: cId, volume: quantity, stoploss: stopLoss, target, price}
       order == 'limit'
-      ? this.stockService.orderStockLimitBuy(pending).subscribe(r => console.log('buy',r))
-      : this.stockService.orderStockMarketBuy(pending).subscribe(r => console.log('buy',r))
+      ? this.stockService.orderStockLimitBuy(pending).subscribe(()=>{},()=>{},()=>this.router.navigate(['home','orders']))
+      : this.stockService.orderStockMarketBuy(pending).subscribe(()=>{},()=>{},()=>this.router.navigate(['home','orders']))
     })
   }
 
@@ -54,20 +55,12 @@ export class OrderService {
       var pending
       pending = {stockId: cId, volume: quantity, stoploss: stopLoss, target, price}
       order == 'limit'
-      ? this.stockService.orderStockLimitSell(pending).subscribe(r => console.log('sell',r))
-      : this.stockService.orderStockMarketSell(pending).subscribe(r => console.log('sell',r))
+      ? this.stockService.orderStockLimitSell(pending).subscribe(()=>{},()=>{},()=>this.router.navigate(['home','orders']))
+      : this.stockService.orderStockMarketSell(pending).subscribe(()=>{},()=>{},()=>this.router.navigate(['home','orders']))
     })
   }
 
-  totalPandL(){
-    // const pos = this.position.map(p => p.pAndL)
-    // const val = pos.reduce((p, c) => p + c)
-    // return val
-  }
+  totalPandL(){}
 
-  savePending(pending){
-    // var pendingToUpdate = this.pending.find(p => p.code == pending.code)
-    // var indexOfPendingToUpdate = this.pending.indexOf(pendingToUpdate)
-    // this.pending.splice(indexOfPendingToUpdate,1,pending)
-  }
+  savePending(pending){}
 }
